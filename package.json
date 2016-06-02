@@ -1,0 +1,19 @@
+{
+  "name": "fit-gaea",
+  "version": "0.0.1",
+  "description": "",
+  "main": "lib/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "ssh://g@gitlab.baidu.com:8022/tb-component/pc-gaea.git"
+  },
+  "author": "huangziyi01",
+  "license": "ISC",
+  "dependencies": {
+
+  },
+  "typings": "lib/index.d.ts"
+}
