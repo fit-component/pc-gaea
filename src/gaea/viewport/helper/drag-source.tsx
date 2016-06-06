@@ -2,6 +2,7 @@ import * as React from 'react'
 import DragSource from '../../utils/drag-source'
 import * as module from './drag-source-module'
 import * as _ from 'lodash'
+import * as $ from 'jquery'
 import * as classNames from 'classnames'
 import * as ReactDOM from 'react-dom'
 

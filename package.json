@@ -1,6 +1,6 @@
 {
   "name": "fit-gaea",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "",
   "main": "lib/index.js",
   "scripts": {
@@ -31,8 +31,8 @@
     "process": "^0.11.2",
     "lodash": "^3.10.1",
     "react-draggable": "^2.1.1",
-    "react-dom": "^15.0.1",
-    "jquery": "^2.1.4"
+    "jquery": "^2.1.4",
+    "react-dom": "^15.0.1"
   },
   "typings": "lib/index.d.ts"
 }
