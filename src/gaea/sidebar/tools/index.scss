@@ -1,0 +1,45 @@
+& {
+    height: 0;
+    flex-grow: 2;
+    display: flex;
+    flex-direction: column;
+}
+
+// reset tabs
+.title-container {
+    border-bottom: 1px solid #ddd;
+    background: whitesmoke;
+    padding: 9px 5px 0 10px;
+    height: 36px;
+    .title-item {
+        margin-bottom: -1px;
+        font-size: 12px;
+        color: #666;
+        border: 1px solid transparent;
+        border-bottom: none;
+        &.active {
+            background: white;
+            border-color: #ddd;
+            color: #666;
+            border-top-left-radius: 5px;
+            border-top-right-radius: 5px;
+        }
+    }
+}
+
+.content-container {
+    padding: 0;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.tab-panel {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.move-bar {
+    background: transparent;
+}

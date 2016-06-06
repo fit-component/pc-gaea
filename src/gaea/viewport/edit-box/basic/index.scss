@@ -1,0 +1,19 @@
+.title-name {
+    margin: 0;
+    .input {
+        color: #666;
+        font-weight: bold;
+        border-bottom: 2px solid #ccc;
+    }
+}
+
+.edit-item-container {
+    padding: 10px 0;
+}
+
+.bottom-addon {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

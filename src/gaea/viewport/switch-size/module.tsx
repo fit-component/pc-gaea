@@ -2,20 +2,13 @@ import * as React from 'react'
 
 export interface PropsInterface {
     /**
-     * 外部提供编辑组件
+     * 设置viewport padding:0 x%
      */
-    components?: Array<React.Component<any ,any>>
-
-    /**
-     * 页面初始化信息
-     */
-    pageInfo?: any
-
-    [x: string]: any
+    setPaddingSize?: (size: number)=>void
 }
 
 export class Props implements PropsInterface {
-    components = new Array()
+
 }
 
 export interface StateInterface {

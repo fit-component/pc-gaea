@@ -1,0 +1,28 @@
+&.drag-box {
+    padding: 10px 20px;
+    border-bottom: 1px solid #ddd;
+    &:hover {
+        cursor: move;
+        background: whitesmoke;
+    }
+}
+
+&.components-container {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: row;
+    .container {
+        width: 0;
+        flex-grow: 3;
+    }
+    .switch {
+        width: 0;
+        flex-grow: 1;
+        border-left: 1px solid #ddd;
+
+        // reset button
+        .btn {
+            border-radius: 0 !important;
+        }
+    }
+}
