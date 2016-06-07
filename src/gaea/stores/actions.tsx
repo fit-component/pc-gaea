@@ -140,3 +140,19 @@ export const userSettingUpdate = (key: string, value: any)=> {
         value
     }
 }
+
+/**
+ * ==================================
+ * root-props 很薄的一层,主要用来触发修改root-props的事件,数据还是从 object-store/root-props 里查询
+ * ==================================
+ */
+
+/**
+ * 修改用户设置
+ */
+export const ROOT_PROPS_CHANGE = 'ROOT_PROPS_CHANGE'
+export const rootPropsChange = ()=> {
+    return {
+        type: ROOT_PROPS_CHANGE
+    }
+}

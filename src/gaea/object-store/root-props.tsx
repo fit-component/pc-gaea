@@ -1,4 +1,6 @@
 import * as Immutable from 'immutable'
+import store from '../utils/configure-store'
+
 let rootProps = Immutable.Map({})
 
 export const initRootProps = (initObject: any)=> {

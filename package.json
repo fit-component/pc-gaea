@@ -1,6 +1,6 @@
 {
   "name": "fit-gaea",
-  "version": "0.0.8",
+  "version": "0.0.10",
   "description": "",
   "main": "lib/index.js",
   "scripts": {
@@ -26,6 +26,7 @@
     "react-redux": "^4.4.5",
     "react-dnd-html5-backend": "^2.1.2",
     "immutable": "^3.8.0",
+    "fit-tree": "^3.0.10",
     "react-dnd": "^2.1.4",
     "fit-tabs": "^3.0.6",
     "redux-immutablejs": "0.0.8",

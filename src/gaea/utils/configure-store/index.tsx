@@ -1,5 +1,6 @@
 /// <reference path="../../../../../../../typings-module/process.d.ts" />
 import {createStore, applyMiddleware, compose} from 'redux'
+import reducer from '../../stores/reducers'
 import * as process from 'process'
 
 // 定义ts丢失的属性
@@ -45,7 +46,7 @@ const middlewareBuilder = () => {
 
 const finalCreateStore = compose(...middlewareBuilder())(createStore)
 
-export default (initialState?: any, rootReducer?: any) => {
+const configureStore = (initialState?: any, rootReducer?: any) => {
     const store = finalCreateStore(rootReducer, initialState)
 
     if (module.hot) {
@@ -58,3 +59,6 @@ export default (initialState?: any, rootReducer?: any) => {
 
     return store
 }
+
+const store = configureStore({}, reducer)
+export default store

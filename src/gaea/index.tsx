@@ -7,8 +7,7 @@ import * as module from './module'
 import {others} from '../../../../common/transmit-transparently/src'
 import {Layout, Header, Sidebar, Section} from '../../../layout-global/src'
 import {Provider} from 'react-redux'
-import reducer from './stores/reducers'
-import configureStore from './utils/configure-store'
+import store from './utils/configure-store'
 import HTML5Backend from 'react-dnd-html5-backend'
 import DragDropContext from './utils/drag-drop-context'
 import * as rootProps from './object-store/root-props'
@@ -17,8 +16,6 @@ import './index.scss'
 import HeaderMenu from './header'
 import SidebarTool from './sidebar'
 import Viewport from './viewport'
-
-const store = configureStore({}, reducer)
 
 @DragDropContext(HTML5Backend)
 export default class Gaea extends React.Component <module.PropsInterface, module.StateInterface> {
