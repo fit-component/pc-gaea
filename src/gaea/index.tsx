@@ -11,13 +11,12 @@ import reducer from './stores/reducers'
 import configureStore from './utils/configure-store'
 import HTML5Backend from 'react-dnd-html5-backend'
 import DragDropContext from './utils/drag-drop-context'
+import * as rootProps from './object-store/root-props'
 import './index.scss'
 
 import HeaderMenu from './header'
 import SidebarTool from './sidebar'
 import Viewport from './viewport'
-
-import * as actions from './stores/actions'
 
 const store = configureStore({}, reducer)
 
@@ -27,7 +26,7 @@ export default class Gaea extends React.Component <module.PropsInterface, module
     public state: module.StateInterface = new module.State()
 
     componentWillMount() {
-        store.dispatch(actions.rootPropsInit(this.props))
+        rootProps.initRootProps(this.props)
     }
 
     render() {

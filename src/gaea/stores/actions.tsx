@@ -81,36 +81,6 @@ export const editBoxSetIsNew = (isNewInstance: boolean)=> {
 
 /**
  * ==================================
- * root-props
- * ==================================
- */
-
-/**
- * 初始化 rootProps
- */
-export const ROOT_PROPS_INIT = 'ROOT_PROPS_INIT'
-export const rootPropsInit = (data: any)=> {
-    return {
-        type: ROOT_PROPS_INIT,
-        data
-    }
-}
-
-/**
- * 更新 rootProps.pageInfo
- */
-export const ROOT_PROPS_UPDATE_PAGE_INFO = 'ROOT_PROPS_UPDATE_PAGE_INFO'
-export const rootPropsUpdatePageInfo = (position: Array<number|string>, key: string, info: any)=> {
-    return {
-        type: ROOT_PROPS_UPDATE_PAGE_INFO,
-        position,
-        key,
-        info
-    }
-}
-
-/**
- * ==================================
  * section
  * ==================================
  */

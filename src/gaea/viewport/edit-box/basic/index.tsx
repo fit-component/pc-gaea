@@ -7,8 +7,10 @@ import {
     setCurrentSelectedDragSourceInstance,
     setCurrentSelectedHelperInstance,
     getCurrentSelectedDragSourceInstance, getCurrentSelectedHelperInstance
-} from '../../../object-store'
+} from '../../../object-store/current-selection'
 import './index.scss'
+
+import RemoveButton from './remote-button'
 
 export default class Basic extends React.Component <module.PropsInterface, module.StateInterface> {
     static defaultProps: module.PropsInterface = new module.Props()
@@ -82,8 +84,7 @@ export default class Basic extends React.Component <module.PropsInterface, modul
         if (this.props.isRoot)return null
 
         return (
-            <Button type="secondary"
-                    onClick={this.handleRemoveCurrent.bind(this)}>移除</Button>
+            <RemoveButton onClick={this.handleRemoveCurrent.bind(this)}/>
         )
     }
 

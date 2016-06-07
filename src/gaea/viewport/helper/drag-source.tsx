@@ -17,15 +17,15 @@ const options = {
 
     beginDrag(props: any, monitor: any, component: any) {
         return {
+            // 在 isNew 为 true 的时候,标识添加的组件名用
             component: props.component,
-            props: props.props,
-            childs: props.childs,
-            isNew: false
+            isNew: false,
+            // 在 isNew 为 false 的时候,当前被拖拽的组件的实例
+            instance: props.helper
         }
     },
 
     endDrag(props: any, monitor: any, component: any) {
-
     }
 }
 
@@ -37,6 +37,15 @@ export default class DragSourceComponent extends React.Component <module.PropsIn
     static defaultProps: module.PropsInterface = new module.Props()
     public state: module.StateInterface = new module.State()
     private $dom: JQuery
+    public isMount: boolean
+
+    componentWillMount() {
+        this.isMount = true
+    }
+
+    componentWillUnmount() {
+        this.isMount = false
+    }
 
     /**
      * 被点击后弹出属性编辑浮层
@@ -52,12 +61,13 @@ export default class DragSourceComponent extends React.Component <module.PropsIn
             })
 
             // 同时触发盒子显示
-            this.props.editBoxShow(this.props.parent, this, this.props.mergedProps, this.props.parent.props.parent === null)
+            this.props.editBoxShow(this.props.helper, this, this.props.mergedProps, this.props.helper.props.parent === null)
         }
     }
 
     // 设置其选中状态
     setSelected(isSelected: boolean) {
+        if (!this.isMount)return
         this.setState({
             isSelected: isSelected
         })

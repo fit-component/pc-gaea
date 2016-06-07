@@ -43,11 +43,11 @@ export interface PropsInterface {
      * layout 的额外样式
      */
     layoutDragSourceStyle?: any
-
+    
     /**
-     * 父级对象
+     * 父级helper对象
      */
-    parent?: any
+    helper?: any
 }
 
 export class Props implements PropsInterface {

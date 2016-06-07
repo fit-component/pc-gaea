@@ -28,6 +28,16 @@ export interface PropsInterface {
      * layout 的额外样式
      */
     layoutDragTargetStyle?: any
+
+    /**
+     * 拖拽源的信息
+     */
+    dragSourceInfo?: any
+
+    /**
+     * 父级helper
+     */
+    helper?: any
 }
 
 export class Props implements PropsInterface {
@@ -36,9 +46,9 @@ export class Props implements PropsInterface {
 }
 
 export interface StateInterface {
-
+    isOver?: boolean
 }
 
 export class State implements StateInterface {
-
+    isOver = false
 }

@@ -13,7 +13,7 @@ export interface PropsInterface {
      * 距离根组件的定位数组
      * 例如 ['pageInfo', 'childs', 0, 'childs', 1]
      */
-    position?: Array<number|string>
+    position?: number | string
 
     /**
      * 组件信息
@@ -34,11 +34,6 @@ export interface PropsInterface {
          */
         childs?: any
     }
-
-    /**
-     * rootPropsUpdatePageInfo action
-     */
-    rootPropsUpdatePageInfo?: any
 
     /**
      * editBoxShow action
@@ -87,8 +82,13 @@ export interface StateInterface {
      * 子元素的 key 列表,用来唯一确定每个元素的位置,控制器正确刷新
      */
     childKeys?: Array<string>
+
+    /**
+     * 如果是layout,那就禁用
+     */
+    disableIfLayout?: boolean
 }
 
 export class State implements StateInterface {
-
+    disableIfLayout = false
 }

@@ -12,6 +12,7 @@ import * as actions from '../../stores/actions'
 import * as module from './module'
 import * as _ from 'lodash'
 import layoutStyleParser from './layout-style-parser'
+import * as rootProps from '../../object-store/root-props'
 
 @connect(
     (state: any) => {
@@ -45,10 +46,105 @@ export default class Helper extends React.Component <module.PropsInterface, modu
 
     shouldComponentUpdate(nextProps: module.PropsInterface, nextState: module.StateInterface) {
         // 只有 state 更新才会触发 render, props 更新不需要理会
-        if (this.state === nextState) {
+        // 而且 位置没变
+        if (this.state === nextState && this.props.position === nextProps.position) {
             return false
         }
         return true
+    }
+
+    /**
+     * 获得positions路径
+     */
+    getPositions() {
+        let positionsArray: Array<number|string> = []
+        let instance = this
+        // 没有循环到顶层 pageInfo 时不要停
+        while (instance.props.position !== 'pageInfo') {
+            positionsArray.unshift(instance.props.position)
+            positionsArray.unshift('childs')
+            instance = instance.props.parent
+        }
+        // 最后添加上顶层的路径
+        positionsArray.unshift('pageInfo')
+        return positionsArray
+    }
+
+    /**
+     * 新增一个子元素
+     */
+    addNewChild(component: string) {
+        let newChilds = this.state.childs || []
+        const newChild = {
+            component: component
+        }
+
+        newChilds.push(newChild)
+
+        let newChildKeys = this.state.childKeys
+        // 往后再随机分配一个 key
+        newChildKeys.push(_.uniqueId('helper_'))
+
+        this.setState({
+            childs: newChilds,
+            childKeys: newChildKeys
+        }, ()=> {
+            // 新增完后同步到 rootProps
+            rootProps.setRootProps(this.getPositions(), 'childs', {
+                type: 'add',
+                child: newChild
+            })
+        })
+    }
+
+    /**
+     * 新增一个已存在的元素（转移元素）
+     */
+    addExistChild(component: string, info: any) {
+        let newChilds = this.state.childs || []
+        const newChild: any = info
+        newChilds.push(newChild)
+
+        let newChildKeys = this.state.childKeys
+        // 往后再随机分配一个 key
+        newChildKeys.push(_.uniqueId('helper_'))
+
+        this.setState({
+            childs: newChilds,
+            childKeys: newChildKeys
+        }, ()=> {
+            // 新增完后同步到 rootProps
+            rootProps.setRootProps(this.getPositions(), 'childs', {
+                type: 'add',
+                child: newChild
+            })
+        })
+    }
+
+    /**
+     * 根据拖拽源判断,是否能被拖拽
+     */
+    canDropByDragSourceInfo(dragSourceInfo: any): boolean {
+        // dragTarget不能是dragSource自己
+        if (dragSourceInfo.instance === this)return false
+        // 也不能是dragSource的直接父级
+        if ('pageInfo' !== dragSourceInfo.instance.position) {
+            if (this === dragSourceInfo.instance.props.parent)return false
+        }
+        // 也不能是它的任何直接子级
+        let parentIsDragSource = false
+        let parentOrThis = this
+        while (parentIsDragSource === false) {
+            if (parentOrThis === dragSourceInfo.instance) {
+                parentIsDragSource = true
+            }
+
+            if (parentOrThis.props.parent === null)break
+
+            parentOrThis = parentOrThis.props.parent
+        }
+        return parentIsDragSource !== true
+
     }
 
     /**
@@ -79,34 +175,31 @@ export default class Helper extends React.Component <module.PropsInterface, modu
     /**
      * 【编辑状态】当 layout 组件被拖入组件【此时当前肯定是 layout 组件】
      */
-    handleDrop(componentInfo: any) {
-        if (componentInfo.isNew) {
+    handleDrop(dragSourceInfo: any) {
+        if (dragSourceInfo.isNew) {
             /**
              * 新增组件
              */
-            let newChilds = this.state.childs || []
-            const newChild = {
-                component: componentInfo.component
-            }
-            newChilds.push(newChild)
-
-            let newChildKeys = this.state.childKeys
-            // 往后再随机分配一个 key
-            newChildKeys.push(_.uniqueId('helper_'))
-
-            this.setState({
-                childs: newChilds,
-                childKeys: newChildKeys
-            }, ()=> {
-                // 新增完后同步到 rootProps
-                this.props.rootPropsUpdatePageInfo(this.props.position, 'childs', {
-                    type: 'add',
-                    child: newChild
-                })
-            })
+            this.addNewChild(dragSourceInfo.component)
         } else {
-            // 已有组件改变父级
-            console.log(componentInfo)
+            /**
+             * 已有组件改变父级
+             */
+            if (!this.canDropByDragSourceInfo(dragSourceInfo))return
+
+            /**
+             * 先在 dragTarget 新增组件
+             */
+            // 现在拖拽到的组件添加这个组件的所有信息
+            // 先获取到这个组件的信息,从 rootProps 里
+            const rootPropsInstance = rootProps.getRootProps()
+            const dragSourceInstanceInfo = rootPropsInstance.getIn(dragSourceInfo.instance.getPositions()).toJS()
+            this.addExistChild(dragSourceInfo.component, dragSourceInstanceInfo)
+
+            /**
+             * 再调用 dragSource 组件的自毁方法
+             */
+            dragSourceInfo.instance.doRemoveSelf()
         }
     }
 
@@ -131,7 +224,7 @@ export default class Helper extends React.Component <module.PropsInterface, modu
             props: newProps
         }, ()=> {
             // 修改完后同步到 rootProps
-            this.props.rootPropsUpdatePageInfo(this.props.position, 'props', newProps)
+            rootProps.setRootProps(this.getPositions(), 'props', newProps)
         })
     }
 
@@ -146,7 +239,7 @@ export default class Helper extends React.Component <module.PropsInterface, modu
             props: newProps
         }, ()=> {
             // 修改完后同步到 rootProps
-            this.props.rootPropsUpdatePageInfo(this.props.position, 'name', value)
+            rootProps.setRootProps(this.getPositions(), 'name', value)
         })
     }
 
@@ -156,8 +249,7 @@ export default class Helper extends React.Component <module.PropsInterface, modu
     doRemoveSelf() {
         // 如果没有父级,说明是顶层元素,顶层元素无法被删除
         if (this.props.parent === null)return
-
-        this.props.parent.removeChildIndex(this.props.position[this.props.position.length - 1])
+        this.props.parent.removeChildIndex(this.props.position)
     }
 
     /**
@@ -177,7 +269,7 @@ export default class Helper extends React.Component <module.PropsInterface, modu
             childKeys: newChildKeys
         }, ()=> {
             // 修改完后同步到 rootProps
-            this.props.rootPropsUpdatePageInfo(this.props.position, 'childs', {
+            rootProps.setRootProps(this.getPositions(), 'childs', {
                 type: 'remove',
                 index: index
             })
@@ -198,7 +290,7 @@ export default class Helper extends React.Component <module.PropsInterface, modu
             props: newProps
         }, ()=> {
             // 修改完后同步到 rootProps
-            this.props.rootPropsUpdatePageInfo(this.props.position, 'reset', null)
+            rootProps.setRootProps(this.getPositions(), 'reset', null)
             // 同时更新 editBox
             const mergedProps = this.getMergedProps()
             this.props.editBoxUpdate(mergedProps)
@@ -208,7 +300,7 @@ export default class Helper extends React.Component <module.PropsInterface, modu
     render() {
         // 获取组件class
         const componentElement = this.props.components[this.props.componentInfo.component]
-        console.log('helperRender:', this.props.componentInfo.component, this.props.position)
+        console.log('helperRender:', this.props.componentInfo.component, this.getPositions())
 
         // 将传入的参数与组件 defaultProps 做 merge,再传给组件
         const mergedProps: any = this.getMergedProps()
@@ -220,24 +312,15 @@ export default class Helper extends React.Component <module.PropsInterface, modu
         if (this.props.componentInfo.component === 'gaea-layout' && _.isArray(this.state.childs)) {
             children = this.state.childs.map((itemComponentInfo: any, index: number)=> {
                 /**
-                 * 计算这个children的新position
-                 */
-                // 基于当前的 position
-                const position: Array<number|string> = _.cloneDeep(this.props.position)
-                position.push('childs')
-                position.push(index)
-
-                /**
                  * 为什么 key 要从 state.childkeys 里取
                  * 1 2 3 4 5 删除了 1,如果 key 变成了 1 2 3 4,那么等于删除了 5
                  * 这是不符合预期的,必须变成 2 3 4 5 才行
                  */
                 return <Helper key={this.state.childKeys[index]}
-                               position={position}
+                               position={index}
                                componentInfo={itemComponentInfo}
                                components={this.props['components']}
                                isInEdit={this.props.isInEdit}
-                               rootPropsUpdatePageInfo={this.props.rootPropsUpdatePageInfo}
                                outMoveBoxMove={this.props.outMoveBoxMove}
                                editBoxShow={this.props.editBoxShow}
                                editBoxDeleteClose={this.props.editBoxDeleteClose}
@@ -268,7 +351,8 @@ export default class Helper extends React.Component <module.PropsInterface, modu
             resultElement = (
                 <DragTarget onDrop={this.handleDrop.bind(this)}
                             mergedProps={mergedProps}
-                            layoutDragTargetStyle={layoutDragTargetStyle}>
+                            layoutDragTargetStyle={layoutDragTargetStyle}
+                            helper={this}>
                     {resultElement}
                 </DragTarget>
             )
@@ -278,8 +362,9 @@ export default class Helper extends React.Component <module.PropsInterface, modu
          * 编辑状态
          * 添加拖拽源（所有,包括layout在内,都是拖拽源）
          * 拖拽源响应点击后触发编辑框事件
+         * 不能是最外层 layout
          */
-        if (this.props.isInEdit) {
+        if (this.props.isInEdit && this.props.parent !== null) {
             resultElement = (
                 <DragSource component={this.props.componentInfo.component}
                             props={this.state.props}
@@ -288,7 +373,7 @@ export default class Helper extends React.Component <module.PropsInterface, modu
                             editBoxShow={this.props.editBoxShow}
                             layoutDragSourceStyle={layoutDragSourceStyle}
                             outMoveBoxMove={this.props.outMoveBoxMove}
-                            parent={this}>
+                            helper={this}>
                     {resultElement}
                 </DragSource>
             )

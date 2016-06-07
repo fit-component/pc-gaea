@@ -1,6 +1,8 @@
 &.drag-box {
     padding: 10px 20px;
     border-bottom: 1px solid #ddd;
+    font-size: 14px;
+    color: #666;
     &:hover {
         cursor: move;
         background: whitesmoke;

@@ -4,6 +4,7 @@ import DragSource from './drag-source'
 import currencyComponents from '../../../../currency-components'
 import {Button, ButtonGroup} from '../../../../../../button/src'
 import * as actions from '../../../stores/actions'
+import * as rootProps from '../../../object-store/root-props'
 
 const switchTypes = [{
     type: 'custom',
@@ -22,9 +23,7 @@ export interface StateProps {
 
 @connect(
     (state: any) => {
-        return {
-            rootProps: state.rootProps.toJS()
-        }
+        return {}
     },
     actions
 )
@@ -44,7 +43,8 @@ export default class Sidebar extends React.Component <any ,any> {
             components[item.defaultProps.uniqueKey] = item
         })
 
-        this.props['rootProps'].components.map((item: any)=> {
+        const rootPropsJs = rootProps.getRootProps().toJS()
+        rootPropsJs.components.map((item: any)=> {
             components[item.defaultProps.uniqueKey] = item
         })
 
@@ -58,7 +58,7 @@ export default class Sidebar extends React.Component <any ,any> {
     }
 
     render() {
-        const {rootProps} = this.props
+        const rootPropsJs = rootProps.getRootProps().toJS()
 
         // 组件类型选择按钮组
         const SwitchButtonGroup = switchTypes.map((item, index)=> {
@@ -74,7 +74,7 @@ export default class Sidebar extends React.Component <any ,any> {
         let DragComponents: any
         switch (this.state.selectedType) {
             case 'custom':
-                DragComponents = rootProps.components.map((item: any, index: number)=> {
+                DragComponents = rootPropsJs.components.map((item: any, index: number)=> {
                     return (
                         <DragSource key={index}
                                     uniqueKey={item.defaultProps.uniqueKey}>{item.defaultProps.name}</DragSource>

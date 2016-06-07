@@ -24,11 +24,30 @@ const options = {
 @DropTarget('component', options, (connect: any, monitor: any) => ({
     connectDropTarget: connect.dropTarget(),
     isOver: monitor.isOver({shallow: true}),
-    canDrop: monitor.canDrop()
+    canDrop: monitor.canDrop(),
+    dragSourceInfo: monitor.getItem()
 }))
 export default class DragTargetComponent extends React.Component <module.PropsInterface, module.StateInterface> {
     static defaultProps: module.PropsInterface = new module.Props()
     public state: module.StateInterface = new module.State()
+
+    componentWillReceiveProps(nextProps: any) {
+        if (!this.props.isOver && nextProps.isOver) {
+            // You can use this as enter handler
+            if (this.props.dragSourceInfo.isNew || this.props.helper.canDropByDragSourceInfo(this.props.dragSourceInfo)) {
+                // 是新的拖拽源（从右侧工具条拖拽的）,或者是可以被dragTarget接收的,都会设置isOver
+                this.setState({
+                    isOver: true
+                })
+            }
+        }
+        if (this.props.isOver && !nextProps.isOver) {
+            // You can use this as leave handler
+            this.setState({
+                isOver: false
+            })
+        }
+    }
 
     render() {
         /**
@@ -37,7 +56,7 @@ export default class DragTargetComponent extends React.Component <module.PropsIn
          */
         // 编辑状态要使外部div样式与内部保持一致
         let outerStyle: any = _.cloneDeep(this.props.layoutDragTargetStyle)
-        if (this.props.isOver) {
+        if (this.state.isOver) {
             outerStyle.outline = '2px dotted #bbb'
             outerStyle.zIndex = 1
         }

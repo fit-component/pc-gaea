@@ -7,11 +7,12 @@ import * as $ from 'jquery'
 import * as actions from '../stores/actions'
 import SwitchSize from './switch-size'
 import OuterMoveBox from './outer-move-box'
+import * as rootProps from '../object-store/root-props'
 import './index.scss'
 
 @connect(
     (state: any) => {
-        return {rootProps: state.rootProps.toJS()}
+        return {}
     },
     actions
 )
@@ -23,16 +24,8 @@ export default class ViewPort extends React.Component <any ,any> {
         }
     }
 
-    shouldComponentUpdate(nextProps: any) {
-        /**
-         * 如果因为 rootProps 有更新,不要重新 render 整个 root
-         * 因为子元素已经局部更新过了,并且触发了action更新了 rootProps
-         * 再刷新是没有意义的资源浪费
-         */
-        if (nextProps.rootProps !== this.props['rootProps']) {
-            return false
-        }
-        return true
+    shouldComponentUpdate(nextProps: any, nextState: any) {
+        return this.state !== nextState
     }
 
     componentDidMount() {
@@ -62,11 +55,13 @@ export default class ViewPort extends React.Component <any ,any> {
     }
 
     render() {
+        const rootPropsJs = rootProps.getRootProps().toJS()
+
         const rootComponent = (
             <Helper isInEdit={true}
                     parent={null}
-                    position={['pageInfo']}
-                    componentInfo={this.props['rootProps'].pageInfo}/>
+                    position="pageInfo"
+                    componentInfo={rootPropsJs.pageInfo}/>
         )
 
         const viewPortStyle = {

@@ -5,7 +5,7 @@ import {
     setCurrentSelectedDragSourceInstance,
     setCurrentSelectedHelperInstance,
     getCurrentSelectedDragSourceInstance
-} from '../../object-store'
+} from '../../object-store/current-selection'
 
 const initialState: Immutable.Map<string, any> = Immutable.Map({
     show: false,
@@ -16,11 +16,6 @@ const initialState: Immutable.Map<string, any> = Immutable.Map({
 
 export default createReducer(initialState, {
     [actions.EDIT_BOX_SHOW]: (state: Immutable.Map<string, any>, action: any) => {
-        // 又选中了一个,如果有 dragSource 就先设置为非选中
-        // 当必须在当前和上一个不同的时候,否则相同时就不会选中了
-        const currentDragSourceInstance: any = getCurrentSelectedDragSourceInstance()
-        currentDragSourceInstance && currentDragSourceInstance !== action.dragSourceInstance && currentDragSourceInstance.setSelected(false)
-
         const isNewInstance = setCurrentSelectedHelperInstance(action.helperInstance)
         setCurrentSelectedDragSourceInstance(action.dragSourceInstance)
 

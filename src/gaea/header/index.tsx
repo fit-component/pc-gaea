@@ -1,20 +1,13 @@
 import * as React from 'react'
 import {Menu, RightMenu, MenuItem} from '../../../../menu/src'
 import connect from '../utils/connect'
+import * as rootProps from '../object-store/root-props'
 
 import UserSetting from './user-setting'
 
-@connect(
-    (state: any) => {
-        return {
-            rootProps: state.rootProps.toJS()
-        }
-    },
-    {}
-)
 export default class Header extends React.Component <any ,any> {
     handleSave() {
-        console.log('保存', this.props['rootProps'].pageInfo)
+        console.log('保存', rootProps.getRootProps().toJS())
     }
 
     render() {

@@ -11,11 +11,18 @@ export interface PropsInterface {
      */
     pageInfo?: any
 
+    /**
+     * 点击保存后会返回页面结构树信息
+     */
+    onSave?: (info?: any)=>void
+
     [x: string]: any
 }
 
 export class Props implements PropsInterface {
     components = new Array()
+    onSave = ()=> {
+    }
 }
 
 export interface StateInterface {
