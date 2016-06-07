@@ -13,12 +13,11 @@ import * as module from './module'
 import * as _ from 'lodash'
 import layoutStyleParser from './layout-style-parser'
 import * as rootProps from '../../object-store/root-props'
+import {getComponents} from '../../object-store/components'
 
 @connect(
     (state: any) => {
-        return {
-            components: state.components.toJS()
-        }
+        return {}
     },
     actions
 )
@@ -152,7 +151,8 @@ export default class Helper extends React.Component <module.PropsInterface, modu
      */
     getMergedProps() {
         // 获取组件class
-        const componentElement = this.props.components[this.props.componentInfo.component]
+        const components = getComponents()
+        const componentElement = components[this.props.componentInfo.component]
 
         const mergedProps: any = _.cloneDeep(componentElement.defaultProps)
         if ('name' in this.state.props) {
@@ -299,7 +299,8 @@ export default class Helper extends React.Component <module.PropsInterface, modu
 
     render() {
         // 获取组件class
-        const componentElement = this.props.components[this.props.componentInfo.component]
+        const components = getComponents()
+        const componentElement = components[this.props.componentInfo.component]
         console.log('helperRender:', this.props.componentInfo.component, this.getPositions())
 
         // 将传入的参数与组件 defaultProps 做 merge,再传给组件
@@ -319,7 +320,6 @@ export default class Helper extends React.Component <module.PropsInterface, modu
                 return <Helper key={this.state.childKeys[index]}
                                position={index}
                                componentInfo={itemComponentInfo}
-                               components={this.props['components']}
                                isInEdit={this.props.isInEdit}
                                outMoveBoxMove={this.props.outMoveBoxMove}
                                editBoxShow={this.props.editBoxShow}

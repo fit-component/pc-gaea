@@ -27,6 +27,11 @@ export interface EditProps {
     name: string
 
     /**
+     * 图标 font-awesome
+     */
+    icon?: string
+
+    /**
      * 唯一的key
      */
     uniqueKey?: number|string

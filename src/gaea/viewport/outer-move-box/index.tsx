@@ -1,6 +1,7 @@
 import * as React from 'react'
 import connect from '../../utils/connect'
 import * as module from './module'
+import * as _ from 'lodash'
 import './index.scss'
 
 @connect(
@@ -15,6 +16,13 @@ import './index.scss'
 export default class Sidebar extends React.Component <module.PropsInterface, module.StateInterface> {
     static defaultProps: module.PropsInterface = new module.Props()
     public state: module.StateInterface = new module.State()
+
+    shouldComponentUpdate(nextProps: any) {
+        if (_.isEqual(this.props['outerMoveBox'], nextProps['outerMoveBox']) && _.isEqual(this.props['section'], nextProps['section'])) {
+            return false
+        }
+        return true
+    }
 
     render() {
         if (!this.props.outerMoveBox.show)return null

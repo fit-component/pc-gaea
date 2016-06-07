@@ -5,7 +5,7 @@ export interface PropsInterface extends EditProps {
 
 export class Props implements PropsInterface {
     name = '布局'
-
+    icon = 'square-o'
     uniqueKey = 'gaea-layout'
 
     options = {

@@ -2,4 +2,10 @@
     height: 0;
     flex-grow: 1;
     border-top: 1px solid #eee;
+    overflow-y: auto;
+}
+
+// reset fit-tree
+.title {
+    height: 25px;
 }

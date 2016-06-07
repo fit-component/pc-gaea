@@ -5,6 +5,7 @@ export interface PropsInterface extends EditProps {
 
 export class Props implements PropsInterface {
     name = '载入动画'
+    icon = 'circle-o-notch'
     uniqueKey = 'gaea-loading'
     options = {}
 }

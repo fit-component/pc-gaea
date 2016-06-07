@@ -1,5 +1,6 @@
 import * as Immutable from 'immutable'
 import store from '../utils/configure-store'
+import * as actions from '../stores/actions'
 
 let rootProps = Immutable.Map({})
 
@@ -43,6 +44,7 @@ export const setRootProps = (position: Array<number|string>, key: string, info: 
             rootProps = rootProps.deleteIn([...position, 'props'])
             break
     }
+    store.dispatch(actions.rootPropsChange())
 }
 
 export const getRootProps = ()=> {

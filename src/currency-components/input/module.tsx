@@ -6,6 +6,7 @@ export interface PropsInterface extends EditProps {
 export class Props implements PropsInterface {
     name = '输入框'
     uniqueKey = 'gaea-input'
+    icon = 'font'
 
     options = {
         label: {

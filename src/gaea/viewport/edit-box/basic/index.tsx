@@ -6,7 +6,8 @@ import Button from '../../../../../../button/src'
 import {
     setCurrentSelectedDragSourceInstance,
     setCurrentSelectedHelperInstance,
-    getCurrentSelectedDragSourceInstance, getCurrentSelectedHelperInstance
+    getCurrentSelectedDragSourceInstance,
+    getCurrentSelectedHelperInstance
 } from '../../../object-store/current-selection'
 import './index.scss'
 
@@ -109,11 +110,15 @@ export default class Basic extends React.Component <module.PropsInterface, modul
 
         return (
             <div className="_namespace">
+                <div className="component-icon-container">
+                    <i className={`fa fa-${this.state.mergedProps.icon}`}></i>
+                </div>
                 <Input className="title-name"
                        label=""
                        key={_.uniqueId('title-name')}
                        onChange={this.handleChangeName.bind(this)}
                        rightRender={this.titleInputRightRender.bind(this)}
+                       style={{paddingLeft:35}}
                        defaultValue={this.state.mergedProps.name}/>
                 <div className="edit-item-container">
                     {Editors}

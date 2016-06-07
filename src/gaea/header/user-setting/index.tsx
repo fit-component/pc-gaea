@@ -5,6 +5,7 @@ import Modal from '../../../../../modal/src'
 import Switch from '../../../../../switch/src'
 import {MenuItem} from '../../../../../menu/src'
 import * as actions from '../../stores/actions'
+import * as _ from 'lodash'
 import './index.scss'
 
 @connect(
@@ -18,6 +19,13 @@ import './index.scss'
 export default class Header extends React.Component <any ,any> {
     state = {
         show: false
+    }
+
+    shouldComponentUpdate(nextProps: any, nextState: any) {
+        if (_.isEqual(this.props['userSetting'], nextProps['userSetting']) && _.isEqual(this.state, nextState)) {
+            return false
+        }
+        return true
     }
 
     handleShowModal() {
@@ -43,6 +51,7 @@ export default class Header extends React.Component <any ,any> {
     }
 
     render() {
+        console.log('user seee')
         return (
             <MenuItem onClick={this.handleShowModal.bind(this)}>
                 设置

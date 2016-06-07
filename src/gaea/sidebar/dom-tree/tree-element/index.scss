@@ -1,0 +1,28 @@
+.flex {
+    display: flex;
+    align-items: center;
+    height: 25px;
+}
+
+.icons-container {
+    width: 2em;
+    height: 2em;
+    line-height: 2em;
+    text-align: center;
+    color: #999;
+}
+
+.icons {
+    color: #999;
+    width: 15px;
+    text-align: center;
+    margin-right: 5px;
+    &.gaea {
+        color: #7266ba;
+    }
+}
+
+.text {
+    color: #666;
+    font-size: 12px;
+}

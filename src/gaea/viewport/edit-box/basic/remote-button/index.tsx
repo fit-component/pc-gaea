@@ -2,6 +2,7 @@ import * as React from 'react'
 import Modal from '../../../../../../../modal/src'
 import Button from '../../../../../../../button/src'
 import connect from '../../../../utils/connect'
+import * as _ from 'lodash'
 
 @connect(
     (state: any) => {
@@ -17,6 +18,13 @@ export default class Basic extends React.Component <any, any> {
         this.state = {
             show: false
         }
+    }
+
+    shouldComponentUpdate(nextProps: any, nextState: any) {
+        if (_.isEqual(this.props['userSetting'], nextProps['userSetting']) && this.state.show === nextState.show) {
+            return false
+        }
+        return true
     }
 
     handleShowModalOrClick() {

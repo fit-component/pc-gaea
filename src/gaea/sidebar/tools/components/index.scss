@@ -1,8 +1,11 @@
 &.drag-box {
-    padding: 10px 20px;
+    padding: 0 10px;
     border-bottom: 1px solid #ddd;
     font-size: 14px;
     color: #666;
+    display: flex;
+    align-items: center;
+    height: 38px;
     &:hover {
         cursor: move;
         background: whitesmoke;
@@ -26,5 +29,15 @@
         .btn {
             border-radius: 0 !important;
         }
+    }
+}
+
+.icons {
+    color: #999;
+    width: 15px;
+    text-align: center;
+    margin-right: 5px;
+    &.gaea {
+        color: #7266ba;
     }
 }

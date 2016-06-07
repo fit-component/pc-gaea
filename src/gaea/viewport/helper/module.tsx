@@ -5,11 +5,6 @@ export interface PropsInterface {
     isInEdit?: boolean
 
     /**
-     * 所有组件
-     */
-    components?: any
-
-    /**
      * 距离根组件的定位数组
      * 例如 ['pageInfo', 'childs', 0, 'childs', 1]
      */

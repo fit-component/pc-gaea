@@ -5,6 +5,7 @@ import currencyComponents from '../../../../currency-components'
 import {Button, ButtonGroup} from '../../../../../../button/src'
 import * as actions from '../../../stores/actions'
 import * as rootProps from '../../../object-store/root-props'
+import {setComponents} from '../../../object-store/components'
 
 const switchTypes = [{
     type: 'custom',
@@ -48,7 +49,7 @@ export default class Sidebar extends React.Component <any ,any> {
             components[item.defaultProps.uniqueKey] = item
         })
 
-        this.props['componentsInit'](components)
+        setComponents(components)
     }
 
     handleChangeSelectedType(type: string) {
@@ -77,7 +78,10 @@ export default class Sidebar extends React.Component <any ,any> {
                 DragComponents = rootPropsJs.components.map((item: any, index: number)=> {
                     return (
                         <DragSource key={index}
-                                    uniqueKey={item.defaultProps.uniqueKey}>{item.defaultProps.name}</DragSource>
+                                    uniqueKey={item.defaultProps.uniqueKey}>
+                            <i className={`fa fa-${item.defaultProps.icon || 'cube'} icons`}/>
+                            {item.defaultProps.name}
+                        </DragSource>
                     )
                 })
                 break
@@ -85,7 +89,10 @@ export default class Sidebar extends React.Component <any ,any> {
                 DragComponents = currencyComponents.map((item, index)=> {
                     return (
                         <DragSource key={index}
-                                    uniqueKey={item.defaultProps.uniqueKey}>{item.defaultProps.name}</DragSource>
+                                    uniqueKey={item.defaultProps.uniqueKey}>
+                            <i className={`fa fa-${item.defaultProps.icon || 'cube'} icons gaea`}/>
+                            {item.defaultProps.name}
+                        </DragSource>
                     )
                 })
                 break

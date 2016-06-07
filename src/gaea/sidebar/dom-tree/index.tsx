@@ -1,6 +1,8 @@
 import * as React from 'react'
 import TreeElement from './tree-element'
 import connect from '../../utils/connect'
+import * as rootProps from '../../object-store/root-props'
+import {Tree} from '../../../../../tree/src'
 import './index.scss'
 
 @connect(
@@ -12,12 +14,21 @@ import './index.scss'
     {}
 )
 export default class Sidebar extends React.Component <any ,any> {
+    shouldComponentUpdate(nextProps: any) {
+        if (_.isEqual(this.props['rootPropsStore'], nextProps['rootPropsStore'])) {
+            return false
+        }
+        return true
+    }
+
     render() {
-        console.log(this.props['rootProps'])
+        const rootPropsJs = rootProps.getRootProps().toJS()
+        
         return (
-            <div className="_namespace">
-                <TreeElement/>
-            </div>
+            <Tree className="_namespace"
+                  defaultExpendAll={true}>
+                <TreeElement info={rootPropsJs.pageInfo}/>
+            </Tree>
         )
     }
 }
