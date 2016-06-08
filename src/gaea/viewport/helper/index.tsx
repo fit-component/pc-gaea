@@ -8,6 +8,7 @@ import * as _ from 'lodash'
 import layoutStyleParser from './layout-style-parser'
 import * as rootProps from '../../object-store/root-props'
 import {getComponents} from '../../object-store/components'
+import {getDomTree} from '../../object-store/dom-tree'
 
 export default class Helper extends React.Component <module.PropsInterface, module.StateInterface> {
     static defaultProps: module.PropsInterface = new module.Props()
@@ -102,9 +103,9 @@ export default class Helper extends React.Component <module.PropsInterface, modu
     /**
      * 新增一个已存在的元素（转移元素）
      */
-    addExistChild(component: string, info: any) {
+    addExistChild(info: any) {
         let newChilds = this.state.childs || []
-        const newChild: any = info
+        const newChild: any = _.cloneDeep(info)
         newChilds.push(newChild)
 
         let newChildKeys = this.state.childKeys
@@ -120,6 +121,11 @@ export default class Helper extends React.Component <module.PropsInterface, modu
                 type: 'add',
                 child: newChild
             })
+
+            // 新增也同步到 domTree
+            const domTree = getDomTree()
+            const treeInstance = domTree.getChildByPositions(this.getPositionsAsDomTree())
+            treeInstance.addExistChild(info)
         })
     }
 
@@ -179,30 +185,44 @@ export default class Helper extends React.Component <module.PropsInterface, modu
      * 【编辑状态】当 layout 组件被拖入组件【此时当前肯定是 layout 组件】
      */
     handleDrop(dragSourceInfo: any) {
-        if (dragSourceInfo.isNew) {
-            /**
-             * 新增组件
-             */
-            this.addNewChild(dragSourceInfo.component)
-        } else {
-            /**
-             * 已有组件改变父级
-             */
-            if (!this.canDropByDragSourceInfo(dragSourceInfo))return
+        switch (dragSourceInfo.type) {
+            case 'new':
+                /**
+                 * 新拖拽进来的
+                 */
+                this.addNewChild(dragSourceInfo.component)
 
-            /**
-             * 先在 dragTarget 新增组件
-             */
-            // 现在拖拽到的组件添加这个组件的所有信息
-            // 先获取到这个组件的信息,从 rootProps 里
-            const rootPropsInstance = rootProps.getRootProps()
-            const dragSourceInstanceInfo = rootPropsInstance.getIn(dragSourceInfo.instance.getPositions()).toJS()
-            this.addExistChild(dragSourceInfo.component, dragSourceInstanceInfo)
+                // 同时同步到 domTree
+                const domTree = getDomTree()
+                const treeInstance = domTree.getChildByPositions(this.getPositionsAsDomTree())
+                treeInstance.addNewChild(dragSourceInfo.component)
+                break
+            case 'changeParent':
+                /**
+                 * 已有组件改变父级
+                 */
+                if (!this.canDropByDragSourceInfo(dragSourceInfo))return
 
-            /**
-             * 再调用 dragSource 组件的自毁方法
-             */
-            dragSourceInfo.instance.doRemoveSelf()
+                /**
+                 * 先在 dragTarget 新增组件
+                 */
+                // 现在拖拽到的组件添加这个组件的所有信息
+                // 先获取到这个组件的信息,从 rootProps 里
+                const rootPropsInstance = rootProps.getRootProps()
+                const dragSourceInstanceInfo = rootPropsInstance.getIn(dragSourceInfo.instance.getPositions()).toJS()
+                this.addExistChild(dragSourceInstanceInfo)
+
+                /**
+                 * 再调用 dragSource 组件的自毁方法
+                 */
+                dragSourceInfo.instance.doRemoveSelf()
+                break
+            case 'group':
+                /**
+                 * 组合
+                 */
+                this.addExistChild(dragSourceInfo.info)
+                break
         }
     }
 
@@ -243,6 +263,11 @@ export default class Helper extends React.Component <module.PropsInterface, modu
         }, ()=> {
             // 修改完后同步到 rootProps
             rootProps.setRootProps(this.getPositions(), 'name', value)
+
+            // 同时同步到 domTree
+            const domTree = getDomTree()
+            const treeInstance = domTree.getChildByPositions(this.getPositionsAsDomTree())
+            treeInstance.setName(value)
         })
     }
 
@@ -276,6 +301,12 @@ export default class Helper extends React.Component <module.PropsInterface, modu
                 type: 'remove',
                 index: index
             })
+
+            // 同时同步到 domTree
+            const domTree = getDomTree()
+            const treeInstance = domTree.getChildByPositions(this.getPositionsAsDomTree())
+            treeInstance.removeChildIndex(index)
+
             // 调用关闭编辑窗并清空
             store.dispatch(actions.editBoxDeleteClose())
         })
@@ -294,6 +325,14 @@ export default class Helper extends React.Component <module.PropsInterface, modu
         }, ()=> {
             // 修改完后同步到 rootProps
             rootProps.setRootProps(this.getPositions(), 'reset', null)
+
+            // 同时同步到 domTree,设置名称为默认 name
+            const domTree = getDomTree()
+            const treeInstance = domTree.getChildByPositions(this.getPositionsAsDomTree())
+            const components = getComponents()
+            const componentElement = components[this.props.componentInfo.component]
+            treeInstance.setName(componentElement.defaultProps.name)
+
             // 同时更新 editBox
             const mergedProps = this.getMergedProps()
             store.dispatch(actions.editBoxUpdate(mergedProps))
@@ -304,7 +343,8 @@ export default class Helper extends React.Component <module.PropsInterface, modu
         // 获取组件class
         const components = getComponents()
         const componentElement = components[this.props.componentInfo.component]
-        console.log('helperRender:', this.props.componentInfo.component, this.getPositions())
+        // TODO: helper render log
+        // console.log('helperRender:', this.props.componentInfo.component, this.getPositions())
 
         // 将传入的参数与组件 defaultProps 做 merge,再传给组件
         const mergedProps: any = this.getMergedProps()

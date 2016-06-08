@@ -128,7 +128,8 @@ export default class Sidebar extends React.Component <module.PropsInterface, mod
                     </div>
                     <div className="edit-container">
                         <Basic mergedProps={this.props.editBox.mergedProps}
-                               isRoot={this.props.editBox.isRoot}/>
+                               isRoot={this.props.editBox.isRoot}
+                               positions={this.props.editBox.positions}/>
                     </div>
                 </div>
             </Draggable>

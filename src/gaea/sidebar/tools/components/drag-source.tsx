@@ -14,7 +14,8 @@ const options = {
     beginDrag(props: any, monitor: any, component: any) {
         return {
             component: props.uniqueKey,
-            isNew: true
+            type: props.type,
+            info: props.info
         }
     },
 

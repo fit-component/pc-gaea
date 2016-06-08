@@ -11,7 +11,8 @@ const initialState: Immutable.Map<string, any> = Immutable.Map({
     show: false,
     mergedProps: {},
     isNewInstance: false,
-    isRoot: false
+    isRoot: false,
+    positions: []
 })
 
 export default createReducer(initialState, {
@@ -23,7 +24,8 @@ export default createReducer(initialState, {
             show: true,
             mergedProps: action.mergedProps,
             isRoot: action.isRoot,
-            isNewInstance
+            isNewInstance,
+            positions: action.positions
         })
     },
     [actions.EDIT_BOX_CLOSE]: (state: Immutable.Map<string, any>, action: any) => {

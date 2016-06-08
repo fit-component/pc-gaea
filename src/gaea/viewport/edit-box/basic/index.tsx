@@ -2,16 +2,14 @@ import * as React from 'react'
 import * as module from './module'
 import * as _ from 'lodash'
 import Input from '../../../../../../input/src'
-import Button from '../../../../../../button/src'
-import {
-    setCurrentSelectedDragSourceInstance,
-    setCurrentSelectedHelperInstance,
-    getCurrentSelectedDragSourceInstance,
-    getCurrentSelectedHelperInstance
-} from '../../../object-store/current-selection'
+import {Button, ButtonGroup} from '../../../../../../button/src'
+import {addGroupComponent} from '../../../object-store/group-components'
+import {getCurrentSelectedHelperInstance} from '../../../object-store/current-selection'
+import {getRootProps} from '../../../object-store/root-props'
 import './index.scss'
 
 import RemoveButton from './remote-button'
+import SetGroupButton from './set-group-button'
 
 export default class Basic extends React.Component <module.PropsInterface, module.StateInterface> {
     static defaultProps: module.PropsInterface = new module.Props()
@@ -89,6 +87,19 @@ export default class Basic extends React.Component <module.PropsInterface, modul
         )
     }
 
+    /**
+     * 成组
+     */
+    handleSetGroup(name: string) {
+        const rootPropsImmutable = getRootProps()
+        // 从 rootProps 里查询组件准确信息
+        const info = rootPropsImmutable.getIn(this.props.positions).toJS()
+        addGroupComponent({
+            name,
+            info
+        })
+    }
+
     render() {
         const Editors = Object.keys(this.state.mergedProps.options).map((key, index)=> {
             const editItem: any = this.state.mergedProps.options[key]
@@ -108,10 +119,30 @@ export default class Basic extends React.Component <module.PropsInterface, modul
             }
         })
 
+        /**
+         * 重置按钮,非根节点才有
+         */
+        let ResetButton: React.ReactElement<any> = null
+        if (!this.props.isRoot) {
+            ResetButton = (
+                <Button onClick={this.resetOptions.bind(this)}>重置为默认属性</Button>
+            )
+        }
+
+        /**
+         * 成组按钮,有childs的layout元素且非根节点才有
+         */
+        let GroupButton: React.ReactElement<any> = null
+        if (this.props.mergedProps.uniqueKey === 'gaea-layout' && !this.props.isRoot) {
+            GroupButton = (
+                <SetGroupButton onOk={this.handleSetGroup.bind(this)}/>
+            )
+        }
+
         return (
             <div className="_namespace">
                 <div className="component-icon-container">
-                    <i className={`fa fa-${this.state.mergedProps.icon}`}></i>
+                    <i className={`fa fa-${this.state.mergedProps.icon}`}/>
                 </div>
                 <Input className="title-name"
                        label=""
@@ -124,8 +155,10 @@ export default class Basic extends React.Component <module.PropsInterface, modul
                     {Editors}
                 </div>
                 <div className="bottom-addon">
-                    {!this.props.isRoot?
-                    <Button onClick={this.resetOptions.bind(this)}>重置为默认属性</Button>:null}
+                    <ButtonGroup>
+                        {ResetButton}
+                        {GroupButton}
+                    </ButtonGroup>
                 </div>
             </div>
         )

@@ -1,7 +1,6 @@
 import * as React from 'react'
 import connect from '../../../utils/connect'
 import * as module from './module'
-import {get$domTree} from '../../../object-store/dom-tree'
 import * as _ from 'lodash'
 import './index.scss'
 
@@ -28,12 +27,11 @@ export default class Sidebar extends React.Component <module.PropsInterface, mod
     render() {
         if (!this.props.treeMoveBox.show)return null
 
-        // 获取 $domTree 的滚动值
-        const $domTree = get$domTree()
+       
 
         const style = {
             left: this.props.treeMoveBox.left,
-            top: this.props.treeMoveBox.top + $domTree.scrollTop(),
+            top: this.props.treeMoveBox.top,
             width: this.props.treeMoveBox.width,
             height: this.props.treeMoveBox.height,
         }

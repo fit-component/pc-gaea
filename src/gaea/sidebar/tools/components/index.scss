@@ -18,7 +18,7 @@
     flex-direction: row;
     .container {
         width: 0;
-        flex-grow: 3;
+        flex-grow: 4;
     }
     .switch {
         width: 0;
@@ -39,5 +39,17 @@
     margin-right: 5px;
     &.gaea {
         color: #7266ba;
+    }
+}
+
+// reset button-group
+.button-group {
+    width: 100%;
+}
+
+.button-container {
+    font-size: 12px;
+    .text-child {
+        padding: 0 10px;
     }
 }

@@ -36,7 +36,8 @@ export default class DragTargetComponent extends React.Component <module.PropsIn
     componentWillReceiveProps(nextProps: any) {
         if (!this.props.isOver && nextProps.isOver) {
             // You can use this as enter handler
-            if (this.props.dragSourceInfo.isNew || this.props.helper.canDropByDragSourceInfo(this.props.dragSourceInfo)) {
+
+            if (this.props.dragSourceInfo.type !== 'changeParent' || this.props.helper.canDropByDragSourceInfo(this.props.dragSourceInfo)) {
                 // 是新的拖拽源（从右侧工具条拖拽的）,或者是可以被dragTarget接收的,都会设置isOver
                 this.setState({
                     isOver: true

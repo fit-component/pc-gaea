@@ -5,7 +5,7 @@ import * as _ from 'lodash'
 import * as actions from '../../stores/actions'
 import store from '../../utils/configure-store'
 import * as $ from 'jquery'
-import {getDomTree, scrollToTreeElement} from '../../object-store/dom-tree'
+import {getDomTree, scrollToTreeElement, getSelectedTree} from '../../object-store/dom-tree'
 import * as ReactDOM from 'react-dom'
 
 const options = {
@@ -22,7 +22,7 @@ const options = {
         return {
             // 在 isNew 为 true 的时候,标识添加的组件名用
             component: props.component,
-            isNew: false,
+            type: 'changeParent',
             // 在 isNew 为 false 的时候,当前被拖拽的组件的实例
             instance: props.helper
         }
@@ -65,7 +65,7 @@ export default class DragSourceComponent extends React.Component <module.PropsIn
             })
 
             // 同时触发盒子显示
-            store.dispatch(actions.editBoxShow(this.props.helper, this, this.props.mergedProps, this.props.helper.props.parent === null))
+            store.dispatch(actions.editBoxShow(this.props.helper, this, this.props.mergedProps, this.props.helper.props.parent === null, this.props.helper.getPositions()))
         }
     }
 
@@ -76,10 +76,13 @@ export default class DragSourceComponent extends React.Component <module.PropsIn
         event.preventDefault()
         event.stopPropagation()
         this.select()
+
         // 设置对应 tree 为选中状态
         const domTree = getDomTree()
         const treeInstance = domTree.getChildByPositions(this.props.helper.getPositionsAsDomTree())
         treeInstance.setSelected(true)
+        // 此时通知 domTree 滚动到对应位置
+        scrollToTreeElement(treeInstance.$dom)
     }
 
     // 设置其选中状态
@@ -106,13 +109,15 @@ export default class DragSourceComponent extends React.Component <module.PropsIn
         event.stopPropagation()
         this.setHover()
 
-        // 通知 domTree 对应元素触发 setHover
-        const domTree = getDomTree()
-        const treeInstance = domTree.getChildByPositions(this.props.helper.getPositionsAsDomTree())
-        treeInstance.setHover()
-
-        // 此时通知 domTree 滚动到对应位置
-        scrollToTreeElement(treeInstance.$dom)
+        const currentSelectedDomTreeElement = getSelectedTree()
+        if (currentSelectedDomTreeElement === null) {
+            // 如果当前没有选中的 domTree 元素,通知 domTree 对应元素触发 setHover
+            const domTree = getDomTree()
+            const treeInstance = domTree.getChildByPositions(this.props.helper.getPositionsAsDomTree())
+            treeInstance.setHover()
+            // 此时通知 domTree 滚动到对应位置
+            scrollToTreeElement(treeInstance.$dom)
+        }
     }
 
     render() {

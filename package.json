@@ -1,6 +1,6 @@
 {
   "name": "fit-gaea",
-  "version": "0.0.16",
+  "version": "0.0.18",
   "description": "",
   "main": "lib/index.js",
   "scripts": {
@@ -14,11 +14,11 @@
   "license": "ISC",
   "dependencies": {
     "react": "^15.0.1",
-    "fit-button": "^3.1.19",
+    "fit-button": "^3.1.20",
     "fit-input": "^5.0.12",
     "fit-loading": "^0.0.12",
     "fit-menu": "^3.0.21",
-    "fit-modal": "^3.0.28",
+    "fit-modal": "^3.0.30",
     "fit-switch": "^3.0.10",
     "lodash": "^3.10.1",
     "classnames": "^2.2.3",
@@ -29,7 +29,7 @@
     "jquery": "^2.1.4",
     "immutable": "^3.8.0",
     "react-dom": "^15.0.1",
-    "fit-tree": "^3.0.12",
+    "fit-tree": "^3.0.14",
     "react-dnd": "^2.1.4",
     "fit-tabs": "^3.0.7",
     "redux-immutablejs": "0.0.8",

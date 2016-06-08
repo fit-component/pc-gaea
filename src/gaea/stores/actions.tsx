@@ -25,13 +25,14 @@ export const componentsInit = (data: any)=> {
  * 显示editBox并赋值信息
  */
 export const EDIT_BOX_SHOW = 'EDIT_BOX_SHOW'
-export const editBoxShow = (helperInstance: any, dragSourceInstance: any, mergedProps: any, isRoot?: boolean)=> {
+export const editBoxShow = (helperInstance: any, dragSourceInstance: any, mergedProps: any, isRoot?: boolean, positions?: Array<string|number>)=> {
     return {
         type: EDIT_BOX_SHOW,
         helperInstance,
         dragSourceInstance,
         mergedProps,
-        isRoot
+        isRoot,
+        positions
     }
 }
 

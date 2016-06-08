@@ -12,7 +12,7 @@ import * as _ from 'lodash'
     },
     {}
 )
-export default class Basic extends React.Component <any, any> {
+export default class RemoveButton extends React.Component <any, any> {
     constructor(props: any) {
         super(props)
         this.state = {

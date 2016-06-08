@@ -3,11 +3,12 @@ import * as ReactDOM from 'react-dom'
 import * as module from './module'
 import {TreeNode} from '../../../../../../tree/src'
 import {getComponents} from '../../../object-store/components'
-import {getDomTreePosition, setSelectedTreeAndUnselectBefore} from '../../../object-store/dom-tree'
+import {getDomTreePosition, setSelectedTreeAndUnselectBefore, clearSelectedTree} from '../../../object-store/dom-tree'
 import {getViewPort} from "../../../object-store/view-port"
 import store from '../../../utils/configure-store'
 import * as className from 'classnames'
 import * as $ from 'jquery'
+import {get$domTree} from '../../../object-store/dom-tree'
 import * as actions from '../../../stores/actions'
 import * as _ from 'lodash'
 import './index.scss'
@@ -18,7 +19,7 @@ export default class TreeElement extends React.Component <module.PropsInterface,
     private $dom: JQuery
 
     shouldComponentUpdate(nextProps: module.PropsInterface, nextState: module.StateInterface) {
-        return !_.isEqual(this.state, nextState)
+        return this.state !== nextState
 
     }
 
@@ -67,6 +68,46 @@ export default class TreeElement extends React.Component <module.PropsInterface,
     }
 
     /**
+     * 新增一个子元素
+     */
+    addNewChild(component: string) {
+        let newChilds = this.state.childs || []
+        const newChild = {
+            component: component
+        }
+
+        newChilds.push(newChild)
+
+        let newChildKeys = this.state.childKeys
+        // 往后再随机分配一个 key
+        newChildKeys.push(_.uniqueId('tree_'))
+
+        this.setState({
+            childs: newChilds,
+            childKeys: newChildKeys
+        })
+    }
+
+    /**
+     * 新增一个已存在的元素
+     */
+    addExistChild(info: any) {
+        let newChilds = this.state.childs || []
+        const newChild = _.cloneDeep(info)
+
+        newChilds.push(newChild)
+
+        let newChildKeys = this.state.childKeys
+        // 往后再随机分配一个 key
+        newChildKeys.push(_.uniqueId('tree_'))
+
+        this.setState({
+            childs: newChilds,
+            childKeys: newChildKeys
+        })
+    }
+
+    /**
      * 渲染名称
      */
     nameRender() {
@@ -98,15 +139,6 @@ export default class TreeElement extends React.Component <module.PropsInterface,
     }
 
     /**
-     * 重新设置childs
-     */
-    setChilds(childs: any) {
-        this.setState({
-            childs: childs
-        })
-    }
-
-    /**
      * 设置为选中状态
      */
     setSelected(selected: boolean) {
@@ -123,9 +155,11 @@ export default class TreeElement extends React.Component <module.PropsInterface,
      */
     setHover() {
         const domTreePosition = getDomTreePosition()
+        // 获取 $domTree 的滚动值
+        const $domTree = get$domTree()
         store.dispatch(actions.treeMoveBoxMove({
             left: this.$dom.offset().left - domTreePosition.left,
-            top: this.$dom.offset().top - domTreePosition.top,
+            top: this.$dom.offset().top - domTreePosition.top + $domTree.scrollTop() - 2,
             width: this.$dom.outerWidth(),
             height: this.$dom.outerHeight()
         }))
@@ -156,6 +190,25 @@ export default class TreeElement extends React.Component <module.PropsInterface,
         helperInstance.refs['dragSource'].decoratedComponentInstance.select()
     }
 
+    /**
+     * 移除自己的第index个元素
+     */
+    removeChildIndex(index: number) {
+        let newChilds = this.state.childs
+        _.pullAt(newChilds, index)
+
+        let newChildKeys = this.state.childKeys
+        _.pullAt(newChildKeys, index)
+
+        // 通知 object-store 清空元素
+        clearSelectedTree()
+
+        this.setState({
+            childs: newChilds,
+            childKeys: newChildKeys
+        })
+    }
+
     render() {
         let children: React.ReactElement<any> = null
         let classes = className({
@@ -183,7 +236,8 @@ export default class TreeElement extends React.Component <module.PropsInterface,
             render: this.nameRender.bind(this),
             defaultExpendAll: this.props.defaultExpendAll,
             onMouseOver: this.handleMouseEnter.bind(this),
-            onClick: this.handleClick.bind(this)
+            onClick: this.handleClick.bind(this),
+            toggleByArrow: true
         }, childElements)
 
         return children

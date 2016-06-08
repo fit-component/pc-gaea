@@ -9,6 +9,10 @@ export interface PropsInterface {
         isNewInstance?: boolean
         isRoot?: boolean,
         mergedProps?: any
+        /**
+         * 当前组件位置信息
+         */
+        positions?: Array<string|number>
     }
 
     /**

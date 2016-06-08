@@ -1,11 +1,37 @@
 import * as Immutable from 'immutable'
 import store from '../utils/configure-store'
 import * as actions from '../stores/actions'
+import {getDomTree} from './dom-tree'
 
 let rootProps = Immutable.Map({})
+// 组件的总数量
+let count = 0
+
+// 根据一个组件对象,获取一共有多少子元素（包含自己）
+const getAllCountWithChildren = (info: any)=> {
+    // 上来自己就算一个
+    let tempCount = 1
+
+    // 都一样,就深度优先遍历吧
+    const searchChilds = (childs: Array<any>)=> {
+        if (!childs)return
+
+        childs.forEach((child: any)=> {
+            if (child.childs) {
+                searchChilds(child.childs)
+            }
+            tempCount++
+        })
+    }
+    searchChilds(info.childs)
+
+    return tempCount
+}
 
 export const initRootProps = (initObject: any)=> {
     rootProps = Immutable.fromJS(initObject)
+    // 减去根节点,根节点不能拖拽,不算一个活动的元素
+    count = getAllCountWithChildren(initObject.pageInfo) - 1
 }
 
 export const setRootProps = (position: Array<number|string>, key: string, info: any)=> {
@@ -21,9 +47,13 @@ export const setRootProps = (position: Array<number|string>, key: string, info: 
                             return Immutable.List.of(Immutable.fromJS(info.child))
                         }
                     })
+
+                    count += getAllCountWithChildren(info.child)
+
                     break
                 case 'remove':
                     rootProps = rootProps.updateIn([...position, 'childs'], (childs: Immutable.List<any>)=> {
+                        count -= getAllCountWithChildren(childs.get(info.index).toJS())
                         return childs.splice(info.index, 1)
                     })
                     break
@@ -45,8 +75,16 @@ export const setRootProps = (position: Array<number|string>, key: string, info: 
             break
     }
     store.dispatch(actions.rootPropsChange())
+
+    // 让 domTree 更新组件数量
+    const domTree = getDomTree()
+    domTree.setCount(count)
 }
 
 export const getRootProps = ()=> {
     return rootProps
+}
+
+export const getCount = ()=> {
+    return count
 }

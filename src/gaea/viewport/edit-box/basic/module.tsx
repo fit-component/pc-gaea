@@ -10,6 +10,11 @@ export interface PropsInterface {
      * 是否是根级组件
      */
     isRoot?: boolean
+
+    /**
+     * 当前组件的位置
+     */
+    positions?: Array<number|string>
 }
 
 export class Props implements PropsInterface {

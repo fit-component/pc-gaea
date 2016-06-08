@@ -51,7 +51,6 @@ export default class Header extends React.Component <any ,any> {
     }
 
     render() {
-        console.log('user seee')
         return (
             <MenuItem onClick={this.handleShowModal.bind(this)}>
                 设置

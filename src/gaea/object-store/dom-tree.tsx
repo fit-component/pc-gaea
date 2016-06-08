@@ -47,18 +47,34 @@ export const get$domTree = ()=> {
  */
 let selectedTreeInstance: any = null
 export const setSelectedTreeAndUnselectBefore = (treeInstance: any)=> {
-    if (selectedTreeInstance !== null) {
+    // 如果上一个选中存在,并且不是这个,则先取消选中上一个
+    if (selectedTreeInstance !== null && selectedTreeInstance !== treeInstance) {
         selectedTreeInstance.setSelected(false)
     }
     selectedTreeInstance = treeInstance
 }
 
 /**
+ * 选中当前选中的 tree 元素实例
+ */
+export const clearSelectedTree = ()=> {
+    selectedTreeInstance = null
+}
+
+/**
+ * 获得当前选中的 tree 元素实例
+ */
+export const getSelectedTree = ()=> {
+    return selectedTreeInstance
+}
+
+/**
  * 让 domTree 滚动条滑动到这个 tree 元素实例位置
- * @param $treeElement
  */
 export const scrollToTreeElement = ($treeElement: JQuery)=> {
-    $domTree.scrollTop($treeElement.offset().top)
+    $domTree.stop().animate({
+        scrollTop: $treeElement.offset().top - $domTree.offset().top + $domTree.scrollTop() - 50
+    }, 100)
 }
 
 /**
@@ -67,5 +83,6 @@ export const scrollToTreeElement = ($treeElement: JQuery)=> {
 export const unSelectLastTree = ()=> {
     if (selectedTreeInstance !== null) {
         selectedTreeInstance.setSelected(false)
+        selectedTreeInstance = null
     }
 }

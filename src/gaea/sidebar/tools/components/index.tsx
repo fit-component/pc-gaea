@@ -1,11 +1,11 @@
 import * as React from 'react'
-import connect from '../../../utils/connect'
 import DragSource from './drag-source'
 import currencyComponents from '../../../../currency-components'
 import {Button, ButtonGroup} from '../../../../../../button/src'
-import * as actions from '../../../stores/actions'
 import * as rootProps from '../../../object-store/root-props'
 import {setComponents} from '../../../object-store/components'
+import {getGroupComponents} from '../../../object-store/group-components'
+import {setToolsComponentsInstance} from '../../../object-store/tools-components'
 
 const switchTypes = [{
     type: 'custom',
@@ -13,7 +13,7 @@ const switchTypes = [{
 }, {
     type: 'currency',
     name: '通用'
-},{
+}, {
     type: 'group',
     name: '组合'
 }]
@@ -23,20 +23,22 @@ export interface StateProps {
      * 选中组件类型
      */
     selectedType?: string
+
+    /**
+     * 保存的组合列表
+     */
+    groups?: Array<any>
 }
 
-@connect(
-    (state: any) => {
-        return {}
-    },
-    actions
-)
 export default class Sidebar extends React.Component <any ,any> {
     state: StateProps = {
-        selectedType: 'custom'
+        selectedType: 'custom',
+        groups: []
     }
 
     componentWillMount() {
+        setToolsComponentsInstance(this)
+
         /**
          * 把所有组件都放到 redux components 里
          */
@@ -55,9 +57,23 @@ export default class Sidebar extends React.Component <any ,any> {
         setComponents(components)
     }
 
+    /**
+     * 选中了一个类型
+     */
     handleChangeSelectedType(type: string) {
         this.setState({
             selectedType: type
+        })
+    }
+
+    /**
+     * 刷新组合
+     */
+    freshGroup() {
+        const groups = getGroupComponents()
+        console.log(groups)
+        this.setState({
+            groups
         })
     }
 
@@ -81,6 +97,7 @@ export default class Sidebar extends React.Component <any ,any> {
                 DragComponents = rootPropsJs.components.map((item: any, index: number)=> {
                     return (
                         <DragSource key={index}
+                                    type="new"
                                     uniqueKey={item.defaultProps.uniqueKey}>
                             <i className={`fa fa-${item.defaultProps.icon || 'cube'} icons`}/>
                             {item.defaultProps.name}
@@ -92,6 +109,7 @@ export default class Sidebar extends React.Component <any ,any> {
                 DragComponents = currencyComponents.map((item, index)=> {
                     return (
                         <DragSource key={index}
+                                    type="new"
                                     uniqueKey={item.defaultProps.uniqueKey}>
                             <i className={`fa fa-${item.defaultProps.icon || 'cube'} icons gaea`}/>
                             {item.defaultProps.name}
@@ -100,7 +118,17 @@ export default class Sidebar extends React.Component <any ,any> {
                 })
                 break
             case 'group':
-                DragComponents = null
+                DragComponents = this.state.groups.map((item, index)=> {
+                    return (
+                        <DragSource key={index}
+                                    uniqueKey="gaea-layout"
+                                    type="group"
+                                    info={item.info}>
+                            <i className={`fa fa-cubes icons gaea`}/>
+                            {item.name}
+                        </DragSource>
+                    )
+                })
                 break
         }
 
@@ -110,7 +138,8 @@ export default class Sidebar extends React.Component <any ,any> {
                     {DragComponents}
                 </div>
                 <div className="switch">
-                    <ButtonGroup vertical>{SwitchButtonGroup}</ButtonGroup>
+                    <ButtonGroup className="button-group"
+                                 vertical>{SwitchButtonGroup}</ButtonGroup>
                 </div>
             </div>
         )

@@ -17,7 +17,7 @@ export class Props implements PropsInterface {
         },
         minHeight: {
             label: '最小高度',
-            value: 50,
+            value: 80,
             editor: 'text',
             editable: true
         },

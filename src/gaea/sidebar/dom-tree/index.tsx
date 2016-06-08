@@ -20,9 +20,13 @@ import './index.scss'
 )
 export default class DomTree extends React.Component <any ,any> {
     refs: any
+    state: any = {
+        count: 0
+    }
 
     componentWillMount() {
         setDomTree(this)
+        this.setCount(rootProps.getCount())
     }
 
     componentDidMount() {
@@ -44,11 +48,17 @@ export default class DomTree extends React.Component <any ,any> {
         })
     }
 
-    shouldComponentUpdate(nextProps: any) {
-        if (_.isEqual(this.props['rootPropsStore'], nextProps['rootPropsStore'])) {
+    shouldComponentUpdate(nextProps: any, nextState: any) {
+        if (_.isEqual(this.props['rootPropsStore'], nextProps['rootPropsStore']) && this.state === nextState) {
             return false
         }
         return true
+    }
+
+    setCount(count: number) {
+        this.setState({
+            count
+        })
     }
 
     /**
@@ -76,6 +86,7 @@ export default class DomTree extends React.Component <any ,any> {
         return (
             <div className="_namespace"
                  onMouseLeave={this.handleViewPortLeave.bind(this)}>
+                <div className="component-count">组件数:{this.state.count}</div>
                 <Tree defaultExpendAll={true}>
                     <TreeElement info={rootPropsJs.pageInfo}
                                  parent={null}
