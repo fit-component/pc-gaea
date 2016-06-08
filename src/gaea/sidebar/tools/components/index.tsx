@@ -13,6 +13,9 @@ const switchTypes = [{
 }, {
     type: 'currency',
     name: '通用'
+},{
+    type: 'group',
+    name: '组合'
 }]
 
 export interface StateProps {
@@ -95,6 +98,9 @@ export default class Sidebar extends React.Component <any ,any> {
                         </DragSource>
                     )
                 })
+                break
+            case 'group':
+                DragComponents = null
                 break
         }
 

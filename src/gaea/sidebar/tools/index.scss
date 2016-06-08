@@ -9,7 +9,7 @@
 .title-container {
     border-bottom: 1px solid #ddd;
     background: whitesmoke;
-    padding: 9px 5px 0 10px;
+    padding: 5px 5px 0 10px;
     height: 36px;
     .title-item {
         margin-bottom: -1px;
@@ -17,12 +17,17 @@
         color: #666;
         border: 1px solid transparent;
         border-bottom: none;
+        padding: 0 10px;
+        height: 30px;
+        display: flex;
+        flex-direction: column;
+        position: relative;
         &.active {
             background: white;
             border-color: #ddd;
             color: #666;
-            border-top-left-radius: 5px;
-            border-top-right-radius: 5px;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
         }
     }
 }
@@ -42,4 +47,48 @@
 
 .move-bar {
     background: transparent;
+}
+
+.center-text {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.tab-bar-content {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-grow: 1;
+    .tab-bar-left {
+        position: absolute;
+        left: -20px;
+        width: 10px;
+        height: 10px;
+        overflow: hidden;
+        bottom: 0;
+    }
+    .tab-bar-left-nav {
+        width: 20px;
+        height: 20px;
+        margin-top: -10px;
+        margin-left: -10px;
+        background: radial-gradient(transparent 60%, #ccc 70%, white 70%);
+    }
+    .tab-bar-right {
+        position: absolute;
+        right: -20px;
+        width: 10px;
+        height: 10px;
+        overflow: hidden;
+        bottom: 0;
+    }
+    .tab-bar-right-nav {
+        width: 20px;
+        height: 20px;
+        margin-top: -10px;
+        background: radial-gradient(transparent 60%, #ccc 70%, white 70%);
+    }
 }

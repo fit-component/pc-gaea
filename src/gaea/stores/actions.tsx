@@ -125,6 +125,33 @@ export const outMoveBoxClose = ()=> {
 
 /**
  * ==================================
+ * tree-move-box
+ * ==================================
+ */
+
+/**
+ * 显示跟随移动框并设置其位置
+ */
+export const TREE_MOVE_BOX_MOVE = 'TREE_MOVE_BOX_MOVE'
+export const treeMoveBoxMove = (data: any)=> {
+    return {
+        type: TREE_MOVE_BOX_MOVE,
+        data
+    }
+}
+
+/**
+ * 关闭这个移动框
+ */
+export const TREE_MOVE_BOX_CLOSE = 'TREE_MOVE_BOX_CLOSE'
+export const treeMoveBoxClose = ()=> {
+    return {
+        type: TREE_MOVE_BOX_CLOSE
+    }
+}
+
+/**
+ * ==================================
  * user-setting
  * ==================================
  */

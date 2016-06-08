@@ -5,6 +5,7 @@ import connect from '../../utils/connect'
 import * as module from './module'
 import * as actions from '../../stores/actions'
 import * as Draggable from 'react-draggable'
+import {unSelectLastTree} from '../../object-store/dom-tree'
 import './index.scss'
 
 import Basic from './basic'
@@ -31,10 +32,6 @@ export default class Sidebar extends React.Component <module.PropsInterface, mod
     public state: module.StateInterface = new module.State()
     private offsetX: number = 0
     private offsetY: number = 0
-
-    handleCloseClick() {
-        this.props.editBoxClose()
-    }
 
     shouldComponentUpdate(nextProps: module.PropsInterface) {
         if (nextProps.editBox.isNewInstance || nextProps.editBox.show !== this.props.editBox.show) {
@@ -70,6 +67,18 @@ export default class Sidebar extends React.Component <module.PropsInterface, mod
         }
     }
 
+    /**
+     * 关闭
+     */
+    handleCloseClick() {
+        this.props.editBoxClose()
+        // 通知取消选择最后一个选择的 tree
+        unSelectLastTree()
+    }
+
+    /**
+     * 编辑框被拖拽
+     */
     handleDrag(event: any, data: DraggableData) {
         this.offsetX = data.x
         this.offsetY = data.y

@@ -29,27 +29,7 @@ export interface PropsInterface {
          */
         childs?: any
     }
-
-    /**
-     * editBoxShow action
-     */
-    editBoxShow?: any
-
-    /**
-     * outMoveBoxMove action
-     */
-    outMoveBoxMove?: (data?: any)=>void
-
-    /**
-     * editBoxDeleteClose action
-     */
-    editBoxDeleteClose?: ()=>void
-
-    /**
-     * editBoxUpdate action
-     */
-    editBoxUpdate?: (mergedProps: any)=>void
-
+    
     /**
      * 父级对象
      */

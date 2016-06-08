@@ -1,26 +1,14 @@
-/**
- * 为组件添加编辑监听功能
- * 为布局组件添加 drag-target
- * assign 传递 props 的 options
- */
-
 import * as React from 'react'
 import DragTarget from './drag-target'
 import DragSource from './drag-source'
-import connect from '../../utils/connect'
 import * as actions from '../../stores/actions'
+import store from '../../utils/configure-store'
 import * as module from './module'
 import * as _ from 'lodash'
 import layoutStyleParser from './layout-style-parser'
 import * as rootProps from '../../object-store/root-props'
 import {getComponents} from '../../object-store/components'
 
-@connect(
-    (state: any) => {
-        return {}
-    },
-    actions
-)
 export default class Helper extends React.Component <module.PropsInterface, module.StateInterface> {
     static defaultProps: module.PropsInterface = new module.Props()
     public state: module.StateInterface = new module.State()
@@ -58,14 +46,29 @@ export default class Helper extends React.Component <module.PropsInterface, modu
     getPositions() {
         let positionsArray: Array<number|string> = []
         let instance = this
-        // 没有循环到顶层 pageInfo 时不要停
-        while (instance.props.position !== 'pageInfo') {
+        // 没有循环到顶层时不要停
+        while (instance.props.parent !== null) {
             positionsArray.unshift(instance.props.position)
             positionsArray.unshift('childs')
             instance = instance.props.parent
         }
         // 最后添加上顶层的路径
         positionsArray.unshift('pageInfo')
+        return positionsArray
+    }
+
+    /**
+     * 获取 domTree 结构的positions路径
+     */
+    getPositionsAsDomTree() {
+        let positionsArray: Array<number> = []
+        let instance = this
+        // 没有循环到顶层 pageInfo 时不要停
+        while (instance.props.parent !== null) {
+            positionsArray.unshift(instance.props.position as number)
+            instance = instance.props.parent
+        }
+        // 最后添加上顶层的路径
         return positionsArray
     }
 
@@ -274,7 +277,7 @@ export default class Helper extends React.Component <module.PropsInterface, modu
                 index: index
             })
             // 调用关闭编辑窗并清空
-            this.props.editBoxDeleteClose()
+            store.dispatch(actions.editBoxDeleteClose())
         })
     }
 
@@ -293,7 +296,7 @@ export default class Helper extends React.Component <module.PropsInterface, modu
             rootProps.setRootProps(this.getPositions(), 'reset', null)
             // 同时更新 editBox
             const mergedProps = this.getMergedProps()
-            this.props.editBoxUpdate(mergedProps)
+            store.dispatch(actions.editBoxUpdate(mergedProps))
         })
     }
 
@@ -321,10 +324,7 @@ export default class Helper extends React.Component <module.PropsInterface, modu
                                position={index}
                                componentInfo={itemComponentInfo}
                                isInEdit={this.props.isInEdit}
-                               outMoveBoxMove={this.props.outMoveBoxMove}
-                               editBoxShow={this.props.editBoxShow}
-                               editBoxDeleteClose={this.props.editBoxDeleteClose}
-                               editBoxUpdate={this.props.editBoxUpdate}
+                               ref={index.toString()}
                                parent={this}/>
             })
         }
@@ -364,15 +364,14 @@ export default class Helper extends React.Component <module.PropsInterface, modu
          * 拖拽源响应点击后触发编辑框事件
          * 不能是最外层 layout
          */
-        if (this.props.isInEdit && this.props.parent !== null) {
+        if (this.props.isInEdit) {
             resultElement = (
                 <DragSource component={this.props.componentInfo.component}
                             props={this.state.props}
                             childs={this.state.childs}
                             mergedProps={mergedProps}
-                            editBoxShow={this.props.editBoxShow}
                             layoutDragSourceStyle={layoutDragSourceStyle}
-                            outMoveBoxMove={this.props.outMoveBoxMove}
+                            ref="dragSource"
                             helper={this}>
                     {resultElement}
                 </DragSource>

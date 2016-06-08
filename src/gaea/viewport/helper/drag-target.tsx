@@ -1,6 +1,8 @@
 import * as React from 'react'
 import DropTarget from '../../utils/drop-target'
 import * as module from './drag-target-module'
+import * as actions from '../../stores/actions'
+import store from '../../utils/configure-store'
 import * as _ from 'lodash'
 
 const options = {

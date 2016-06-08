@@ -8,6 +8,7 @@ import * as actions from '../stores/actions'
 import SwitchSize from './switch-size'
 import OuterMoveBox from './outer-move-box'
 import * as rootProps from '../object-store/root-props'
+import {setViewPort} from '../object-store/view-port'
 import './index.scss'
 
 @connect(
@@ -17,11 +18,17 @@ import './index.scss'
     actions
 )
 export default class ViewPort extends React.Component <any ,any> {
+    refs: any
+
     constructor(props: any) {
         super(props)
         this.state = {
             paddingSize: 0
         }
+    }
+
+    componentWillMount() {
+        setViewPort(this)
     }
 
     shouldComponentUpdate(nextProps: any, nextState: any) {
@@ -52,6 +59,18 @@ export default class ViewPort extends React.Component <any ,any> {
      */
     handleViewPortLeave() {
         this.props['outMoveBoxClose']()
+        this.props['treeMoveBoxClose']()
+    }
+
+    /**
+     * 通过位置寻找子元素
+     */
+    getChildByPositions(positions: Array<number|string>) {
+        let instance = this.refs['rootHelper']
+        positions.forEach(number=> {
+            instance = instance.refs[number]
+        })
+        return instance
     }
 
     render() {
@@ -61,6 +80,7 @@ export default class ViewPort extends React.Component <any ,any> {
             <Helper isInEdit={true}
                     parent={null}
                     position="pageInfo"
+                    ref="rootHelper"
                     componentInfo={rootPropsJs.pageInfo}/>
         )
 

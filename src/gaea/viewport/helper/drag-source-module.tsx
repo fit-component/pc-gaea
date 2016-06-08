@@ -28,17 +28,7 @@ export interface PropsInterface {
      * 被点击
      */
     onClick?: ()=>void
-
-    /**
-     * editBoxShow action
-     */
-    editBoxShow?: any
-
-    /**
-     * outMoveBoxMove action
-     */
-    outMoveBoxMove?: (data?: any)=>void
-
+    
     /**
      * layout 的额外样式
      */

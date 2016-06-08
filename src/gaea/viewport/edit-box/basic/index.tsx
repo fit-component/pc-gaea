@@ -124,7 +124,8 @@ export default class Basic extends React.Component <module.PropsInterface, modul
                     {Editors}
                 </div>
                 <div className="bottom-addon">
-                    <Button onClick={this.resetOptions.bind(this)}>重置为默认属性</Button>
+                    {!this.props.isRoot?
+                    <Button onClick={this.resetOptions.bind(this)}>重置为默认属性</Button>:null}
                 </div>
             </div>
         )

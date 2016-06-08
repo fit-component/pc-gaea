@@ -2,13 +2,16 @@ import * as React from 'react'
 import DragSource from '../../utils/drag-source'
 import * as module from './drag-source-module'
 import * as _ from 'lodash'
+import * as actions from '../../stores/actions'
+import store from '../../utils/configure-store'
 import * as $ from 'jquery'
-import * as classNames from 'classnames'
+import {getDomTree, scrollToTreeElement} from '../../object-store/dom-tree'
 import * as ReactDOM from 'react-dom'
 
 const options = {
-    canDrag() {
-        return true
+    canDrag(props: any) {
+        // 跟级不能被拖拽
+        return props.helper.props.parent !== null
     },
 
     isDragging(props: any, monitor: any) {
@@ -47,13 +50,14 @@ export default class DragSourceComponent extends React.Component <module.PropsIn
         this.isMount = false
     }
 
-    /**
-     * 被点击后弹出属性编辑浮层
-     */
-    handleClick(event: MouseEvent) {
-        event.preventDefault()
-        event.stopPropagation()
+    componentDidMount() {
+        this.$dom = $(ReactDOM.findDOMNode(this))
+    }
 
+    /**
+     * 弹出属性编辑浮层
+     */
+    select() {
         // 设置为选中
         if (!this.state.isSelected) {
             this.setState({
@@ -61,8 +65,21 @@ export default class DragSourceComponent extends React.Component <module.PropsIn
             })
 
             // 同时触发盒子显示
-            this.props.editBoxShow(this.props.helper, this, this.props.mergedProps, this.props.helper.props.parent === null)
+            store.dispatch(actions.editBoxShow(this.props.helper, this, this.props.mergedProps, this.props.helper.props.parent === null))
         }
+    }
+
+    /**
+     * 被点击
+     */
+    handleClick(event: MouseEvent) {
+        event.preventDefault()
+        event.stopPropagation()
+        this.select()
+        // 设置对应 tree 为选中状态
+        const domTree = getDomTree()
+        const treeInstance = domTree.getChildByPositions(this.props.helper.getPositionsAsDomTree())
+        treeInstance.setSelected(true)
     }
 
     // 设置其选中状态
@@ -73,21 +90,29 @@ export default class DragSourceComponent extends React.Component <module.PropsIn
         })
     }
 
+    setHover() {
+        store.dispatch(actions.outMoveBoxMove({
+            left: this.$dom.offset().left,
+            top: this.$dom.offset().top,
+            width: this.$dom.outerWidth(),
+            height: this.$dom.outerHeight()
+        }))
+    }
+
     /**
      * 鼠标飘进
      */
     handleMouseEnter(event: Event) {
         event.stopPropagation()
-        this.props.outMoveBoxMove({
-            left: this.$dom.offset().left,
-            top: this.$dom.offset().top,
-            width: this.$dom.outerWidth(),
-            height: this.$dom.outerHeight()
-        })
-    }
+        this.setHover()
 
-    componentDidMount() {
-        this.$dom = $(ReactDOM.findDOMNode(this))
+        // 通知 domTree 对应元素触发 setHover
+        const domTree = getDomTree()
+        const treeInstance = domTree.getChildByPositions(this.props.helper.getPositionsAsDomTree())
+        treeInstance.setHover()
+
+        // 此时通知 domTree 滚动到对应位置
+        scrollToTreeElement(treeInstance.$dom)
     }
 
     render() {
