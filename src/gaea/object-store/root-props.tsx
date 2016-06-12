@@ -3,9 +3,12 @@ import store from '../utils/configure-store'
 import * as actions from '../stores/actions'
 import {getDomTree} from './dom-tree'
 
+// 根节点总信息
 let rootProps = Immutable.Map({})
 // 组件的总数量
 let count = 0
+// 根节点信息历史数据 全量存储,新的会被 push 到末尾
+let rootPropsHistory: Array<Immutable.Map<string,any>> = []
 
 // 根据一个组件对象,获取一共有多少子元素（包含自己）
 const getAllCountWithChildren = (info: any)=> {
@@ -65,11 +68,13 @@ export const setRootProps = (position: Array<number|string>, key: string, info: 
                 return Immutable.fromJS(info)
             })
             break
+
         case 'name':
             rootProps = rootProps.updateIn([...position, 'props', 'name'], ()=> {
                 return Immutable.fromJS(info)
             })
             break
+
         case 'reset':
             rootProps = rootProps.deleteIn([...position, 'props'])
             break
@@ -79,6 +84,10 @@ export const setRootProps = (position: Array<number|string>, key: string, info: 
     // 让 domTree 更新组件数量
     const domTree = getDomTree()
     domTree.setCount(count)
+
+    // 添加一条历史纪录
+    rootPropsHistory.push(rootProps)
+    // :TODO 通知历史树更新
 }
 
 export const getRootProps = ()=> {

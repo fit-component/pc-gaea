@@ -27,8 +27,6 @@ export default class Sidebar extends React.Component <module.PropsInterface, mod
     render() {
         if (!this.props.treeMoveBox.show)return null
 
-       
-
         const style = {
             left: this.props.treeMoveBox.left,
             top: this.props.treeMoveBox.top,

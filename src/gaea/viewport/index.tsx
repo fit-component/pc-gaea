@@ -19,6 +19,7 @@ import './index.scss'
 )
 export default class ViewPort extends React.Component <any ,any> {
     refs: any
+    private $dom: JQuery
 
     constructor(props: any) {
         super(props)
@@ -36,15 +37,25 @@ export default class ViewPort extends React.Component <any ,any> {
     }
 
     componentDidMount() {
-        const $dom = $(ReactDOM.findDOMNode(this))
-        $(document).ready(()=> {
-            const offset = $dom.offset()
-            this.props['sectionSetPosition']({
-                top: offset.top,
-                left: offset.left,
-                width: $dom.outerWidth(),
-                height: $dom.outerHeight()
-            })
+        this.$dom = $(ReactDOM.findDOMNode(this))
+        // 等待单页应用dom加载完毕
+        setTimeout(()=> {
+            this.setSectionPosition()
+        }, 100)
+
+        // 处理 resize 的情况
+        $(window).resize(()=> {
+            this.setSectionPosition()
+        })
+    }
+
+    setSectionPosition() {
+        const offset = this.$dom.offset()
+        this.props['sectionSetPosition']({
+            top: offset.top,
+            left: offset.left,
+            width: this.$dom.outerWidth(),
+            height: this.$dom.outerHeight()
         })
     }
 

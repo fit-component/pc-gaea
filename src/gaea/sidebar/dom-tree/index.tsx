@@ -23,6 +23,7 @@ export default class DomTree extends React.Component <any ,any> {
     state: any = {
         count: 0
     }
+    private $dom: JQuery
 
     componentWillMount() {
         setDomTree(this)
@@ -30,21 +31,23 @@ export default class DomTree extends React.Component <any ,any> {
     }
 
     componentDidMount() {
-        const $dom = $(ReactDOM.findDOMNode(this))
-        set$domTree($dom)
-        $(document).ready(()=> {
-            setDomTreePosition({
-                left: $dom.offset().left,
-                top: $dom.offset().top
-            })
-        })
+        this.$dom = $(ReactDOM.findDOMNode(this))
+        set$domTree(this.$dom)
+        // 等待单页加载完毕
+        setTimeout(()=> {
+            this.setDomTreePosition()
+        }, 100)
 
         // 处理 resize 的情况
         $(window).resize(()=> {
-            setDomTreePosition({
-                left: $dom.offset().left,
-                top: $dom.offset().top
-            })
+            this.setDomTreePosition()
+        })
+    }
+
+    setDomTreePosition() {
+        setDomTreePosition({
+            left: this.$dom.offset().left,
+            top: this.$dom.offset().top
         })
     }
 
