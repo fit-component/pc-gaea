@@ -13,7 +13,7 @@ import './index.scss'
     },
     {}
 )
-export default class Sidebar extends React.Component <module.PropsInterface, module.StateInterface> {
+export default class OuterMoveBox extends React.Component <module.PropsInterface, module.StateInterface> {
     static defaultProps: module.PropsInterface = new module.Props()
     public state: module.StateInterface = new module.State()
 
@@ -26,13 +26,16 @@ export default class Sidebar extends React.Component <module.PropsInterface, mod
 
     render() {
         if (!this.props.outerMoveBox.show)return null
-        
+
         const style = {
             left: this.props.outerMoveBox.left - this.props.section.left,
             top: this.props.outerMoveBox.top - this.props.section.top - 2,
             width: this.props.outerMoveBox.width,
             height: this.props.outerMoveBox.height,
         }
+
+        // :TODO 暂时解决初始化取不到值
+        if (!style.left)return null
 
         return (
             <div className="_namespace"

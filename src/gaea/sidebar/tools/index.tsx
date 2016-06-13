@@ -27,7 +27,7 @@ const renderTab = (name: string)=> {
     }
 }
 
-export default class Sidebar extends React.Component <any ,any> {
+export default class Tools extends React.Component <any ,any> {
     render() {
         return (
             <Tabs defaultActiveKey="components"

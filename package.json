@@ -1,6 +1,6 @@
 {
   "name": "fit-gaea",
-  "version": "0.0.19",
+  "version": "0.0.21",
   "description": "",
   "main": "lib/index.js",
   "scripts": {
@@ -35,6 +35,7 @@
     "redux-immutablejs": "0.0.8",
     "redux": "^3.4.0",
     "process": "^0.11.2",
+    "fit-select": "^4.0.19",
     "react-draggable": "^2.1.1",
     "font-awesome": "^4.6.1"
   },

@@ -13,7 +13,7 @@ import './index.scss'
     },
     {}
 )
-export default class Sidebar extends React.Component <module.PropsInterface, module.StateInterface> {
+export default class TreeMoveBox extends React.Component <module.PropsInterface, module.StateInterface> {
     static defaultProps: module.PropsInterface = new module.Props()
     public state: module.StateInterface = new module.State()
 

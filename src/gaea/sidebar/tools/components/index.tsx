@@ -30,7 +30,7 @@ export interface StateProps {
     groups?: Array<any>
 }
 
-export default class Sidebar extends React.Component <any ,any> {
+export default class Components extends React.Component <any ,any> {
     state: StateProps = {
         selectedType: 'custom',
         groups: []

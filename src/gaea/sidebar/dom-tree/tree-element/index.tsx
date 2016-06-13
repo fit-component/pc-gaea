@@ -157,6 +157,11 @@ export default class TreeElement extends React.Component <module.PropsInterface,
         const domTreePosition = getDomTreePosition()
         // 获取 $domTree 的滚动值
         const $domTree = get$domTree()
+
+        if (!domTreePosition){
+            return
+        }
+
         store.dispatch(actions.treeMoveBoxMove({
             left: this.$dom.offset().left - domTreePosition.left,
             top: this.$dom.offset().top - domTreePosition.top + $domTree.scrollTop() - 2,

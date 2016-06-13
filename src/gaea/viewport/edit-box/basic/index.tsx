@@ -2,6 +2,7 @@ import * as React from 'react'
 import * as module from './module'
 import * as _ from 'lodash'
 import Input from '../../../../../../input/src'
+import {Select} from '../../../../../../select/src'
 import {Button, ButtonGroup} from '../../../../../../button/src'
 import {addGroupComponent} from '../../../object-store/group-components'
 import {getCurrentSelectedHelperInstance} from '../../../object-store/current-selection'
@@ -34,18 +35,19 @@ export default class Basic extends React.Component <module.PropsInterface, modul
     /**
      * 修改组件 options
      */
-    handleOptionsChange(key: string, value: any) {
-        this.doChange(key, value)
+    handleOptionsChange(key: string, isEvent: boolean, special: any, value: any) {
+        if (isEvent) {
+            this.doChange(key, value.target.value, special)
+        } else {
+            this.doChange(key, value, special)
+        }
+
     }
 
-    handleOptionsChangeEvent(key: string, event: any) {
-        this.doChange(key, event.target.value)
-    }
-
-    doChange(key: string, value: any) {
+    doChange(key: string, value: any, special: any) {
         // 通知 helper 更新组件信息
         const currentSelectedHelperInstance: any = getCurrentSelectedHelperInstance()
-        currentSelectedHelperInstance.doUpdatePropsOptions(key, value)
+        currentSelectedHelperInstance.doUpdatePropsOptions(key, value, special)
     }
 
     /**
@@ -100,23 +102,92 @@ export default class Basic extends React.Component <module.PropsInterface, modul
         })
     }
 
+    /**
+     * 根据类型生成对应编辑器的dom结构
+     */
+    createEditDom(editItem: any, key: string, special: any): React.ReactElement<any> {
+        // 生成每一个 key 都要带 uniqueKey,防止组件不刷新
+        switch (editItem.editor) {
+            case 'text':
+                // 文本编辑器
+                const textOpts: any = {
+                    key: _.uniqueId(this.state.mergedProps.uniqueKey),
+                    label: editItem.label,
+                    disabled: !editItem.editable,
+                    defaultValue: editItem.value,
+                    onChange: this.handleOptionsChange.bind(this, key, true, special)
+                }
+                return (
+                    <Input {...textOpts}/>
+                )
+            case 'selector':
+                // 下拉选择
+                const selectorOpts: any = {
+                    key: _.uniqueId(this.state.mergedProps.uniqueKey),
+                    label: editItem.label,
+                    disabled: !editItem.editable,
+                    defaultValue: editItem.value,
+                    options: editItem.options,
+                    onChange: this.handleOptionsChange.bind(this, key, false, special)
+                }
+                return (
+                    <Select {...selectorOpts}/>
+                )
+            case 'array':
+                // 数组
+                // 循环 value 数组
+                const ArrayChildren = editItem.value.map((item: any, index: number)=> {
+                    // 循环 children 对象,对每个 value 数组生成表单
+                    const ArrayFormChildren = Object.keys(editItem.children).map((formKey: string, formIndex: number)=> {
+                        const formItemInfo = editItem.children[formKey]
+                        // 将 value 赋值给对应的 form
+                        formItemInfo.value = item[formKey]
+                        return this.createEditDom(formItemInfo, key, {
+                            type: 'arrayUpdate',
+                            index,
+                            key: formKey
+                        })
+                    })
+
+                    // 如果不是第一个,在顶部加分隔条
+                    let SplitElement: React.ReactElement<any> = null
+                    if (index > 0) {
+                        SplitElement = <div className="split"/>
+                    }
+                    const deleteSpecial = {
+                        type: 'arrayDelete',
+                        index
+                    }
+
+                    return (
+                        <div key={_.uniqueId(this.state.mergedProps.uniqueKey)}
+                             className="group-item-container">
+                            <i className="fa fa-times close"
+                               onClick={this.handleOptionsChange.bind(this, key, false, deleteSpecial)}/>
+                            {SplitElement}
+                            <div className="group-item">
+                                {ArrayFormChildren}
+                            </div>
+                        </div>
+                    )
+                })
+                return (
+                    <div className="array-group-container"
+                         key={_.uniqueId(this.state.mergedProps.uniqueKey)}>
+                        <div className="array-group-title">{editItem.label}</div>
+                        <div className="array-group-content">
+                            {ArrayChildren}
+                            <Button className="add"
+                                    onClick={this.handleOptionsChange.bind(this, key, false, {type:'arrayPush'})}>新增一项</Button>
+                        </div>
+                    </div>
+                )
+        }
+    }
+
     render() {
         const Editors = Object.keys(this.state.mergedProps.options).map((key, index)=> {
-            const editItem: any = this.state.mergedProps.options[key]
-
-            // 生成每一个 key 都要带 uniqueKey,防止组件不刷新
-            switch (editItem.editor) {
-                case 'text':
-                    // 文本编辑器
-                    return (
-                        <Input key={_.uniqueId(this.state.mergedProps.uniqueKey)}
-                               label={editItem.label}
-                               disabled={!editItem.editable}
-                               onChange={this.handleOptionsChangeEvent.bind(this,key)}
-                               defaultValue={editItem.value}/>
-                    )
-
-            }
+            return this.createEditDom(this.state.mergedProps.options[key], key, {type: 'default'})
         })
 
         /**

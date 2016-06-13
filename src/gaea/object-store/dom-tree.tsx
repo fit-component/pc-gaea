@@ -1,10 +1,11 @@
 import * as $ from 'jquery'
+import DomTree from '../sidebar/dom-tree'
 
 /**
  * 设置 domTree 对象实例
  */
 let domTree: any = null
-export const setDomTree = (_domTree: any)=> {
+export const setDomTree = (_domTree: DomTree)=> {
     domTree = _domTree
 }
 

@@ -229,18 +229,69 @@ export default class Helper extends React.Component <module.PropsInterface, modu
     /**
      * 【编辑状态】会被编辑器调用的方法,更新props
      */
-    doUpdatePropsOptions(key: string, value: any) {
+    doUpdatePropsOptions(key: string, value: any, special: any) {
         let newProps = this.state.props || {}
         if (!newProps.options) {
             newProps.options = {}
         }
 
-        if (newProps.options[key]) {
-            newProps.options[key].value = value
-        } else {
-            newProps.options[key] = {
-                value: value
-            }
+        // 根据不同类型区分赋值
+        switch (special.type) {
+            case 'default':
+                if (newProps.options[key]) {
+                    newProps.options[key].value = value
+                } else {
+                    newProps.options[key] = {
+                        value: value
+                    }
+                }
+                break
+            case 'arrayUpdate':
+                if (!newProps.options[key]) {
+                    // 数组类型比较特殊,如果没有设置值的话,只有先把默认值全部拷贝过来
+                    const components = getComponents()
+                    const componentElement = components[this.props.componentInfo.component]
+                    newProps.options[key] = {
+                        value: _.cloneDeep(componentElement.defaultProps.options[key].value)
+                    }
+                }
+                newProps.options[key].value[special.index][special.key] = value
+                break
+            case 'arrayPush':
+                const arrayPushComponents = getComponents()
+                const arrayPushComponentElement = arrayPushComponents[this.props.componentInfo.component]
+
+                if (!newProps.options[key]) {
+                    newProps.options[key] = {
+                        value: _.cloneDeep(arrayPushComponentElement.defaultProps.options[key].value)
+                    }
+                }
+                // 将 children 中每个 key 都设置成空,赋值给 value
+                let item: any = {}
+                Object.keys(arrayPushComponentElement.defaultProps.options[key].children).forEach(key=> {
+                    item[key] = ''
+                })
+                newProps.options[key].value.push(item)
+
+                // 因为新增了,通知 edit 刷新
+                const arrayPushMergedProps = this.getMergedProps()
+                store.dispatch(actions.editBoxUpdate(arrayPushMergedProps))
+                break
+            case 'arrayDelete':
+                const arrayDeleteComponents = getComponents()
+                const arrayDeleteComponentElement = arrayDeleteComponents[this.props.componentInfo.component]
+
+                if (!newProps.options[key]) {
+                    newProps.options[key] = {
+                        value: _.cloneDeep(arrayDeleteComponentElement.defaultProps.options[key].value)
+                    }
+                }
+                _.pullAt(newProps.options[key].value, special.index)
+
+                // 因为删除了,通知 edit 刷新
+                const arrayDeleteMergedProps = this.getMergedProps()
+                store.dispatch(actions.editBoxUpdate(arrayDeleteMergedProps))
+                break
         }
 
         this.setState({
