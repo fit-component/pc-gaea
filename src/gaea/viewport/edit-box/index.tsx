@@ -6,9 +6,12 @@ import * as module from './module'
 import * as actions from '../../stores/actions'
 import * as Draggable from 'react-draggable'
 import {unSelectLastTree} from '../../object-store/dom-tree'
+import {Tabs, TabPanel} from '../../../../../tabs/src'
 import './index.scss'
 
 import Basic from './basic'
+import Event from './event'
+import Script from './script'
 
 export type DraggableData = {
     node: HTMLElement,
@@ -113,23 +116,36 @@ export default class EditBox extends React.Component <module.PropsInterface, mod
         }
 
         return (
-            <Draggable handle=".edit-box-handle"
+            <Draggable handle=".title-container"
                        bounds={bounds}
                        onDrag={this.handleDrag.bind(this)}
                        defaultPosition={position}>
-                <div className="_namespace"
-                     style={{top:0,left:0}}>
-                    <div className="edit-box-handle handle-drag">
-                        <div className="handle-drag-nav-container">
-                            <div className="handle-drag-nav handle-drag-nav-active">基础</div>
-                        </div>
-                    <span className="handle-drag-close"
-                          onClick={this.handleCloseClick.bind(this)}>x</span>
-                    </div>
-                    <div className="edit-container">
-                        <Basic mergedProps={this.props.editBox.mergedProps}
-                               isRoot={this.props.editBox.isRoot}
-                               positions={this.props.editBox.positions}/>
+                <div className="_namespace handle-drag">
+                    <div className="container-box">
+                        <span className="handle-drag-close"
+                              onClick={this.handleCloseClick.bind(this)}>x</span>
+
+                        <Tabs defaultActiveKey="basic"
+                              type="retro"
+                              className="_namespace edit-box-handle">
+                            <TabPanel tab="基础"
+                                      key="basic"
+                                      className="edit-container">
+                                <Basic mergedProps={this.props.editBox.mergedProps}
+                                       isRoot={this.props.editBox.isRoot}
+                                       positions={this.props.editBox.positions}/>
+                            </TabPanel>
+                            <TabPanel tab="事件"
+                                      key="event"
+                                      className="edit-container">
+                                <Event/>
+                            </TabPanel>
+                            <TabPanel tab="脚本"
+                                      key="script"
+                                      className="edit-container">
+                                <Script/>
+                            </TabPanel>
+                        </Tabs>
                     </div>
                 </div>
             </Draggable>

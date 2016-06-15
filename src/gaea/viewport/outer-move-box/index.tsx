@@ -27,15 +27,15 @@ export default class OuterMoveBox extends React.Component <module.PropsInterface
     render() {
         if (!this.props.outerMoveBox.show)return null
 
+        // 初始化拿不到数据返回 null
+        if (_.isEmpty(this.props.section))return null
+
         const style = {
             left: this.props.outerMoveBox.left - this.props.section.left,
             top: this.props.outerMoveBox.top - this.props.section.top - 2,
             width: this.props.outerMoveBox.width,
             height: this.props.outerMoveBox.height,
         }
-
-        // :TODO 暂时解决初始化取不到值
-        if (!style.left)return null
 
         return (
             <div className="_namespace"
