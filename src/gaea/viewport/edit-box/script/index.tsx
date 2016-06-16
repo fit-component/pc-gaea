@@ -3,6 +3,7 @@
 import * as React from 'react'
 import * as module from './module'
 import * as Codemirror from 'react-codemirror'
+import * as process from 'process'
 import './index.scss'
 import 'codemirror/lib/codemirror.css'
 import 'codemirror/mode/javascript/javascript'
@@ -50,6 +51,9 @@ export default class Event extends React.Component <module.PropsInterface, modul
     }
 
     render() {
+        // 只会在前端显示
+        if (!process.browser)return null
+
         return (
             <div className="_namespace">
                 <Codemirror onChange={this.handleCodeChange.bind(this)}

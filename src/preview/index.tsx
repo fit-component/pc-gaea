@@ -1,26 +1,41 @@
-/// <reference path="../../../../../typings-module/wolfy87-eventemitter.d.ts" />
-import * as EventEmitter from 'wolfy87-eventemitter'
 import * as React from 'react'
 import * as module from './module'
+import currencyComponents from '../currency-components'
+import {setComponents} from './object-store/components'
+import Helper from './helper'
 import './index.scss'
-
-const event = new EventEmitter()
 
 export default class Preview extends React.Component <module.PropsInterface, module.StateInterface> {
     static defaultProps: module.PropsInterface = new module.Props()
     public state: module.StateInterface = new module.State()
 
+    componentWillMount(){
+        // 把通用组件装进来
+        // 初始状态先获取所有组件的引用
+        let components: any = {}
+
+        currencyComponents.map(item=> {
+            components[item.defaultProps.uniqueKey] = item
+        })
+
+        this.props.components.map((item: any)=> {
+            components[item.defaultProps.uniqueKey] = item
+        })
+
+        setComponents(components)
+    }
+
     /**
      * 通过 id 寻找组件
      */
-    getComponentById(){
+    getComponentById() {
 
     }
 
     render() {
         return (
             <div className="_namespace">
-                
+                <Helper/>
             </div>
         )
     }

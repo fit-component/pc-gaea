@@ -11,6 +11,7 @@ import store from './utils/configure-store'
 import HTML5Backend from 'react-dnd-html5-backend'
 import DragDropContext from './utils/drag-drop-context'
 import * as rootProps from './object-store/root-props'
+import * as gaeaObjectStore from './object-store/gaea'
 import './index.scss'
 
 import HeaderMenu from './header'
@@ -24,6 +25,7 @@ export default class Gaea extends React.Component <module.PropsInterface, module
 
     componentWillMount() {
         rootProps.initRootProps(this.props)
+        gaeaObjectStore.setGaea(this)
     }
 
     render() {

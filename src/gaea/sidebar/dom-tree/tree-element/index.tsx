@@ -20,7 +20,6 @@ export default class TreeElement extends React.Component <module.PropsInterface,
 
     shouldComponentUpdate(nextProps: module.PropsInterface, nextState: module.StateInterface) {
         return this.state !== nextState
-
     }
 
     componentWillMount() {
