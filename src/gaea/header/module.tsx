@@ -1,10 +1,7 @@
-import * as React from 'react'
+import {StateInterface as ReduxPreviewStateInterface} from '../stores/preview/reducer'
 
 export interface PropsInterface {
-    /**
-     * 传递过来的组件信息
-     */
-    componentInfo?: any
+    preview?: ReduxPreviewStateInterface
 }
 
 export class Props implements PropsInterface {

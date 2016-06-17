@@ -184,3 +184,20 @@ export const rootPropsChange = ()=> {
         type: ROOT_PROPS_CHANGE
     }
 }
+
+/**
+ * ==================================
+ * preview 预览
+ * ==================================
+ */
+
+/**
+ * 切换 preview 状态
+ */
+export const PREVIEW_CHANGE = 'PREVIEW_CHANGE'
+export const previewChange = (isPreview: boolean)=> {
+    return {
+        type: PREVIEW_CHANGE,
+        isPreview
+    }
+}

@@ -9,6 +9,7 @@ import SwitchSize from './switch-size'
 import OuterMoveBox from './outer-move-box'
 import * as rootProps from '../object-store/root-props'
 import {setViewPort} from '../object-store/view-port'
+import Preview from '../../preview'
 import './index.scss'
 
 @connect(
@@ -24,7 +25,8 @@ export default class ViewPort extends React.Component <any ,any> {
     constructor(props: any) {
         super(props)
         this.state = {
-            paddingSize: 0
+            paddingSize: 0,
+            isPreview: false
         }
     }
 
@@ -84,6 +86,15 @@ export default class ViewPort extends React.Component <any ,any> {
         return instance
     }
 
+    /**
+     * 设置是否为预览模式
+     */
+    setPreview(isPreview?: boolean) {
+        this.setState({
+            isPreview
+        })
+    }
+
     render() {
         const rootPropsJs = rootProps.getRootProps().toJS()
 
@@ -99,19 +110,39 @@ export default class ViewPort extends React.Component <any ,any> {
             padding: `0 ${this.state['paddingSize']}%`
         }
 
-        return (
-            <div className="_namespace">
-                <SwitchSize setPaddingSize={this.setPaddingSize.bind(this)}/>
-                <EditBox/>
-                <OuterMoveBox/>
-                <div className="view-port"
-                     style={viewPortStyle}>
-                    <div className="white-bg"
-                         onMouseLeave={this.handleViewPortLeave.bind(this)}>
-                        {rootComponent}
+        let Children: React.ReactElement<any>
+
+        if (!this.state.isPreview) {
+            Children = (
+                <div className="_namespace">
+                    <SwitchSize setPaddingSize={this.setPaddingSize.bind(this)}/>
+                    <EditBox/>
+                    <OuterMoveBox/>
+                    <div className="view-port"
+                         style={viewPortStyle}>
+                        <div className="white-bg"
+                             onMouseLeave={this.handleViewPortLeave.bind(this)}>
+                            {rootComponent}
+                        </div>
                     </div>
                 </div>
-            </div>
-        )
+            )
+        } else {
+            const rootPropsJs = rootProps.getRootProps().toJS()
+            Children = (
+                <div className="_namespace">
+                    <SwitchSize setPaddingSize={this.setPaddingSize.bind(this)}/>
+                    <div className="view-port"
+                         style={viewPortStyle}>
+                        <div className="white-bg">
+                            <Preview componentInfo={rootPropsJs.pageInfo}
+                                     components={rootPropsJs.components}/>
+                        </div>
+                    </div>
+                </div>
+            )
+        }
+
+        return Children
     }
 }

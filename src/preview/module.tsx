@@ -7,9 +7,9 @@ export interface PropsInterface {
     components?: Array<React.Component<any ,any>>
 
     /**
-     * 页面初始化信息
+     * 信息
      */
-    pageInfo?: any
+    componentInfo?: any
 }
 
 export class Props implements PropsInterface {

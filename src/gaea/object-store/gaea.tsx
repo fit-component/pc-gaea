@@ -1,5 +1,5 @@
 import Gaea from '../../gaea'
-let gaea: Gaea = null
+let gaea: Gaea
 
 export const setGaea = (_gaea: Gaea)=> {
     gaea = _gaea

@@ -1,8 +1,8 @@
 import * as React from 'react'
-import Gaea from '../../src'
+import {Preview} from '../../src'
 
 const info = {
-    pageInfo: {
+    componentInfo: {
         component: 'gaea-layout',
         props: {
             name: '外壳',
@@ -29,7 +29,7 @@ const info = {
 export default class Demo extends React.Component <any, any> {
     render() {
         return (
-            <Gaea {...info}/>
+            <Preview {...info}/>
         )
     }
 }

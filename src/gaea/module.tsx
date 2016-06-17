@@ -26,9 +26,12 @@ export class Props implements PropsInterface {
 }
 
 export interface StateInterface {
-
+    /**
+     * 是否在预览模式
+     */
+    isPreview?: boolean
 }
 
 export class State implements StateInterface {
-
+    isPreview = false
 }

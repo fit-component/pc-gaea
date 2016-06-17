@@ -9,7 +9,7 @@ export default class Preview extends React.Component <module.PropsInterface, mod
     static defaultProps: module.PropsInterface = new module.Props()
     public state: module.StateInterface = new module.State()
 
-    componentWillMount(){
+    componentWillMount() {
         // 把通用组件装进来
         // 初始状态先获取所有组件的引用
         let components: any = {}
@@ -18,7 +18,7 @@ export default class Preview extends React.Component <module.PropsInterface, mod
             components[item.defaultProps.uniqueKey] = item
         })
 
-        this.props.components.map((item: any)=> {
+        this.props.components && this.props.components.map((item: any)=> {
             components[item.defaultProps.uniqueKey] = item
         })
 
@@ -35,7 +35,7 @@ export default class Preview extends React.Component <module.PropsInterface, mod
     render() {
         return (
             <div className="_namespace">
-                <Helper/>
+                <Helper componentInfo={this.props.componentInfo}/>
             </div>
         )
     }

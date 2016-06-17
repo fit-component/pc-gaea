@@ -2,6 +2,7 @@
 import {createStore, applyMiddleware, compose} from 'redux'
 import reducer from '../../stores/reducers'
 import * as process from 'process'
+import Store = Redux.Store;
 
 // 定义ts丢失的属性
 interface MyWindow extends Window {
@@ -46,7 +47,7 @@ const middlewareBuilder = () => {
 
 const finalCreateStore = compose(...middlewareBuilder())(createStore)
 
-const configureStore = (initialState?: any, rootReducer?: any) => {
+const configureStore = (initialState?: any, rootReducer?: any): Store => {
     const store = finalCreateStore(rootReducer, initialState)
 
     if (module.hot) {

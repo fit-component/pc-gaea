@@ -7,6 +7,7 @@ import outerMoveBox from './outer-move-box/reducer'
 import treeMoveBox from './tree-move-box/reducer'
 import userSetting from './user-setting/reducer'
 import rootProps from './root-props/reducer'
+import preview from './preview/reducer'
 
 const rootReducer = combineReducers({
     components,
@@ -15,7 +16,8 @@ const rootReducer = combineReducers({
     outerMoveBox,
     treeMoveBox,
     userSetting,
-    rootProps
+    rootProps,
+    preview
 })
 
 export default rootReducer

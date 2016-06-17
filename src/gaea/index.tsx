@@ -12,6 +12,7 @@ import HTML5Backend from 'react-dnd-html5-backend'
 import DragDropContext from './utils/drag-drop-context'
 import * as rootProps from './object-store/root-props'
 import * as gaeaObjectStore from './object-store/gaea'
+import connect from './utils/connect'
 import './index.scss'
 
 import HeaderMenu from './header'
@@ -28,10 +29,21 @@ export default class Gaea extends React.Component <module.PropsInterface, module
         gaeaObjectStore.setGaea(this)
     }
 
+    setPreview(isPreview: boolean) {
+        this.setState({
+            isPreview
+        })
+    }
+
     render() {
         const classes = classNames({
             '_namespace': true,
             [this.props['className']]: !!this.props['className']
+        })
+
+        const sectionClasses = classNames({
+            'section': true,
+            'preview': this.state.isPreview === true
         })
 
         return (
@@ -44,11 +56,12 @@ export default class Gaea extends React.Component <module.PropsInterface, module
                     </Header>
 
                     <Sidebar width={240}
+                             className="sidebar"
                              direction="right">
                         <SidebarTool/>
                     </Sidebar>
 
-                    <Section className="section">
+                    <Section className={sectionClasses}>
                         <Viewport/>
                     </Section>
 

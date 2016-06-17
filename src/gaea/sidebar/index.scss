@@ -4,4 +4,8 @@
     height: 100%;
     border-left: 2px solid #eee;
     overflow-x: hidden;
+    transition: all .2s;
+    &.preview {
+        transform: translate3d(240px, 0, 0);
+    }
 }

@@ -1,6 +1,8 @@
-let viewPort: any = null
+import ViewPort from '../viewport'
 
-export const setViewPort = (_viewport: any)=> {
+let viewPort: ViewPort = null
+
+export const setViewPort = (_viewport: ViewPort)=> {
     viewPort = _viewport
 }
 
