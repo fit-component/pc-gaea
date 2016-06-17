@@ -50,14 +50,6 @@ const finalCreateStore = compose(...middlewareBuilder())(createStore)
 const configureStore = (initialState?: any, rootReducer?: any): Store => {
     const store = finalCreateStore(rootReducer, initialState)
 
-    if (module.hot) {
-        // 开启 reducer 的 hot-loader
-        // module.hot.accept('../reducer', () => {
-        //     const nextRootReducer = require('../reducer').default
-        //     store.replaceReducer(nextRootReducer)
-        // })
-    }
-
     return store
 }
 
