@@ -2,12 +2,17 @@
 
 import * as React from 'react'
 import * as module from './module'
-import * as Codemirror from 'react-codemirror'
 import * as process from 'process'
 import * as _ from 'lodash'
 import './index.scss'
-import 'codemirror/lib/codemirror.css'
-import 'codemirror/mode/javascript/javascript'
+
+// 只有在前端才会引用 codeMirror
+let Codemirror: any = {}
+if (process.browser) {
+    Codemirror = require('react-codemirror')
+    require('codemirror/lib/codemirror.css')
+    require('codemirror/mode/javascript/javascript')
+}
 
 const defaultValue = _.trim(`
 /**
