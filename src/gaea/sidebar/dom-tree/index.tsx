@@ -8,6 +8,7 @@ import {Tree} from '../../../../../tree/src'
 import * as actions from '../../stores/actions'
 import {setDomTree, set$domTree} from '../../object-store/dom-tree'
 import TreeMoveBox from './tree-move-box'
+import * as _ from 'lodash'
 import './index.scss'
 
 @connect(
