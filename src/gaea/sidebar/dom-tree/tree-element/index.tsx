@@ -3,7 +3,7 @@ import * as ReactDOM from 'react-dom'
 import * as module from './module'
 import {TreeNode} from '../../../../../../tree/src'
 import {getComponents} from '../../../object-store/components'
-import {getDomTreePosition, setSelectedTreeAndUnselectBefore, clearSelectedTree} from '../../../object-store/dom-tree'
+import {setSelectedTreeAndUnselectBefore, clearSelectedTree} from '../../../object-store/dom-tree'
 import {getViewPort} from "../../../object-store/view-port"
 import store from '../../../utils/configure-store'
 import * as className from 'classnames'
@@ -153,17 +153,12 @@ export default class TreeElement extends React.Component <module.PropsInterface,
      * 设置为 hover 状态
      */
     setHover() {
-        const domTreePosition = getDomTreePosition()
         // 获取 $domTree 的滚动值
         const $domTree = get$domTree()
 
-        if (!domTreePosition){
-            return
-        }
-
         store.dispatch(actions.treeMoveBoxMove({
-            left: this.$dom.offset().left - domTreePosition.left,
-            top: this.$dom.offset().top - domTreePosition.top + $domTree.scrollTop() - 2,
+            left: this.$dom.offset().left - $domTree.offset().left,
+            top: this.$dom.offset().top - $domTree.offset().top + $domTree.scrollTop() - 2,
             width: this.$dom.outerWidth(),
             height: this.$dom.outerHeight()
         }))

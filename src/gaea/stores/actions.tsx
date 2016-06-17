@@ -82,23 +82,6 @@ export const editBoxSetIsNew = (isNewInstance: boolean)=> {
 
 /**
  * ==================================
- * section
- * ==================================
- */
-
-/**
- * 更新 section 的位置信息
- */
-export const SECTION_SET_POSITION = 'SECTION_SET_POSITION'
-export const sectionSetPosition = (position: any)=> {
-    return {
-        type: SECTION_SET_POSITION,
-        position
-    }
-}
-
-/**
- * ==================================
  * outer-move-box
  * ==================================
  */

@@ -6,7 +6,7 @@ import connect from '../../utils/connect'
 import * as rootProps from '../../object-store/root-props'
 import {Tree} from '../../../../../tree/src'
 import * as actions from '../../stores/actions'
-import {setDomTree, setDomTreePosition, set$domTree} from '../../object-store/dom-tree'
+import {setDomTree, set$domTree} from '../../object-store/dom-tree'
 import TreeMoveBox from './tree-move-box'
 import './index.scss'
 
@@ -33,22 +33,6 @@ export default class DomTree extends React.Component <any ,any> {
     componentDidMount() {
         this.$dom = $(ReactDOM.findDOMNode(this))
         set$domTree(this.$dom)
-        // 等待单页加载完毕
-        setTimeout(()=> {
-            this.setDomTreePosition()
-        }, 100)
-
-        // 处理 resize 的情况
-        $(window).resize(()=> {
-            this.setDomTreePosition()
-        })
-    }
-
-    setDomTreePosition() {
-        setDomTreePosition({
-            left: this.$dom.offset().left,
-            top: this.$dom.offset().top
-        })
     }
 
     shouldComponentUpdate(nextProps: any, nextState: any) {

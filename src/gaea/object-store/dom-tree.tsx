@@ -14,24 +14,6 @@ export const getDomTree = ()=> {
 }
 
 /**
- * 设置 domTree 的位置
- */
-export interface positionInterface {
-    left: number,
-    top: number
-}
-
-let domTreePosition: positionInterface
-
-export const setDomTreePosition = (_domTreePosition: positionInterface)=> {
-    domTreePosition = _domTreePosition
-}
-
-export const getDomTreePosition = ()=> {
-    return domTreePosition
-}
-
-/**
  * 设置 domTree 的 jquery 对象
  */
 let $domTree: JQuery

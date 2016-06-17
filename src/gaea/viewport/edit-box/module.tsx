@@ -24,11 +24,6 @@ export interface PropsInterface {
      * editBoxSetIsNew action
      */
     editBoxSetIsNew?: (isNewInstance: boolean)=>void
-
-    /**
-     * 左侧主体信息
-     */
-    section?: any
 }
 
 export class Props implements PropsInterface {

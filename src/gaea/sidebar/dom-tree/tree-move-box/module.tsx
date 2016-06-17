@@ -8,13 +8,6 @@ export interface PropsInterface {
         height: number
         show: boolean
     }
-
-    section?: {
-        left: number
-        top: number
-        width: number
-        height: number
-    }
 }
 
 export class Props implements PropsInterface {

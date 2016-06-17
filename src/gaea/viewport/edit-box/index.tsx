@@ -7,6 +7,7 @@ import * as actions from '../../stores/actions'
 import * as Draggable from 'react-draggable'
 import {unSelectLastTree} from '../../object-store/dom-tree'
 import {Tabs, TabPanel} from '../../../../../tabs/src'
+import {getViewPort$dom} from '../../object-store/view-port'
 import './index.scss'
 
 import Basic from './basic'
@@ -24,8 +25,7 @@ export type DraggableData = {
 @connect(
     (state: any) => {
         return {
-            editBox: state.editBox.toJS(),
-            section: state.section.toJS()
+            editBox: state.editBox.toJS()
         }
     },
     actions
@@ -51,10 +51,11 @@ export default class EditBox extends React.Component <module.PropsInterface, mod
 
     componentWillReceiveProps() {
         if (this.state.offsetLeft === -1) {
+            const $viewPort = getViewPort$dom()
             // 初始状态放在右侧
-            this.offsetX = this.props.section.width ? this.props.section.width - 400 : -1
+            this.offsetX = $viewPort.outerWidth() - 400
 
-            if (this.props.section.width && this.offsetX < 0) {
+            if ($viewPort.outerWidth() && this.offsetX < 0) {
                 this.offsetX = 0
             }
 
@@ -83,14 +84,16 @@ export default class EditBox extends React.Component <module.PropsInterface, mod
      * 编辑框被拖拽
      */
     handleDrag(event: any, data: DraggableData) {
+        const $viewPort = getViewPort$dom()
+
         this.offsetX = data.x
         this.offsetY = data.y
 
-        if (this.offsetX > this.props.section.width - 400) {
-            this.offsetX = this.props.section.width - 400
+        if (this.offsetX > $viewPort.outerWidth() - 400) {
+            this.offsetX = $viewPort.outerWidth() - 400
         }
-        if (this.offsetY > this.props.section.height - 550) {
-            this.offsetY = this.props.section.height - 550
+        if (this.offsetY > $viewPort.outerHeight() - 550) {
+            this.offsetY = $viewPort.outerHeight() - 550
         }
         if (this.offsetX < 0) {
             this.offsetX = 0
@@ -103,11 +106,13 @@ export default class EditBox extends React.Component <module.PropsInterface, mod
     render() {
         if (!this.props.editBox.show)return null
 
+        const $viewPort = getViewPort$dom()
+
         const bounds = {
             left: 0,
             top: 0,
-            right: this.props.section.width - 400,
-            bottom: this.props.section.height - 550
+            right: $viewPort.outerWidth() - 400,
+            bottom: $viewPort.outerHeight() - 550
         }
 
         const position = {

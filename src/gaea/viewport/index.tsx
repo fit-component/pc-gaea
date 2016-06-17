@@ -8,7 +8,7 @@ import * as actions from '../stores/actions'
 import SwitchSize from './switch-size'
 import OuterMoveBox from './outer-move-box'
 import * as rootProps from '../object-store/root-props'
-import {setViewPort} from '../object-store/view-port'
+import {setViewPort, setViewPort$dom} from '../object-store/view-port'
 import Preview from '../../preview'
 import './index.scss'
 
@@ -30,35 +30,14 @@ export default class ViewPort extends React.Component <any ,any> {
         }
     }
 
-    componentWillMount() {
-        setViewPort(this)
-    }
-
     shouldComponentUpdate(nextProps: any, nextState: any) {
         return this.state !== nextState
     }
 
     componentDidMount() {
         this.$dom = $(ReactDOM.findDOMNode(this))
-        // 等待单页应用dom加载完毕
-        setTimeout(()=> {
-            this.setSectionPosition()
-        }, 100)
-
-        // 处理 resize 的情况
-        $(window).resize(()=> {
-            this.setSectionPosition()
-        })
-    }
-
-    setSectionPosition() {
-        const offset = this.$dom.offset()
-        this.props['sectionSetPosition']({
-            top: offset.top,
-            left: offset.left,
-            width: this.$dom.outerWidth(),
-            height: this.$dom.outerHeight()
-        })
+        setViewPort(this)
+        setViewPort$dom(this.$dom)
     }
 
     setPaddingSize(size: number) {

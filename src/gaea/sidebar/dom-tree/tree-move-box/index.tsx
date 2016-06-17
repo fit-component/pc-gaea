@@ -7,8 +7,7 @@ import './index.scss'
 @connect(
     (state: any) => {
         return {
-            treeMoveBox: state.treeMoveBox.toJS(),
-            section: state.section.toJS()
+            treeMoveBox: state.treeMoveBox.toJS()
         }
     },
     {}
@@ -18,7 +17,7 @@ export default class TreeMoveBox extends React.Component <module.PropsInterface,
     public state: module.StateInterface = new module.State()
 
     shouldComponentUpdate(nextProps: any) {
-        if (_.isEqual(this.props['treeMoveBox'], nextProps['treeMoveBox']) && _.isEqual(this.props['section'], nextProps['section'])) {
+        if (_.isEqual(this.props['treeMoveBox'], nextProps['treeMoveBox'])) {
             return false
         }
         return true
