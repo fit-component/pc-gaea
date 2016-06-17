@@ -33,5 +33,5 @@ export interface StateInterface {
 }
 
 export class State implements StateInterface {
-    isPreview = false
+    isPreview = false 
 }
