@@ -186,8 +186,17 @@ export default class Basic extends React.Component <module.PropsInterface, modul
     }
 
     render() {
-        const Editors = Object.keys(this.state.mergedProps.options).map((key, index)=> {
-            return this.createEditDom(this.state.mergedProps.options[key], key, {type: 'default'})
+        // 把对象转成数组
+        let optionsArray: Array<string> = []
+        Object.keys(this.state.mergedProps.options).forEach((key, index)=> {
+            let obj: any = this.state.mergedProps.options[key]
+            obj._key = key
+            optionsArray.push(obj)
+        })
+        // 把配置数组根据 order 排序
+        optionsArray = _.sortBy(optionsArray, 'order')
+        const Editors = optionsArray.map((item: any, index: number)=> {
+            return this.createEditDom(item, item._key, {type: 'default'})
         })
 
         /**

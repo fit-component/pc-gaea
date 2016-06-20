@@ -12,7 +12,10 @@ export default class LayoutComponent extends React.Component <module.PropsInterf
             background: this.props.options['background'].value,
             display: this.props.options['display'].value,
             flexDirection: this.props.options['flexDirection'].value,
-            flexGrow: this.props.options['flexGrow'].value
+            flexGrow: this.props.options['flexGrow'].value,
+            flexWrap:this.props.options['flexWrap'].value,
+            justifyContent:this.props.options['justifyContent'].value,
+            alignItems:this.props.options['alignItems'].value
         }
 
         return (
