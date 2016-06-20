@@ -16,22 +16,24 @@ export default class Tools extends React.Component <any ,any> {
                           className="tab-panel">
                     <Components/>
                 </TabPanel>
-                <TabPanel tab="历史"
-                          key="history"
-                          className="tab-panel">
-                    <History/>
-                </TabPanel>
-                <TabPanel tab="脚本"
-                          key="file"
-                          className="tab-panel">
 
-                </TabPanel>
-                <TabPanel tab="资源"
-                          key="source"
-                          className="tab-panel">
-                    
-                </TabPanel>
             </Tabs>
         )
     }
 }
+
+// <TabPanel tab="历史"
+//           key="history"
+//           className="tab-panel">
+//     <History/>
+// </TabPanel>
+// <TabPanel tab="脚本"
+// key="file"
+// className="tab-panel">
+//
+//     </TabPanel>
+//     <TabPanel tab="资源"
+//               key="source"
+//               className="tab-panel">
+//
+//     </TabPanel>

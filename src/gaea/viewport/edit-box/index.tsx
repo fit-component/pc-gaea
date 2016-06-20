@@ -140,16 +140,7 @@ export default class EditBox extends React.Component <module.PropsInterface, mod
                                        isRoot={this.props.editBox.isRoot}
                                        positions={this.props.editBox.positions}/>
                             </TabPanel>
-                            <TabPanel tab="事件"
-                                      key="event"
-                                      className="edit-container">
-                                <Event/>
-                            </TabPanel>
-                            <TabPanel tab="脚本"
-                                      key="script"
-                                      className="edit-container">
-                                <Script/>
-                            </TabPanel>
+
                         </Tabs>
                     </div>
                 </div>
@@ -157,3 +148,14 @@ export default class EditBox extends React.Component <module.PropsInterface, mod
         )
     }
 }
+
+// <TabPanel tab="事件"
+//           key="event"
+//           className="edit-container">
+//     <Event/>
+// </TabPanel>
+// <TabPanel tab="脚本"
+// key="script"
+// className="edit-container">
+//     <Script/>
+//     </TabPanel>

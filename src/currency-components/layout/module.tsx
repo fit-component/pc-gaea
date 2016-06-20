@@ -72,11 +72,11 @@ export class Props implements PropsInterface {
                 key: 'center',
                 value: 'center'
             }, {
-                key: 'space-between',
-                value: 'space-between'
+                key: 'baseline',
+                value: 'baseline'
             }, {
-                key: 'space-around',
-                value: 'space-around'
+                key: 'stretch',
+                value: 'stretch'
             }],
             order: 4
         },

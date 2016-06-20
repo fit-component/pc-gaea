@@ -78,8 +78,21 @@ export default class Helper extends React.Component <module.PropsInterface, modu
      */
     addNewChild(component: string) {
         let newChilds = this.state.childs || []
-        const newChild = {
+        const newChild: any = {
             component: component
+        }
+
+        // 如果这个元素是 gaea-layout
+        // 如果父级是 root, 不做处理
+        // 如果父级不是 root, 横向排列 宽度设置为 50% 纵向排列 高度设置为 50%
+        if (this.props.parent !== null && component === 'gaea-layout') {
+            newChild.props = {
+                options: {
+                    width: {
+                        value: '50%'
+                    }
+                }
+            }
         }
 
         newChilds.push(newChild)
