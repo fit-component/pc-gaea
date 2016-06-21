@@ -16,11 +16,17 @@ export interface PropsInterface {
      */
     onSave?: (info?: any)=>void
 
+    /**
+     * 工具栏:是否只显示定制组件
+     */
+    toolsOnlyCustomComponents?: boolean
+
     [x: string]: any
 }
 
 export class Props implements PropsInterface {
     components = new Array()
+    toolsOnlyCustomComponents = false
     onSave = ()=> {
     }
 }
@@ -33,5 +39,5 @@ export interface StateInterface {
 }
 
 export class State implements StateInterface {
-    isPreview = false 
+    isPreview = false
 }

@@ -82,6 +82,9 @@ export default class Components extends React.Component <any ,any> {
 
         // 组件类型选择按钮组
         const SwitchButtonGroup = switchTypes.map((item, index)=> {
+            // 如果设置了只显示定制,其它按钮不会显示
+            if (rootPropsJs.toolsOnlyCustomComponents && item.type !== 'custom') return null
+
             return (
                 <Button type="secondary"
                         key={index}
