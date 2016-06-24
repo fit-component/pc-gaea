@@ -8,6 +8,7 @@ import * as Draggable from 'react-draggable'
 import {unSelectLastTree} from '../../object-store/dom-tree'
 import {Tabs, TabPanel} from '../../../../../tabs/src'
 import {getViewPort$dom} from '../../object-store/view-port'
+import {saveToHistory} from '../../object-store/root-props'
 import './index.scss'
 
 import Basic from './basic'
@@ -49,7 +50,7 @@ export default class EditBox extends React.Component <module.PropsInterface, mod
         return false
     }
 
-    componentWillReceiveProps() {
+    componentWillReceiveProps(nextProps: module.PropsInterface) {
         if (this.state.offsetLeft === -1) {
             const $viewPort = getViewPort$dom()
             // 初始状态放在右侧
@@ -69,6 +70,17 @@ export default class EditBox extends React.Component <module.PropsInterface, mod
                 offsetTop: this.offsetY
             })
         }
+
+        // 如果是新开的编辑,之前的有修改的话,先设置已修改
+        // 把 hasChange 置为 false
+        if (!_.isEqual(this.props.editBox.positions, nextProps.editBox.positions)) {
+            if (this.state.hasChange) {
+                this.setSaveHistory()
+            }
+            this.setState({
+                hasChange: false
+            })
+        }
     }
 
     /**
@@ -78,6 +90,19 @@ export default class EditBox extends React.Component <module.PropsInterface, mod
         this.props.editBoxClose()
         // 通知取消选择最后一个选择的 tree
         unSelectLastTree()
+
+        // 如果这次有修改,保存一次历史纪录
+        if (this.state.hasChange) {
+            this.setSaveHistory()
+        }
+
+        this.setState({
+            hasChange: false
+        })
+    }
+
+    setSaveHistory() {
+        saveToHistory(`修改组件: ${this.props.editBox.mergedProps.name}`)
     }
 
     /**
@@ -101,6 +126,15 @@ export default class EditBox extends React.Component <module.PropsInterface, mod
         if (this.offsetY < 0) {
             this.offsetY = 0
         }
+    }
+
+    /**
+     * 子组件触发了修改
+     */
+    handleChange() {
+        this.setState({
+            hasChange: true
+        })
     }
 
     render() {
@@ -136,7 +170,8 @@ export default class EditBox extends React.Component <module.PropsInterface, mod
                             <TabPanel tab="基础"
                                       key="basic"
                                       className="edit-container">
-                                <Basic mergedProps={this.props.editBox.mergedProps}
+                                <Basic onChange={this.handleChange.bind(this)}
+                                       mergedProps={this.props.editBox.mergedProps}
                                        isRoot={this.props.editBox.isRoot}
                                        positions={this.props.editBox.positions}/>
                             </TabPanel>

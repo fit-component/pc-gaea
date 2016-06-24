@@ -209,6 +209,10 @@ export default class Helper extends React.Component <module.PropsInterface, modu
                 const domTree = getDomTree()
                 const treeInstance = domTree.getChildByPositions(this.getPositionsAsDomTree())
                 treeInstance.addNewChild(dragSourceInfo.component)
+
+                // 获取新增组件的名字
+                const components = getComponents()
+                rootProps.saveToHistory(`新增组件: ${components[dragSourceInfo.component].defaultProps.name}`)
                 break
             case 'changeParent':
                 /**
@@ -228,7 +232,11 @@ export default class Helper extends React.Component <module.PropsInterface, modu
                 /**
                  * 再调用 dragSource 组件的自毁方法
                  */
-                dragSourceInfo.instance.doRemoveSelf()
+                dragSourceInfo.instance.doRemoveSelf(false)
+
+                // 获取移动组件的名字
+                const componentsChangeParent = getComponents()
+                rootProps.saveToHistory(`移动组件: ${dragSourceInfo.instance.getMergedProps().name}`)
                 break
             case 'group':
                 /**
@@ -338,16 +346,16 @@ export default class Helper extends React.Component <module.PropsInterface, modu
     /**
      * 【编辑状态】会被编辑器调用的方法,移除自身
      */
-    doRemoveSelf() {
+    doRemoveSelf(saveHistory: boolean) {
         // 如果没有父级,说明是顶层元素,顶层元素无法被删除
         if (this.props.parent === null)return
-        this.props.parent.removeChildIndex(this.props.position)
+        this.props.parent.removeChildIndex(this.props.position, _.cloneDeep(this.getMergedProps()), saveHistory)
     }
 
     /**
      * 【编辑状态】移除自身第 index 个子元素
      */
-    removeChildIndex(index: number) {
+    removeChildIndex(index: number, mergedProps: any, saveHistory: boolean) {
         // 删除第 index 个元素
         let newChilds = this.state.childs
         _.pullAt(newChilds, index)
@@ -373,6 +381,10 @@ export default class Helper extends React.Component <module.PropsInterface, modu
 
             // 调用关闭编辑窗并清空
             store.dispatch(actions.editBoxDeleteClose())
+
+            if (saveHistory) {
+                rootProps.saveToHistory(`移除组件: ${mergedProps.name}`)
+            }
         })
     }
 

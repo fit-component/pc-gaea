@@ -4,34 +4,39 @@ import connect from '../utils/connect'
 import EditBox from './edit-box'
 import * as ReactDOM from 'react-dom'
 import * as $ from 'jquery'
+import * as _ from 'lodash'
 import * as actions from '../stores/actions'
 import SwitchSize from './switch-size'
 import OuterMoveBox from './outer-move-box'
 import * as rootProps from '../object-store/root-props'
 import {setViewPort, setViewPort$dom} from '../object-store/view-port'
 import Preview from '../../preview'
+import * as module from './module'
+import store from '../utils/configure-store'
 import './index.scss'
 
 @connect(
     (state: any) => {
         return {}
     },
-    actions
+    {}
 )
-export default class ViewPort extends React.Component <any ,any> {
+export default class ViewPort extends React.Component <module.PropsInterface, module.StateInterface> {
+    static defaultProps: module.PropsInterface = new module.Props()
+    public state: module.StateInterface = new module.State()
+
     refs: any
     private $dom: JQuery
 
-    constructor(props: any) {
-        super(props)
-        this.state = {
-            paddingSize: 0,
-            isPreview: false
-        }
+    componentWillMount() {
+        const rootPropsJs = rootProps.getRootProps().toJS()
+        this.setState({
+            pageInfo: rootPropsJs.pageInfo
+        })
     }
 
     shouldComponentUpdate(nextProps: any, nextState: any) {
-        return this.state !== nextState
+        return !_.isEqual(this.state, nextState)
     }
 
     componentDidMount() {
@@ -50,8 +55,8 @@ export default class ViewPort extends React.Component <any ,any> {
      * 鼠标离开视图区域
      */
     handleViewPortLeave() {
-        this.props['outMoveBoxClose']()
-        this.props['treeMoveBoxClose']()
+        store.dispatch(actions.outMoveBoxClose())
+        store.dispatch(actions.treeMoveBoxClose())
     }
 
     /**
@@ -74,17 +79,17 @@ export default class ViewPort extends React.Component <any ,any> {
         })
     }
 
+    /**
+     * 修改当前渲染内容
+     */
+    freshView(pageInfo: any) {
+        this.setState({
+            pageInfo,
+            renderKey: this.state.renderKey + 1
+        })
+    }
+
     render() {
-        const rootPropsJs = rootProps.getRootProps().toJS()
-
-        const rootComponent = (
-            <Helper isInEdit={true}
-                    parent={null}
-                    position="pageInfo"
-                    ref="rootHelper"
-                    componentInfo={rootPropsJs.pageInfo}/>
-        )
-
         const viewPortStyle = {
             padding: `0 ${this.state['paddingSize']}%`
         }
@@ -101,7 +106,12 @@ export default class ViewPort extends React.Component <any ,any> {
                          style={viewPortStyle}>
                         <div className="white-bg"
                              onMouseLeave={this.handleViewPortLeave.bind(this)}>
-                            {rootComponent}
+                            <Helper key={this.state.renderKey}
+                                    isInEdit={true}
+                                    parent={null}
+                                    position="pageInfo"
+                                    ref="rootHelper"
+                                    componentInfo={this.state.pageInfo}/>
                         </div>
                     </div>
                 </div>
@@ -114,7 +124,8 @@ export default class ViewPort extends React.Component <any ,any> {
                     <div className="view-port"
                          style={viewPortStyle}>
                         <div className="white-bg">
-                            <Preview componentInfo={rootPropsJs.pageInfo}
+                            <Preview key={this.state.renderKey}
+                                     componentInfo={this.state.pageInfo}
                                      components={rootPropsJs.components}/>
                         </div>
                     </div>

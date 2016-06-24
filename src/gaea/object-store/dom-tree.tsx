@@ -4,7 +4,7 @@ import DomTree from '../sidebar/dom-tree'
 /**
  * 设置 domTree 对象实例
  */
-let domTree: any = null
+let domTree: DomTree = null
 export const setDomTree = (_domTree: DomTree)=> {
     domTree = _domTree
 }

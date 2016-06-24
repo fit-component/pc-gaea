@@ -29,7 +29,7 @@ export interface PropsInterface {
          */
         childs?: any
     }
-    
+
     /**
      * 父级对象
      */

@@ -1,0 +1,27 @@
+&.btn-group-vertical {
+    overflow-y: auto;
+}
+
+.history-item {
+    padding: 5px;
+    cursor: pointer;
+    border-radius: 0 !important;
+    height: initial;
+    &:hover {
+        background: whitesmoke;
+    }
+}
+
+// reset button
+.text-child {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start !important;
+    .info-text {
+
+    }
+    .time-text {
+        font-weight: normal;
+        color: #999;
+    }
+}

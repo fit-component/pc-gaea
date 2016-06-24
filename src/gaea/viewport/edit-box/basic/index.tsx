@@ -6,7 +6,7 @@ import {Select} from '../../../../../../select/src'
 import {Button, ButtonGroup} from '../../../../../../button/src'
 import {addGroupComponent} from '../../../object-store/group-components'
 import {getCurrentSelectedHelperInstance} from '../../../object-store/current-selection'
-import {getRootProps} from '../../../object-store/root-props'
+import {getRootProps, saveToHistory} from '../../../object-store/root-props'
 import './index.scss'
 
 import RemoveButton from './remote-button'
@@ -48,6 +48,8 @@ export default class Basic extends React.Component <module.PropsInterface, modul
         // 通知 helper 更新组件信息
         const currentSelectedHelperInstance: any = getCurrentSelectedHelperInstance()
         currentSelectedHelperInstance.doUpdatePropsOptions(key, value, special)
+
+        this.props.onChange()
     }
 
     /**
@@ -57,6 +59,8 @@ export default class Basic extends React.Component <module.PropsInterface, modul
         // 通知 helper 更新组件信息
         const currentSelectedHelperInstance: any = getCurrentSelectedHelperInstance()
         currentSelectedHelperInstance.resetOptions()
+
+        this.props.onChange()
     }
 
     /**
@@ -66,6 +70,8 @@ export default class Basic extends React.Component <module.PropsInterface, modul
         // 通知 helper 更新组件信息
         const currentSelectedHelperInstance: any = getCurrentSelectedHelperInstance()
         currentSelectedHelperInstance.doUpdatePropsName(event.target.value)
+
+        this.props.onChange()
     }
 
     /**
@@ -74,7 +80,7 @@ export default class Basic extends React.Component <module.PropsInterface, modul
     handleRemoveCurrent() {
         // 通知这个组件自我删除（这个组件会通知父级让其删除它）
         const currentSelectedHelperInstance: any = getCurrentSelectedHelperInstance()
-        currentSelectedHelperInstance.doRemoveSelf()
+        currentSelectedHelperInstance.doRemoveSelf(true)
     }
 
     /**

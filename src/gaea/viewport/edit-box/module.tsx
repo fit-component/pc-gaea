@@ -33,9 +33,15 @@ export class Props implements PropsInterface {
 export interface StateInterface {
     offsetLeft?: number
     offsetTop?: number
+
+    /**
+     * 是否有修改
+     */
+    hasChange?: boolean
 }
 
 export class State implements StateInterface {
     offsetLeft = -1
     offsetTop = 0
+    hasChange = false
 }

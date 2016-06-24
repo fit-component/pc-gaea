@@ -15,6 +15,11 @@ export interface PropsInterface {
      * 当前组件的位置
      */
     positions?: Array<number|string>
+
+    /**
+     * 通知父级组件,有修改
+     */
+    onChange?: ()=>void
 }
 
 export class Props implements PropsInterface {

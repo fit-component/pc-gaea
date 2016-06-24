@@ -2,6 +2,11 @@ import * as React from 'react'
 
 export interface PropsInterface {
     /**
+     * 导航栏标题
+     */
+    title?: string
+
+    /**
      * 外部提供编辑组件
      */
     components?: Array<React.Component<any ,any>>
@@ -25,6 +30,7 @@ export interface PropsInterface {
 }
 
 export class Props implements PropsInterface {
+    title = 'Gaea'
     components = new Array()
     toolsOnlyCustomComponents = false
     onSave = ()=> {
