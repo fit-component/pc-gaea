@@ -1,0 +1,26 @@
+// reset context-menu
+._global {
+    .react-context-menu {
+        outline: none;
+        box-shadow: 0 0 50px #ccc;
+    }
+
+    .react-context-menu-wrapper {
+        // 占满高度
+        flex-grow: 1;
+    }
+
+    .react-context-menu-link {
+        display: block;
+        padding: 7px 15px;
+        color: #333;
+        text-decoration: none;
+        white-space: nowrap;
+        &:hover {
+            background: whitesmoke;
+        }
+        .icon {
+            margin-right: 5px;
+        }
+    }
+}

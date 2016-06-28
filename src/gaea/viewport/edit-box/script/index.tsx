@@ -4,6 +4,7 @@ import * as React from 'react'
 import * as module from './module'
 import * as process from 'process'
 import * as _ from 'lodash'
+import {Button, ButtonGroup} from '../../../../../../button/src'
 import './index.scss'
 
 // 只有在前端才会引用 codeMirror
@@ -65,6 +66,9 @@ export default class Event extends React.Component <module.PropsInterface, modul
                 <Codemirror onChange={this.handleCodeChange.bind(this)}
                             defaultValue={defaultValue}
                             options={codeMirrorOpts}/>
+                <ButtonGroup>
+                    <Button active>test</Button>
+                </ButtonGroup>
             </div>
         )
     }

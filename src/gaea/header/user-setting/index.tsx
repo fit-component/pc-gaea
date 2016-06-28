@@ -16,7 +16,7 @@ import './index.scss'
     },
     actions
 )
-export default class Header extends React.Component <any ,any> {
+export default class UserSetting extends React.Component <any ,any> {
     state = {
         show: false
     }

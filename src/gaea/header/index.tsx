@@ -2,7 +2,7 @@ import * as React from 'react'
 import {Menu, RightMenu, MenuItem} from '../../../../menu/src'
 import connect from '../utils/connect'
 import {getViewPort} from '../object-store/view-port'
-import {getHistorys} from '../object-store/root-props'
+import {addVersion} from '../object-store/root-props'
 import {setHeaderComponentInstance} from '../object-store/header'
 import * as actions from '../stores/actions'
 import store from '../utils/configure-store'
@@ -10,7 +10,10 @@ import * as classNames from 'classnames'
 import * as rootProps from '../object-store/root-props'
 import * as gaeaObjectStore from '../object-store/gaea'
 import * as module from './module'
+
 import UserSetting from './user-setting'
+import Online from './online'
+
 import './index.scss'
 
 @connect(
@@ -38,13 +41,20 @@ export default class Header extends React.Component <module.PropsInterface, modu
     }
 
     /**
+     * 咔嚓,保存一个版本快照
+     */
+    saveToVersion(id: string) {
+        addVersion(id)
+    }
+
+    /**
      * 保存
      */
     handleSave() {
         gaeaObjectStore.getGaea().props.onSave({
             pageInfo: rootProps.getRootProps().toJS().pageInfo,
             settings: this.props.userSetting,
-            historys: getHistorys()
+            saveToVersion: this.saveToVersion.bind(this)
         })
     }
 
@@ -107,6 +117,7 @@ export default class Header extends React.Component <module.PropsInterface, modu
                           to="/designer">{rootProps.getRootProps().toJS().title}</MenuItem>
                 <UserSetting/>
                 <RightMenu>
+                    <Online/>
                     <MenuItem onClick={this.handleSave.bind(this)}>保存</MenuItem>
                     <MenuItem onClick={this.handlePreview.bind(this)}>{previewText}</MenuItem>
                     <MenuItem className={redoClasses}

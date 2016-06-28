@@ -1,9 +1,31 @@
-&.btn-group-vertical {
-    overflow-y: auto;
+&.history-container {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: row;
+    .container {
+        width: 0;
+        flex-grow: 4;
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+    .switch {
+        width: 0;
+        flex-grow: 1;
+        border-left: 1px solid #ddd;
+
+        // reset button
+        .btn {
+            border-radius: 0 !important;
+        }
+    }
+}
+
+.btn-group-vertical {
+    width: 100%;
 }
 
 .history-item {
-    padding: 5px;
+    padding: 3px;
     cursor: pointer;
     border-radius: 0 !important;
     height: initial;
@@ -12,16 +34,66 @@
     }
 }
 
+.version-item {
+    padding: 8px 5px;
+    height: initial;
+    font-size: 12px;
+    color: #333;
+    border-bottom: 1px solid #ddd;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
 // reset button
 .text-child {
     display: flex;
     flex-direction: column;
     align-items: flex-start !important;
-    .info-text {
+}
 
+// version
+.version-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.load-more {
+    margin: 5px 10px;
+    .text-child {
+        display: flex;
+        align-items: center !important;
     }
-    .time-text {
-        font-weight: normal;
-        color: #999;
+}
+
+.version-info-text {
+
+}
+
+.version-time-text {
+    font-weight: normal;
+    color: #999;
+}
+
+// history
+.info-text {
+
+}
+
+.time-text {
+    font-weight: normal;
+    color: #999;
+}
+
+// reset button-group
+.button-group {
+    width: 100%;
+}
+
+.button-container {
+    font-size: 12px;
+    .text-child {
+        padding: 0 10px;
     }
 }
