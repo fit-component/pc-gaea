@@ -134,7 +134,15 @@ export class Props implements PropsInterface {
             editor: 'background',
             editable: true,
             order: 8
-        }
+        },
+
+        overflow: {
+            label: 'overflow',
+            value: 'hidden',
+            editor: 'none',
+            editable: false,
+            order: 9
+        },
     }
 }
 

@@ -18,11 +18,11 @@
     box-sizing: border-box;
     position: relative;
     .white-bg {
-        display: flex;
         box-sizing: border-box;
         position: relative;
         background: white;
         width: 100%;
         overflow-y: auto;
+        overflow-x: hidden;
     }
 }
