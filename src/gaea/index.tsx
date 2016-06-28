@@ -1,5 +1,7 @@
 /// <reference path="../../../../../typings-module/redux-immutablejs.d.ts" />
 /// <reference path="../../../../../typings-module/react-dnd-html5-backend.d.ts" />
+/// <reference path="../../../../../typings-module/immutablediff.d.ts" />
+/// <reference path="../../../../../typings-module/immutablepatch.d.ts" />
 
 import * as React from 'react'
 import * as classNames from 'classnames'

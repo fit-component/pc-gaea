@@ -1,6 +1,3 @@
-/// <reference path="../../../../../../typings-module/immutablediff.d.ts" />
-/// <reference path="../../../../../../typings-module/immutablepatch.d.ts" />
-
 import * as Immutable from 'immutable'
 import store from '../utils/configure-store'
 import * as actions from '../stores/actions'
