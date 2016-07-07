@@ -9,6 +9,7 @@ import {unSelectLastTree} from '../../object-store/dom-tree'
 import {Tabs, TabPanel} from '../../../../../tabs/src'
 import {getViewPort$dom} from '../../object-store/view-port'
 import {saveToHistory} from '../../object-store/root-props'
+import * as _ from 'lodash'
 import './index.scss'
 
 import Basic from './basic'
