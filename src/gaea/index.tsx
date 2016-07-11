@@ -48,9 +48,12 @@ export default class Gaea extends React.Component <module.PropsInterface, module
             'preview': this.state.isPreview === true
         })
 
+        let LayoutProps = others(new module.Props(), this.props);
+        delete LayoutProps.pageInfo;
+
         return (
             <Provider store={store}>
-                <Layout {...others(new module.Props(), this.props)}
+                <Layout {...LayoutProps}
                     className={classes}>
 
                     <Header height={40}>
