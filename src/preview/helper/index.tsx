@@ -2,6 +2,7 @@
 import * as EventEmitter from 'wolfy87-eventemitter'
 import * as React from 'react'
 import * as module from './module'
+import * as _ from 'lodash'
 import layoutStyleParser from '../../gaea/viewport/helper/layout-style-parser'
 import {getComponents} from '../object-store/components'
 
