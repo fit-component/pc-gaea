@@ -19,7 +19,7 @@ export default class TreeElement extends React.Component <module.PropsInterface,
     private $dom: JQuery
 
     shouldComponentUpdate(nextProps: module.PropsInterface, nextState: module.StateInterface) {
-        return this.state !== nextState
+        return !_.isEqual(this.state, nextState)
     }
 
     componentWillMount() {

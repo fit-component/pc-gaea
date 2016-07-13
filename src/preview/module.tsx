@@ -13,7 +13,7 @@ export interface PropsInterface {
 }
 
 export class Props implements PropsInterface {
-
+    
 }
 
 export interface StateInterface {

@@ -49,6 +49,11 @@ export interface PropsInterface {
     versionInit?: (saveVersion?: (versions?: Array<Version>)=>void, hasNext?: boolean)=>void
 
     /**
+     * 插件配置选项
+    */
+    plugin?: PluginInfo
+
+    /**
      * 点击版本记录页的加载更多按钮,加载到哪和加载逻辑需要在业务中处理
      */
     onLoadMoreVersionClick?: (saveVersion?: (versions?: Array<Version>)=>void, hasNext?: boolean)=>void
@@ -88,6 +93,10 @@ export class Props implements PropsInterface {
     version = '0.0.0'
     components = [] as any
     toolsOnlyCustomComponents = false
+    plugin = {
+        left: {},
+        right: {}
+    }
     onSave = ()=> {
     }
     versionInit = (saveVersion: Function)=> {
@@ -123,4 +132,20 @@ export interface StateInterface {
 
 export class State implements StateInterface {
     isPreview = false
+}
+
+export interface PluginInfo {
+    headerConfig?: {
+        left?: {
+            components: React.ComponentClass<any>[],
+            order: string[]
+        },
+        right?: {
+            components: React.ComponentClass<any>[],
+            order: string[]
+        }
+    },
+    extendConfig?: {
+        component: React.ComponentClass<any>
+    }
 }

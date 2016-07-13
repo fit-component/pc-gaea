@@ -1,6 +1,6 @@
 import * as React from 'react'
 import connect from '../../utils/connect'
-import Button from '../../../../../button/src'
+import * as module from './module.tsx'
 import Modal from '../../../../../modal/src'
 import Switch from '../../../../../switch/src'
 import {MenuItem} from '../../../../../menu/src'
@@ -16,10 +16,15 @@ import './index.scss'
     },
     actions
 )
-export default class UserSetting extends React.Component <any ,any> {
+export default class UserSetting extends React.Component <module.PropsInterface, module.StateInterface> {
     state = {
         show: false
     }
+
+    context: module.IRouterContext & module.ISomeOtherContext
+    static contextTypes = {
+        pluginInfo: React.PropTypes.object.isRequired
+    };
 
     shouldComponentUpdate(nextProps: any, nextState: any) {
         if (_.isEqual(this.props['userSetting'], nextProps['userSetting']) && _.isEqual(this.state, nextState)) {
@@ -46,11 +51,23 @@ export default class UserSetting extends React.Component <any ,any> {
         })
     }
 
+    handleExtendChange (key:string, value:any) {
+        this.props.handleConfigChange(key, value);
+    }
+
     handleSettingChange(key: string, value: any) {
         this.props['userSettingUpdate'](key, value)
     }
 
     render() {
+        let ExtendComponent:JSX.Element;
+        if (this.context.pluginInfo.extendConfig) {
+            let extendConfig = this.context.pluginInfo.extendConfig;
+            ExtendComponent = React.createElement(extendConfig.component, {
+                onChange: this.handleExtendChange.bind(this)
+            })
+        }
+
         return (
             <MenuItem onClick={this.handleShowModal.bind(this)}>
                 设置
@@ -67,6 +84,7 @@ export default class UserSetting extends React.Component <any ,any> {
                                         onChange={this.handleSettingChange.bind(this,'confirmOnRemove')}/>
                             </div>
                         </div>
+                        {ExtendComponent}
                     </Modal>
                 </div>
             </MenuItem>

@@ -14,11 +14,13 @@ import HTML5Backend from 'react-dnd-html5-backend'
 import DragDropContext from './utils/drag-drop-context'
 import * as rootProps from './object-store/root-props'
 import * as gaeaObjectStore from './object-store/gaea'
-import connect from './utils/connect'
+import PluginContext from '../plugin/index.tsx'
 import './index.scss'
 
 import HeaderMenu from './header'
+import * as headerModule from './header/module.tsx'
 import SidebarTool from './sidebar'
+import * as siderBarModule from './sidebar/module.tsx'
 import Viewport from './viewport'
 
 @DragDropContext(HTML5Backend)
@@ -48,8 +50,14 @@ export default class Gaea extends React.Component <module.PropsInterface, module
             'preview': this.state.isPreview === true
         })
 
+        const { plugin } = this.props;
+
         let LayoutProps = others(new module.Props(), this.props);
         delete LayoutProps.pageInfo;
+        delete LayoutProps.plugin;
+
+        let PlugHeader = PluginContext<headerModule.PropsInterface>(plugin)(HeaderMenu);
+        let PlugSideBar = PluginContext<siderBarModule.PropsInterface>(plugin)(SidebarTool)
 
         return (
             <Provider store={store}>
@@ -57,17 +65,17 @@ export default class Gaea extends React.Component <module.PropsInterface, module
                     className={classes}>
 
                     <Header height={40}>
-                        <HeaderMenu/>
+                        <PlugHeader />
                     </Header>
 
                     <Sidebar width={240}
                              className="sidebar"
                              direction="right">
-                        <SidebarTool/>
+                        <PlugSideBar />
                     </Sidebar>
 
                     <Section className={sectionClasses}>
-                        <Viewport/>
+                        <Viewport />
                     </Section>
 
                 </Layout>
