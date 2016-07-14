@@ -149,16 +149,8 @@ export default class Header extends React.Component <module.PropsInterface, modu
             disabled: !this.state.canRedo
         });
 
-        let MenuItems:JSX.Element[] = [
-            <MenuItem key="save" onClick={this.handleSave.bind(this)}>保存</MenuItem>,
-            <MenuItem key="preview" onClick={this.handlePreview.bind(this)}>{previewText}</MenuItem>,
-            <MenuItem key="redo" className={redoClasses} onClick={this.redo.bind(this)}><i className="fa fa-rotate-right"/></MenuItem>,
-            <MenuItem key="undo" className={undoClasses} onClick={this.undo.bind(this)}><i className="fa fa-undo"/></MenuItem>,
-            <Online key="online" />
-        ];
-        let SettingItems:JSX.Element[] = [
-            <UserSetting key="settings" handleConfigChange={this.handleConfigChange.bind(this)}/>
-        ];
+        let MenuItems:JSX.Element[];
+        let SettingItems:JSX.Element[] = [];
 
         let itemMap:module.itemMapType = {
             save: <MenuItem key="save" onClick={this.handleSave.bind(this)}>保存</MenuItem>,
@@ -173,18 +165,30 @@ export default class Header extends React.Component <module.PropsInterface, modu
             let headerPlus = this.context.pluginInfo.headerConfig;
 
             if (headerPlus.left) {
-                let leftOrder = headerPlus.left.order;
+                let leftOrder = headerPlus.left.order || ['settings'];
                 let leftComponent = headerPlus.left.components;
                 invariant(leftOrder, 'component order is needed, the default order is [\'save\', \'preview\', \'redo\', \'undo\']');
                 SettingItems = this.getOrderItems(leftOrder, itemMap, leftComponent);
             }
 
             if(headerPlus.right) {
-                let rightOrder = headerPlus.right.order;
+                let rightOrder = headerPlus.right.order || ['save', 'preview', 'redo', 'undo', 'online'];
                 let rightComponent = headerPlus.right.components;
                 invariant(rightOrder, 'component order is needed, the default order is [\'save\', \'preview\', \'redo\', \'undo\']');
                 MenuItems = this.getOrderItems(rightOrder, itemMap, rightComponent, true);
             }
+        }
+        else {
+            MenuItems = [
+                <MenuItem key="save" onClick={this.handleSave.bind(this)}>保存</MenuItem>,
+                <MenuItem key="preview" onClick={this.handlePreview.bind(this)}>{previewText}</MenuItem>,
+                <MenuItem key="redo" className={redoClasses} onClick={this.redo.bind(this)}><i className="fa fa-rotate-right"/></MenuItem>,
+                <MenuItem key="undo" className={undoClasses} onClick={this.undo.bind(this)}><i className="fa fa-undo"/></MenuItem>,
+                <Online key="online" />
+            ]
+            SettingItems = [
+                <UserSetting key="settings" handleConfigChange={this.handleConfigChange.bind(this)}/>
+            ]
         }
 
         return (
