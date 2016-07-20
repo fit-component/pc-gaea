@@ -1,6 +1,6 @@
 import * as React from 'react'
-import {PluginInfo} from '../gaea/module.tsx'
-import { ContextComponentClass } from './module.tsx'
+import {PluginInfo} from '../gaea/module'
+import { ContextComponentClass } from './module'
 
 function getDisplayName(WrapperComponent:any) {
     return WrapperComponent.displayName || WrapperComponent.name || 'Component'

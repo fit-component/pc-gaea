@@ -14,13 +14,13 @@ import HTML5Backend from 'react-dnd-html5-backend'
 import DragDropContext from './utils/drag-drop-context'
 import * as rootProps from './object-store/root-props'
 import * as gaeaObjectStore from './object-store/gaea'
-import PluginContext from '../plugin/index.tsx'
+import PluginContext from '../plugin/index'
 import './index.scss'
 
 import HeaderMenu from './header'
-import * as headerModule from './header/module.tsx'
+import * as headerModule from './header/module'
 import SidebarTool from './sidebar'
-import * as siderBarModule from './sidebar/module.tsx'
+import * as siderBarModule from './sidebar/module'
 import Viewport from './viewport'
 
 @DragDropContext(HTML5Backend)

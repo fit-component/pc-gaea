@@ -82,7 +82,7 @@ export default class Header extends React.Component <module.PropsInterface, modu
      * 缓存插件的额外配置选项
      */
     handleConfigChange (key: string, value: any) {
-        this.extendConfig[key] = value;
+        this.extendConfig[key] = value
     }
 
     /**

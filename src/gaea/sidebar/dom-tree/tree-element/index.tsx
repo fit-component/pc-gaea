@@ -70,7 +70,7 @@ export default class TreeElement extends React.Component <module.PropsInterface,
      * 新增一个子元素
      */
     addNewChild(component: string) {
-        let newChilds = this.state.childs || []
+        let newChilds = this.state.childs ? _.cloneDeep(this.state.childs) : []
         const newChild = {
             component: component
         }
@@ -91,7 +91,7 @@ export default class TreeElement extends React.Component <module.PropsInterface,
      * 新增一个已存在的元素
      */
     addExistChild(info: any) {
-        let newChilds = this.state.childs || []
+        let newChilds = this.state.childs ? _.cloneDeep(this.state.childs) : []
         const newChild = _.cloneDeep(info)
 
         newChilds.push(newChild)
@@ -99,6 +99,8 @@ export default class TreeElement extends React.Component <module.PropsInterface,
         let newChildKeys = this.state.childKeys
         // 往后再随机分配一个 key
         newChildKeys.push(_.uniqueId('tree_'))
+
+
 
         this.setState({
             childs: newChilds,
@@ -193,7 +195,7 @@ export default class TreeElement extends React.Component <module.PropsInterface,
      * 移除自己的第index个元素
      */
     removeChildIndex(index: number) {
-        let newChilds = this.state.childs
+        let newChilds = _.cloneDeep(this.state.childs)
         _.pullAt(newChilds, index)
 
         let newChildKeys = this.state.childKeys

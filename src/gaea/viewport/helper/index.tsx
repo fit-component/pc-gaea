@@ -35,7 +35,7 @@ export default class Helper extends React.Component <module.PropsInterface, modu
     shouldComponentUpdate(nextProps: module.PropsInterface, nextState: module.StateInterface) {
         // 只有 state 更新才会触发 render, props 更新不需要理会
         // 而且 位置没变
-        if (this.state === nextState && this.props.position === nextProps.position) {
+        if (_.isEqual(this.state, nextState) && this.props.position === nextProps.position) {
             return false
         }
         return true
@@ -77,7 +77,7 @@ export default class Helper extends React.Component <module.PropsInterface, modu
      * 新增一个子元素
      */
     addNewChild(component: string) {
-        let newChilds = this.state.childs || []
+        let newChilds = this.state.childs ? _.cloneDeep(this.state.childs) : []
         const newChild: any = {
             component: component
         }
@@ -117,7 +117,7 @@ export default class Helper extends React.Component <module.PropsInterface, modu
      * 新增一个已存在的元素（转移元素）
      */
     addExistChild(info: any) {
-        let newChilds = this.state.childs || []
+        let newChilds = this.state.childs ? _.cloneDeep(this.state.childs) : []
         const newChild: any = _.cloneDeep(info)
         newChilds.push(newChild)
 
@@ -251,7 +251,7 @@ export default class Helper extends React.Component <module.PropsInterface, modu
      * 【编辑状态】会被编辑器调用的方法,更新props
      */
     doUpdatePropsOptions(key: string, value: any, special: any) {
-        let newProps = this.state.props || {}
+        let newProps = this.state.props ? _.cloneDeep(this.state.props) : {}
         if (!newProps.options) {
             newProps.options = {}
         }
@@ -327,7 +327,7 @@ export default class Helper extends React.Component <module.PropsInterface, modu
      * 【编辑状态】会被编辑器调用的方法,更新name
      */
     doUpdatePropsName(value: string) {
-        let newProps = this.state.props || {}
+        let newProps = this.state.props ? _.cloneDeep(this.state.props) : {}
         newProps.name = value
 
         this.setState({
@@ -357,7 +357,7 @@ export default class Helper extends React.Component <module.PropsInterface, modu
      */
     removeChildIndex(index: number, mergedProps: any, saveHistory: boolean) {
         // 删除第 index 个元素
-        let newChilds = this.state.childs
+        let newChilds = _.cloneDeep(this.state.childs)
         _.pullAt(newChilds, index)
 
         // childKeys 也删除第 index 个元素

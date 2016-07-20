@@ -1,5 +1,5 @@
 import {StateInterface as ReduxPreviewStateInterface} from '../stores/preview/reducer'
-import { PluginInfo } from '../module.tsx'
+import {PluginInfo} from '../module'
 
 export interface PropsInterface {
     preview?: ReduxPreviewStateInterface
@@ -28,11 +28,11 @@ export class State implements StateInterface {
 }
 
 export interface IRouterContext {
-    pluginInfo: PluginInfo;
+    pluginInfo: PluginInfo
 }
 
 export interface ISomeOtherContext {
-    somethingElse: any;
+    somethingElse: any
 }
 
 export interface itemMapType {
@@ -40,7 +40,7 @@ export interface itemMapType {
     preview: JSX.Element,
     redo: JSX.Element,
     undo: JSX.Element,
-    [key:string]: JSX.Element
+    [key: string]: JSX.Element
 }
 
 export interface extendConfigStore {
