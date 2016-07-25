@@ -1,4 +1,4 @@
-import * as React from 'react'
+ import * as React from 'react'
 import { Link } from 'react-router'
 import Input from 'fit-input'
 import Gaea from '../../src'

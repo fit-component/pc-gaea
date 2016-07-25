@@ -137,8 +137,24 @@ export default class Basic extends React.Component <module.PropsInterface, modul
                     onChange: this.handleOptionsChange.bind(this, key, false, special)
                 }
                 return (
-                    <Select {...selectorOpts}/>
+                    <Select {...selectorOpts} />
                 )
+
+            case 'object':
+                let ObjectChildren = Object.keys(editItem.children).map((formKey: string) => {
+                    const formItemInfo = editItem.children[formKey];
+                    formItemInfo.value = editItem.value[formKey];
+                    return this.createEditDom(formItemInfo, key, {
+                        type: 'default'
+                    });
+                });
+
+                return (
+                    <div key={_.uniqueId(this.state.mergedProps.uniqueKey)}>
+                        {ObjectChildren}
+                    </div>
+                )
+
             case 'array':
                 // 数组
                 // 循环 value 数组
@@ -177,14 +193,15 @@ export default class Basic extends React.Component <module.PropsInterface, modul
                         </div>
                     )
                 })
+
                 return (
                     <div className="array-group-container"
                          key={_.uniqueId(this.state.mergedProps.uniqueKey)}>
                         <div className="array-group-title">{editItem.label}</div>
                         <div className="array-group-content">
                             {ArrayChildren}
-                            <Button className="add"
-                                    onClick={this.handleOptionsChange.bind(this, key, false, {type:'arrayPush'})}>新增一项</Button>
+                            {!editItem.freeze && <Button className="add"
+                                    onClick={this.handleOptionsChange.bind(this, key, false, {type:'arrayPush'})}>新增一项</Button> }
                         </div>
                     </div>
                 )
