@@ -1,6 +1,6 @@
 {
   "name": "fit-gaea",
-  "version": "0.2.12",
+  "version": "0.2.20",
   "description": "",
   "main": "lib/index.js",
   "scripts": {
