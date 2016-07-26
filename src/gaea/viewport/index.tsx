@@ -31,7 +31,8 @@ export default class ViewPort extends React.Component <module.PropsInterface, mo
     componentWillMount() {
         const rootPropsJs = rootProps.getRootProps().toJS()
         this.setState({
-            pageInfo: rootPropsJs.pageInfo
+            pageInfo: rootPropsJs.pageInfo,
+            paddingSize: (100 - rootPropsJs.viewportSize) / 2
         })
     }
 
@@ -91,7 +92,7 @@ export default class ViewPort extends React.Component <module.PropsInterface, mo
 
     render() {
         const viewPortStyle = {
-            padding: `0 ${this.state['paddingSize']}%`
+            padding: `0 ${this.state.paddingSize}%`
         }
 
         let Children: React.ReactElement<any>
