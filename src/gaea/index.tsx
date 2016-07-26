@@ -75,7 +75,7 @@ export default class Gaea extends React.Component <module.PropsInterface, module
                     </Sidebar>
 
                     <Section className={sectionClasses}>
-                        <Viewport />
+                        <Viewport/>
                     </Section>
 
                 </Layout>

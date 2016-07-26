@@ -50,7 +50,7 @@ export interface PropsInterface {
 
     /**
      * 插件配置选项
-    */
+     */
     plugin?: PluginInfo
 
     /**
@@ -85,6 +85,11 @@ export interface PropsInterface {
      */
     addSourceFile?: (folderId?: string, fileInfo?: SourceFile, addSuccess?: ()=>void)=>void
 
+    /**
+     * 页面大小, 0 ~ 100, 100 表示页面宽度最大
+     */
+    viewportSize?: number
+
     [x: string]: any
 }
 
@@ -93,6 +98,7 @@ export class Props implements PropsInterface {
     version = '0.0.0'
     components = [] as any
     toolsOnlyCustomComponents = false
+    viewportSize = 100
     plugin = {
         left: {},
         right: {}
