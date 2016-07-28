@@ -74,9 +74,10 @@ export default class ViewPort extends React.Component <module.PropsInterface, mo
     /**
      * 设置是否为预览模式
      */
-    setPreview(isPreview?: boolean) {
+    setPreview(isPreview: boolean, pageInfo: any) {
         this.setState({
-            isPreview
+            isPreview,
+            pageInfo
         })
     }
 

@@ -2,7 +2,7 @@ import * as React from 'react'
 import {Menu, RightMenu, MenuItem} from '../../../../menu/src'
 import connect from '../utils/connect'
 import {getViewPort} from '../object-store/view-port'
-import {addVersion} from '../object-store/root-props'
+import {addVersion, getRootProps} from '../object-store/root-props'
 import {setHeaderComponentInstance} from '../object-store/header'
 import * as actions from '../stores/actions'
 import store from '../utils/configure-store'
@@ -20,7 +20,7 @@ import './index.scss'
 
 
 @connect(
-    (state:any) => {
+    (state: any) => {
         return {
             preview: state.preview.toJS(),
             userSetting: state.userSetting.toJS()
@@ -29,9 +29,9 @@ import './index.scss'
     {}
 )
 export default class Header extends React.Component <module.PropsInterface, module.StateInterface> {
-    static defaultProps:module.PropsInterface = new module.Props()
-    public state:module.StateInterface = new module.State()
-    
+    static defaultProps: module.PropsInterface = new module.Props()
+    public state: module.StateInterface = new module.State()
+
     context: module.IRouterContext & module.ISomeOtherContext
 
     static contextTypes: React.ValidationMap<any> = {
@@ -40,8 +40,8 @@ export default class Header extends React.Component <module.PropsInterface, modu
 
     extendConfig: module.extendConfigStore = {}
 
-    private getOrderItems (order:string[], itemMap: module.itemMapType, components:React.ComponentClass<any>[], isReverse:boolean = false):JSX.Element[] {
-        let items:JSX.Element[] = order.map((key:string) => {
+    private getOrderItems(order: string[], itemMap: module.itemMapType, components: React.ComponentClass<any>[], isReverse: boolean = false): JSX.Element[] {
+        let items: JSX.Element[] = order.map((key: string) => {
             if (itemMap[key]) {
                 return itemMap[key];
             }
@@ -64,7 +64,7 @@ export default class Header extends React.Component <module.PropsInterface, modu
         setHeaderComponentInstance(this)
     }
 
-    shouldComponentUpdate(nextProps:module.PropsInterface, nextState:module.StateInterface) {
+    shouldComponentUpdate(nextProps: module.PropsInterface, nextState: module.StateInterface) {
         if (nextProps.preview.isPreview === this.props.preview.isPreview && this.state === nextState) {
             return false
         }
@@ -74,14 +74,14 @@ export default class Header extends React.Component <module.PropsInterface, modu
     /**
      * 咔嚓,保存一个版本快照
      */
-    saveToVersion(id:string) {
+    saveToVersion(id: string) {
         addVersion(id)
     }
 
     /**
      * 缓存插件的额外配置选项
      */
-    handleConfigChange (key: string, value: any) {
+    handleConfigChange(key: string, value: any) {
         this.extendConfig[key] = value
     }
 
@@ -104,7 +104,9 @@ export default class Header extends React.Component <module.PropsInterface, modu
         const nextPreview = !this.props.preview.isPreview
 
         const viewPort = getViewPort()
-        viewPort.setPreview(nextPreview)
+        const rootProps = getRootProps().toJS()
+
+        viewPort.setPreview(nextPreview, rootProps['pageInfo'])
         gaeaObjectStore.getGaea().setPreview(nextPreview)
         store.dispatch(actions.previewChange(nextPreview))
     }
@@ -128,7 +130,7 @@ export default class Header extends React.Component <module.PropsInterface, modu
     /**
      * 设置 canUndo canRedo
      */
-    setCanUndoRedo(canUndo:boolean, canRedo:boolean) {
+    setCanUndoRedo(canUndo: boolean, canRedo: boolean) {
         this.setState({
             canUndo,
             canRedo
@@ -149,16 +151,23 @@ export default class Header extends React.Component <module.PropsInterface, modu
             disabled: !this.state.canRedo
         });
 
-        let MenuItems:JSX.Element[];
-        let SettingItems:JSX.Element[] = [];
+        let MenuItems: JSX.Element[];
+        let SettingItems: JSX.Element[] = [];
 
-        let itemMap:module.itemMapType = {
-            save: <MenuItem key="save" onClick={this.handleSave.bind(this)}>保存</MenuItem>,
-            preview: <MenuItem key="preview" onClick={this.handlePreview.bind(this)}>{previewText}</MenuItem>,
-            redo: <MenuItem key="redo" className={redoClasses} onClick={this.redo.bind(this)}><i className="fa fa-rotate-right"/></MenuItem>,
-            undo: <MenuItem key="undo" className={undoClasses} onClick={this.undo.bind(this)}><i className="fa fa-undo"/></MenuItem>,
-            online: <Online key="online" />,
-            settings: <UserSetting key="settings" handleConfigChange={this.handleConfigChange.bind(this)}/>
+        let itemMap: module.itemMapType = {
+            save: <MenuItem key="save"
+                            onClick={this.handleSave.bind(this)}>保存</MenuItem>,
+            preview: <MenuItem key="preview"
+                               onClick={this.handlePreview.bind(this)}>{previewText}</MenuItem>,
+            redo: <MenuItem key="redo"
+                            className={redoClasses}
+                            onClick={this.redo.bind(this)}><i className="fa fa-rotate-right"/></MenuItem>,
+            undo: <MenuItem key="undo"
+                            className={undoClasses}
+                            onClick={this.undo.bind(this)}><i className="fa fa-undo"/></MenuItem>,
+            online: <Online key="online"/>,
+            settings: <UserSetting key="settings"
+                                   handleConfigChange={this.handleConfigChange.bind(this)}/>
         };
 
         if (this.context.pluginInfo.headerConfig) {
@@ -171,7 +180,7 @@ export default class Header extends React.Component <module.PropsInterface, modu
                 SettingItems = this.getOrderItems(leftOrder, itemMap, leftComponent);
             }
 
-            if(headerPlus.right) {
+            if (headerPlus.right) {
                 let rightOrder = headerPlus.right.order || ['save', 'preview', 'redo', 'undo', 'online'];
                 let rightComponent = headerPlus.right.components;
                 invariant(rightOrder, 'component order is needed, the default order is [\'save\', \'preview\', \'redo\', \'undo\']');
@@ -180,14 +189,21 @@ export default class Header extends React.Component <module.PropsInterface, modu
         }
         else {
             MenuItems = [
-                <MenuItem key="save" onClick={this.handleSave.bind(this)}>保存</MenuItem>,
-                <MenuItem key="preview" onClick={this.handlePreview.bind(this)}>{previewText}</MenuItem>,
-                <MenuItem key="redo" className={redoClasses} onClick={this.redo.bind(this)}><i className="fa fa-rotate-right"/></MenuItem>,
-                <MenuItem key="undo" className={undoClasses} onClick={this.undo.bind(this)}><i className="fa fa-undo"/></MenuItem>,
-                <Online key="online" />
+                <MenuItem key="save"
+                          onClick={this.handleSave.bind(this)}>保存</MenuItem>,
+                <MenuItem key="preview"
+                          onClick={this.handlePreview.bind(this)}>{previewText}</MenuItem>,
+                <MenuItem key="redo"
+                          className={redoClasses}
+                          onClick={this.redo.bind(this)}><i className="fa fa-rotate-right"/></MenuItem>,
+                <MenuItem key="undo"
+                          className={undoClasses}
+                          onClick={this.undo.bind(this)}><i className="fa fa-undo"/></MenuItem>,
+                <Online key="online"/>
             ]
             SettingItems = [
-                <UserSetting key="settings" handleConfigChange={this.handleConfigChange.bind(this)}/>
+                <UserSetting key="settings"
+                             handleConfigChange={this.handleConfigChange.bind(this)}/>
             ]
         }
 
