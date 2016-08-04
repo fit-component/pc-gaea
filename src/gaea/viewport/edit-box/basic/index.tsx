@@ -41,7 +41,6 @@ export default class Basic extends React.Component <module.PropsInterface, modul
         } else {
             this.doChange(key, value, special)
         }
-
     }
 
     doChange(key: string, value: any, special: any) {
@@ -201,7 +200,7 @@ export default class Basic extends React.Component <module.PropsInterface, modul
                         <div className="array-group-content">
                             {ArrayChildren}
                             {!editItem.freeze && <Button className="add"
-                                    onClick={this.handleOptionsChange.bind(this, key, false, {type:'arrayPush'})}>新增一项</Button> }
+                                                         onClick={this.handleOptionsChange.bind(this, key, false, {type:'arrayPush'})}>新增一项</Button> }
                         </div>
                     </div>
                 )

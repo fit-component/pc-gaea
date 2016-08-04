@@ -5,7 +5,7 @@ export interface PropsInterface extends EditProps {
 
 export class Props implements PropsInterface {
     name = '选择框'
-    uniqueKey = 'gaea-input'
+    uniqueKey = 'gaea-select'
     icon = 'list'
 
     options = {

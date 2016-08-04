@@ -33,6 +33,7 @@ export default class Preview extends React.Component <module.PropsInterface, mod
     }
 
     render() {
+        console.log('preview render', this.props.componentInfo)
         return (
             <div className="_namespace">
                 <Helper componentInfo={this.props.componentInfo}/>

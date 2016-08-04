@@ -223,8 +223,8 @@ export default class Helper extends React.Component <module.PropsInterface, modu
                 /**
                  * 先在 dragTarget 新增组件
                  */
-                // 现在拖拽到的组件添加这个组件的所有信息
-                // 先获取到这个组件的信息,从 rootProps 里
+                    // 现在拖拽到的组件添加这个组件的所有信息
+                    // 先获取到这个组件的信息,从 rootProps 里
                 const rootPropsInstance = rootProps.getRootProps()
                 const dragSourceInstanceInfo = rootPropsInstance.getIn(dragSourceInfo.instance.getPositions()).toJS()
                 this.addExistChild(dragSourceInstanceInfo)
@@ -293,10 +293,6 @@ export default class Helper extends React.Component <module.PropsInterface, modu
                     item[key] = ''
                 })
                 newProps.options[key].value.push(item)
-
-                // 因为新增了,通知 edit 刷新
-                const arrayPushMergedProps = this.getMergedProps()
-                store.dispatch(actions.editBoxUpdate(arrayPushMergedProps))
                 break
             case 'arrayDelete':
                 const arrayDeleteComponents = getComponents()
@@ -320,6 +316,14 @@ export default class Helper extends React.Component <module.PropsInterface, modu
         }, ()=> {
             // 修改完后同步到 rootProps
             rootProps.setRootProps(this.getPositions(), 'props', newProps)
+
+            // 为什么通知 editBox 会放在这里
+            // 因为 getMergedProps 操作会获取自身 props, 这里更新完才能保证拿到的数据是最新的
+            if (special.type === 'arrayPush') {
+                // 因为新增了,通知 edit 刷新
+                const arrayPushMergedProps = this.getMergedProps()
+                store.dispatch(actions.editBoxUpdate(arrayPushMergedProps))
+            }
         })
     }
 
