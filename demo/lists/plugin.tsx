@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { Link } from 'react-router'
-import Button from 'fit-button'
+import Button from '../../../button/src'
 import Gaea from '../../src'
 
 class CustomButton extends React.Component<any, any> {

@@ -7,7 +7,6 @@ export default class InputComponent extends React.Component <module.PropsInterfa
     public state: module.StateInterface = new module.State()
 
     render() {
-        console.log('select render', this.props.options['options'].value)
         return (
             <Select label={this.props.options['label'].value}
                     options={this.props.options['options'].value}

@@ -6,6 +6,7 @@ import * as rootProps from '../../../object-store/root-props'
 import {setComponents} from '../../../object-store/components'
 import {getGroupComponents} from '../../../object-store/group-components'
 import {setToolsComponentsInstance} from '../../../object-store/tools-components'
+import './index.scss'
 
 const switchTypes = [{
     type: 'custom',
@@ -42,7 +43,7 @@ export default class Components extends React.Component <any ,any> {
         /**
          * 把所有组件都放到 redux components 里
          */
-        // 初始状态先获取所有组件的引用
+            // 初始状态先获取所有组件的引用
         let components: any = {}
 
         currencyComponents.map(item=> {
@@ -75,6 +76,15 @@ export default class Components extends React.Component <any ,any> {
         this.setState({
             groups
         })
+    }
+
+    /**
+     * 渲染预览图
+     */
+    renderComponentPreview() {
+        return (
+            <div>123</div>
+        )
     }
 
     render() {

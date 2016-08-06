@@ -11,12 +11,14 @@ import * as module from './module'
 import store from '../../utils/configure-store'
 import TreeMoveBox from './tree-move-box'
 import * as _ from 'lodash'
+import ExtraPage from './extra-page'
 import './index.scss'
 
 @connect(
     (state: any) => {
         return {
-            rootPropsStore: state.rootProps.toJS()
+            rootPropsStore: state.rootProps.toJS(),
+            domTree: state.domTree.toJS()
         }
     },
     actions
@@ -45,7 +47,7 @@ export default class DomTree extends React.Component <module.PropsInterface, mod
     }
 
     shouldComponentUpdate(nextProps: any, nextState: any) {
-        if (_.isEqual(this.props.rootPropsStore, nextProps.rootPropsStore) && this.state === nextState) {
+        if (_.isEqual(this.props.rootPropsStore, nextProps.rootPropsStore) && this.state === nextState && _.isEqual(this.props.domTree, nextProps.domTree)) {
             return false
         }
         return true
@@ -82,24 +84,50 @@ export default class DomTree extends React.Component <module.PropsInterface, mod
      */
     freshView(pageInfo: any) {
         this.setState({
-            pageInfo:_.cloneDeep(pageInfo),
+            pageInfo: _.cloneDeep(pageInfo),
             renderKey: this.state.renderKey + 1
         })
+    }
+
+    /**
+     * 获取右下角显示角标
+     */
+    getComponentCountElement() {
+        if (this.props.domTree.extraContent.type === '') {
+            return (
+                <span>组件数:{this.state.count}</span>
+            )
+        }
+
+        switch (this.props.domTree.extraContent.type) {
+            case 'componentPreview':
+                return (
+                    <span>组件预览</span>
+                )
+        }
     }
 
     render() {
         return (
             <div className="_namespace"
                  onMouseLeave={this.handleViewPortLeave.bind(this)}>
-                <div className="component-count">组件数:{this.state.count}</div>
-                <Tree defaultExpendAll={true}>
-                    <TreeElement info={this.state.pageInfo}
-                                 key={this.state.renderKey}
-                                 parent={null}
-                                 ref="rootTreeElement"
-                                 position={-1}/>
-                </Tree>
-                <TreeMoveBox/>
+
+                <div className="component-count">
+                    {this.getComponentCountElement.call(this)}
+                </div>
+
+                <div style={{display:this.props.domTree.extraContent.type===''?'block':'none'}}>
+                    <Tree defaultExpendAll={true}>
+                        <TreeElement info={this.state.pageInfo}
+                                     key={this.state.renderKey}
+                                     parent={null}
+                                     ref="rootTreeElement"
+                                     position={-1}/>
+                    </Tree>
+                    <TreeMoveBox/>
+                </div>
+
+                <ExtraPage info={this.props.domTree.extraContent}/>
             </div>
         )
     }

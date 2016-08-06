@@ -2,6 +2,7 @@ import * as React from 'react'
 
 export interface PropsInterface {
     rootPropsStore?: any
+    domTree?: Models.DomTree
 }
 
 export class Props implements PropsInterface {

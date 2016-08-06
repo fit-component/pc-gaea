@@ -184,3 +184,30 @@ export const previewChange = (isPreview: boolean)=> {
         isPreview
     }
 }
+
+/**
+ * ==================================
+ * dom-tree 右下角的区域
+ * ==================================
+ */
+
+/**
+ * 展示内容,并且覆盖掉树内容（树只是隐藏,因为销毁成本很大,这里会展示比如组件预览等状态,当鼠标不在树上和编辑区域的时候,都可以利用这块空间）
+ */
+export const DOM_TREE_EXTRA_CONTENT_SHOW = 'DOM_TREE_EXTRA_CONTENT_SHOW'
+export const domTreeExtraContentShow = (componentName: string)=> {
+    return {
+        type: DOM_TREE_EXTRA_CONTENT_SHOW,
+        componentName
+    }
+}
+
+/**
+ * 隐藏展示内容
+ */
+export const DOM_TREE_EXTRA_CONTENT_HIDE = 'DOM_TREE_EXTRA_CONTENT_HIDE'
+export const domTreeExtraContentHide = ()=> {
+    return {
+        type: DOM_TREE_EXTRA_CONTENT_HIDE
+    }
+}

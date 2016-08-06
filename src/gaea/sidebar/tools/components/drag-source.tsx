@@ -1,5 +1,7 @@
 import * as React from 'react'
 import {DragSource} from 'react-dnd'
+import * as actions from '../../../stores/actions'
+import store from '../../../utils/configure-store'
 import './index.scss'
 
 const options = {
@@ -25,12 +27,24 @@ const options = {
 
 @DragSource('component', options, (connect, monitor) => ({
     connectDragSource: connect.dragSource(),
-    isDragging: monitor.isDragging()
+    isDragging: monitor.isDragging(),
+    handleMouseEnter: (uniqueKey: string)=> {
+        // 触发在 dom-tree 显示组件预览的 action
+        store.dispatch(actions.domTreeExtraContentShow(uniqueKey))
+    },
+    handleMouseLeave: ()=> {
+        // 触发在 dom-tree 关闭额外内容显示
+        store.dispatch(actions.domTreeExtraContentHide())
+    }
 }))
 export default class DragSourceComponent extends React.Component <any, any> {
     render() {
         return this.props['connectDragSource'](
-            <div className="_namespace drag-box">{this.props.children}</div>
+            <div className="_namespace drag-box"
+                 onMouseEnter={this.props['handleMouseEnter'].bind(this, this.props['uniqueKey'])}
+                 onMouseLeave={this.props['handleMouseLeave']}>
+                {this.props.children}
+            </div>
         )
     }
 }

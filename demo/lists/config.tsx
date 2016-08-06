@@ -1,6 +1,6 @@
  import * as React from 'react'
 import { Link } from 'react-router'
-import Input from 'fit-input'
+import Input from '../../../input/src'
 import Gaea from '../../src'
 
 interface extendComponentProps {
