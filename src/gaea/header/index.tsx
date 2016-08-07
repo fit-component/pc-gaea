@@ -36,7 +36,7 @@ export default class Header extends React.Component <module.PropsInterface, modu
 
     static contextTypes: React.ValidationMap<any> = {
         pluginInfo: React.PropTypes.object.isRequired
-    };
+    }
 
     extendConfig: module.extendConfigStore = {}
 
@@ -51,7 +51,7 @@ export default class Header extends React.Component <module.PropsInterface, modu
                     key: index
                 });
             }
-        });
+        })
 
         if (isReverse) {
             return _(items).reverse().value();
@@ -65,7 +65,8 @@ export default class Header extends React.Component <module.PropsInterface, modu
     }
 
     shouldComponentUpdate(nextProps: module.PropsInterface, nextState: module.StateInterface) {
-        if (nextProps.preview.isPreview === this.props.preview.isPreview && this.state === nextState) {
+        //console.log(111111111,this.state == nextState)
+        if (nextProps.preview.isPreview === this.props.preview.isPreview && this.state == nextState) {
             return false
         }
         return true
@@ -138,6 +139,7 @@ export default class Header extends React.Component <module.PropsInterface, modu
     }
 
     render() {
+        //console.log('header update')
         let previewText = '预览'
         if (this.props.preview.isPreview) {
             previewText = '取消'
@@ -149,10 +151,10 @@ export default class Header extends React.Component <module.PropsInterface, modu
 
         const redoClasses = classNames({
             disabled: !this.state.canRedo
-        });
+        })
 
-        let MenuItems: JSX.Element[];
-        let SettingItems: JSX.Element[] = [];
+        let MenuItems: JSX.Element[]
+        let SettingItems: JSX.Element[] = []
 
         let itemMap: module.itemMapType = {
             save: <MenuItem key="save"
@@ -168,7 +170,7 @@ export default class Header extends React.Component <module.PropsInterface, modu
             online: <Online key="online"/>,
             settings: <UserSetting key="settings"
                                    handleConfigChange={this.handleConfigChange.bind(this)}/>
-        };
+        }
 
         if (this.context.pluginInfo.headerConfig) {
             let headerPlus = this.context.pluginInfo.headerConfig;

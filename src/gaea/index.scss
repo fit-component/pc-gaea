@@ -1,9 +1,12 @@
 .section {
     background-image: url('./transparent.png');
-    transition: all .2s;
     &.preview {
         right: 0 !important;
     }
+}
+
+.section-transition {
+    transition: all .2s;
 }
 
 .header {

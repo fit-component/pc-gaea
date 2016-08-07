@@ -13,16 +13,16 @@ export default function PluginContext<P>(
 
     let childContext = {
         pluginInfo: pluginInfo
-    };
+    }
 
     return function (wrapperComponent:React.ComponentClass<P>):ContextComponentClass<P> {
 
         return class extends React.Component<P, any> {
-            static displayName = `Plugin(${getDisplayName(wrapperComponent)})`;
+            static displayName = `Plugin(${getDisplayName(wrapperComponent)})`
 
             static childContextTypes:React.ValidationMap<any> = {
                 pluginInfo: React.PropTypes.object.isRequired
-            };
+            }
 
             getChildContext() {
                 return childContext
@@ -32,7 +32,7 @@ export default function PluginContext<P>(
                 return React.createElement(
                     wrapperComponent,
                     this.props
-                );
+                )
             }
         }
     }

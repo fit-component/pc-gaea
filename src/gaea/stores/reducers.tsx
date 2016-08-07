@@ -8,6 +8,7 @@ import userSetting from './user-setting/reducer'
 import rootProps from './root-props/reducer'
 import preview from './preview/reducer'
 import domTree from './dom-tree/reducer'
+import layout from './layout/reducer'
 
 const rootReducer = combineReducers({
     components,
@@ -17,7 +18,8 @@ const rootReducer = combineReducers({
     userSetting,
     rootProps,
     preview,
-    domTree
+    domTree,
+    layout
 })
 
 export default rootReducer

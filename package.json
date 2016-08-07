@@ -1,6 +1,6 @@
 {
   "name": "fit-gaea",
-  "version": "0.2.32",
+  "version": "0.2.33",
   "description": "",
   "main": "lib/index.js",
   "scripts": {
@@ -24,10 +24,9 @@
     "lodash": "^3.10.1",
     "fit-modal": "^3.0.45",
     "fit-switch": "^3.0.23",
-    "fit-transmit-transparently": "^3.1.26",
-    "fit-layout-global": "^3.0.22",
     "react-redux": "^4.4.5",
     "react-dnd-html5-backend": "^2.1.2",
+    "fit-layout-global": "^3.0.23",
     "jquery": "^1.12.4",
     "immutable": "^3.8.0",
     "immutablediff": "^0.4.2",

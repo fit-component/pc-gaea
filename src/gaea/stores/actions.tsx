@@ -211,3 +211,41 @@ export const domTreeExtraContentHide = ()=> {
         type: DOM_TREE_EXTRA_CONTENT_HIDE
     }
 }
+
+/**
+ * ==================================
+ * 整体布局
+ * ==================================
+ */
+
+/**
+ * 设置侧边栏宽度
+ * @offset 指侧边栏宽度比上次变化的数量
+ */
+export const LAYOUT_SET_SIDEBAR_WIDTH = 'LAYOUT_SET_SIDEBAR_WIDTH'
+export const layoutSetSidebarWidth = (offset: number)=> {
+    return {
+        type: LAYOUT_SET_SIDEBAR_WIDTH,
+        offset
+    }
+}
+
+/**
+ * 侧边栏准备移动,鼠标点下去
+ */
+export const LAYOUT_SIDEBAR_MOVE_DOWN_START = 'LAYOUT_SIDEBAR_MOVE_DOWN_START'
+export const layoutSidebarMoveDownStart = ()=> {
+    return {
+        type: LAYOUT_SIDEBAR_MOVE_DOWN_START
+    }
+}
+
+/**
+ * 侧边栏准备移动,鼠标抬起来
+ */
+export const LAYOUT_SIDEBAR_MOVE_DOWN_END = 'LAYOUT_SIDEBAR_MOVE_DOWN_END'
+export const layoutSidebarMoveDownEnd = ()=> {
+    return {
+        type: LAYOUT_SIDEBAR_MOVE_DOWN_END
+    }
+}
