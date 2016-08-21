@@ -1,4 +1,4 @@
-declare type EventType = number|string
+export declare type EventType = number|string
 
 /**
  * 事件

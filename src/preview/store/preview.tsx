@@ -2,7 +2,7 @@
  * 预览时的页面数据
  */
 
-import {observable, computed, map, transaction} from 'mobx'
+import {observable, computed, map, transaction, ObservableMap} from 'mobx'
 import * as React from 'react'
 
 export default class Preview {
@@ -52,7 +52,7 @@ export default class Preview {
     /**
      * 已实例化在编辑区域组件的集合
      */
-    components = map<FitGaea.ViewportComponentInfo>()
+    components: ObservableMap<FitGaea.ViewportComponentInfo> = map<FitGaea.ViewportComponentInfo>()
 
     /**
      * 根节点的唯一 id

@@ -2,10 +2,9 @@
  * 编辑可视区域
  */
 
-import {observable, computed, map, transaction} from 'mobx'
+import {observable, computed, map, transaction, ObservableMap} from 'mobx'
 import * as _ from 'lodash'
 import Application from './application'
-import ViewportComponentInfo = FitGaea.ViewportComponentInfo;
 
 export default class Viewport {
     private application: Application
@@ -17,7 +16,7 @@ export default class Viewport {
     /**
      * 已实例化在编辑区域组件的集合
      */
-    @observable components = map<FitGaea.ViewportComponentInfo>()
+    @observable components: ObservableMap<FitGaea.ViewportComponentInfo> = map<FitGaea.ViewportComponentInfo>()
 
     /**
      * 根节点的唯一 id
@@ -501,7 +500,7 @@ export default class Viewport {
      * 删除 component
      */
     deleteComponent(mapUniqueKey: string, deleteChildComponents: {
-        [mapUniqueKey: string]: ViewportComponentInfo
+        [mapUniqueKey: string]: FitGaea.ViewportComponentInfo
     } = {}) {
         // 从父级删除这个 child
         // 能删除的都不是根元素, 一定有 parentMapUniqueId 这个属性
@@ -701,7 +700,7 @@ export default class Viewport {
 
         // 更新 childs 的 mapUniqueKey
         let childs: {
-            [mapUniqueKey: string]: ViewportComponentInfo
+            [mapUniqueKey: string]: FitGaea.ViewportComponentInfo
         } = {}
 
         Object.keys(originComponent.childs).forEach(mapUniqueKey=> {
