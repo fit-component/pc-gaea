@@ -13,9 +13,9 @@ declare namespace FitGaea {
          */
         layoutChilds?: Array<string>
         /**
-         * 父级 mapUniqueId, 这样不但方便寻找父级,还能根据是否为 null 判断是否为根元素
+         * 父级 mapUniqueKey, 这样不但方便寻找父级,还能根据是否为 null 判断是否为根元素
          */
-        parentMapUniqueId: string
+        parentMapUniqueKey: string
     }
 
     /**

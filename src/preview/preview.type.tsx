@@ -10,7 +10,7 @@ export interface PropsDefine {
      * 页面信息
      */
     value?: {
-        [mapUniqueId: string]: FitGaea.ViewportComponentInfo
+        [mapUniqueKey: string]: FitGaea.ViewportComponentInfo
     }
 }
 

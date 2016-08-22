@@ -27,7 +27,7 @@ export default class TreeElement extends React.Component <typings.PropsDefine, t
 
     componentWillMount() {
         // 从 store 找到自己信息
-        this.componentInfo = this.props.viewport.components.get(this.props.mapUniqueId)
+        this.componentInfo = this.props.viewport.components.get(this.props.mapUniqueKey)
     }
 
     componentDidMount() {
@@ -69,10 +69,10 @@ export default class TreeElement extends React.Component <typings.PropsDefine, t
     @autoBindMethod handleMouseOver(event: React.MouseEvent) {
         event.stopPropagation()
         this.props.application.event.emit(this.props.application.event.viewportOrTreeComponentMouseOver, {
-            mapUniqueId: this.props.mapUniqueId,
+            mapUniqueKey: this.props.mapUniqueKey,
             type: 'tree'
         } as FitGaea.MouseHoverComponentEvent)
-        this.props.viewport.setHoveringComponentMapUniqueKey(this.props.mapUniqueId)
+        this.props.viewport.setHoveringComponentMapUniqueKey(this.props.mapUniqueKey)
     }
 
     /**
@@ -81,7 +81,7 @@ export default class TreeElement extends React.Component <typings.PropsDefine, t
     @autoBindMethod handleMouseLeave(event: React.MouseEvent) {
         event.stopPropagation()
         this.props.application.event.emit(this.props.application.event.viewportOrTreeRootComponentMouseLeave, {
-            mapUniqueId: this.props.mapUniqueId,
+            mapUniqueKey: this.props.mapUniqueKey,
             type: 'tree'
         } as FitGaea.MouseHoverComponentEvent)
         this.props.viewport.setHoveringComponentMapUniqueKey(null)
@@ -101,23 +101,23 @@ export default class TreeElement extends React.Component <typings.PropsDefine, t
         event.stopPropagation()
 
         // 设置选中组件的 uniqueKey
-        this.props.viewport.setCurrentEditComponentMapUniqueKey(this.props.mapUniqueId)
+        this.props.viewport.setCurrentEditComponentMapUniqueKey(this.props.mapUniqueKey)
 
         // 把上一个组件触发非选中
-        if (this.props.viewport.lastSelectMapUniqueId !== null) {
+        if (this.props.viewport.lastSelectMapUniqueKey !== null) {
             // 如果上个选中组件没被关
             this.props.application.event.emit(this.props.application.event.changeComponentSelectStatusEvent, {
-                mapUniqueId: this.props.viewport.lastSelectMapUniqueId,
+                mapUniqueKey: this.props.viewport.lastSelectMapUniqueKey,
                 selected: false
             } as FitGaea.ComponentSelectStatusEvent)
         }
 
         // 设置自己为上一个组件
-        this.props.viewport.setLastSelectMapUniqueId(this.props.mapUniqueId)
+        this.props.viewport.setLastSelectMapUniqueKey(this.props.mapUniqueKey)
 
         // 触发选中组件 event, 各 layout 会接收, 设置子组件的 setSelect
         this.props.application.event.emit(this.props.application.event.changeComponentSelectStatusEvent, {
-            mapUniqueId: this.props.mapUniqueId,
+            mapUniqueKey: this.props.mapUniqueKey,
             selected: true
         } as FitGaea.ComponentSelectStatusEvent)
     }
@@ -142,7 +142,7 @@ export default class TreeElement extends React.Component <typings.PropsDefine, t
             childs = this.componentInfo.layoutChilds.map(layoutChildUniqueMapKey=> {
                 return (
                     <TreeElement.ObserveTreeElement key={layoutChildUniqueMapKey}
-                                                    mapUniqueId={layoutChildUniqueMapKey}
+                                                    mapUniqueKey={layoutChildUniqueMapKey}
                                                     ref={`tree-${layoutChildUniqueMapKey}`}/>
                 )
             })

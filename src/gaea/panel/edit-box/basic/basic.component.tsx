@@ -2,9 +2,9 @@ import * as React from 'react'
 import * as typings from './basic.type'
 import {observer, inject} from 'mobx-react'
 
-import {autoBindMethod} from '../../../../../../../../common/auto-bind/src'
-import {Button, ButtonGroup} from '../../../../../../../button/src'
-import Input from '../../../../../../../input/src'
+import {autoBindMethod} from '../../../../../../../common/auto-bind/src'
+import {Button, ButtonGroup} from '../../../../../../button/src'
+import Input from '../../../../../../input/src'
 
 import RemoveButton from './remote-button/remote-button.component'
 import SetGroupButton from './set-group-button/set-group-button.component'
@@ -26,7 +26,7 @@ export default class EditBoxBasic extends React.Component <typings.PropsDefine, 
      * 重置为默认属性
      */
     @autoBindMethod resetOptions() {
-
+        this.props.viewport.resetComponent(this.props.viewport.currentEditComponentMapUniqueKey)
     }
 
     /**
@@ -41,7 +41,7 @@ export default class EditBoxBasic extends React.Component <typings.PropsDefine, 
      */
     @autoBindMethod titleInputRightRender() {
         // 根组件没有移除功能
-        if (this.componentInfo.parentMapUniqueId === null) {
+        if (this.componentInfo.parentMapUniqueKey === null) {
             return null
         }
 
@@ -51,6 +51,10 @@ export default class EditBoxBasic extends React.Component <typings.PropsDefine, 
     }
 
     render() {
+        if (!this.props.viewport.currentEditComponentMapUniqueKey) {
+            return null
+        }
+
         // 绑定组件信息
         this.componentInfo = this.props.viewport.components.get(this.props.viewport.currentEditComponentMapUniqueKey)
 
@@ -73,7 +77,7 @@ export default class EditBoxBasic extends React.Component <typings.PropsDefine, 
 
         // 重置按钮,非根节点才有
         let ResetButton: React.ReactElement<any> = null
-        if (this.componentInfo.parentMapUniqueId === null) {
+        if (this.componentInfo.parentMapUniqueKey !== null) {
             ResetButton = (
                 <Button onClick={this.resetOptions}>重置为默认属性</Button>
             )
@@ -81,7 +85,7 @@ export default class EditBoxBasic extends React.Component <typings.PropsDefine, 
 
         // 成组按钮,有 childs 的 layout 元素且非根节点才有
         let GroupButton: React.ReactElement<any> = null
-        if (this.componentInfo.props.uniqueKey === 'gaea-layout' && this.componentInfo.parentMapUniqueId === null) {
+        if (this.componentInfo.props.uniqueKey === 'gaea-layout' && this.componentInfo.parentMapUniqueKey !== null) {
             GroupButton = (
                 <SetGroupButton/>
             )
@@ -98,7 +102,7 @@ export default class EditBoxBasic extends React.Component <typings.PropsDefine, 
                        onChange={this.handleChangeName}
                        rightRender={this.titleInputRightRender}
                        style={{paddingLeft:35}}
-                       defaultValue={this.componentInfo.props.name}/>
+                       value={this.componentInfo.props.name}/>
                 <div className="edit-item-container">
                     {Editors}
                 </div>

@@ -22,7 +22,7 @@ export interface PropsDefine {
      * 页面初始化信息
      */
     defaultValue?: {
-        [mapUniqueId: string]: FitGaea.ViewportComponentInfo
+        [mapUniqueKey: string]: FitGaea.ViewportComponentInfo
     }
 
     /**
@@ -31,7 +31,7 @@ export interface PropsDefine {
      * 同时要后端把 info.pageInfo 和当前时间戳 存储起来,下次刷新时候获取,并且塞入到 versionInit 可以显示版本快照信息
      */
     onSave?: (info?: {
-        [mapUniqueId: string]: FitGaea.ViewportComponentInfo
+        [mapUniqueKey: string]: FitGaea.ViewportComponentInfo
     }) => void
 
     /**

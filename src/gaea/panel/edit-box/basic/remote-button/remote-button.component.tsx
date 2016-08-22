@@ -4,9 +4,9 @@ import {observer, inject} from 'mobx-react'
 
 import * as _ from 'lodash'
 
-import Button from '../../../../../../../../button/src'
-import Modal from '../../../../../../../../modal/src'
-import {autoBindMethod} from '../../../../../../../../../common/auto-bind/src'
+import Button from '../../../../../../../button/src'
+import Modal from '../../../../../../../modal/src'
+import {autoBindMethod} from '../../../../../../../../common/auto-bind/src'
 
 @inject('viewport', 'setting') @observer
 export default class RemoveButton extends React.Component <typings.PropsDefine, typings.StateDefine> {
@@ -28,7 +28,7 @@ export default class RemoveButton extends React.Component <typings.PropsDefine, 
         const currentEditComponentMapUniqueKey = this.props.viewport.currentEditComponentMapUniqueKey
 
         // 找到父级 mapUniqueKey, 记录历史操作使用
-        const parentMapUniqueKey = this.props.viewport.components.get(currentEditComponentMapUniqueKey).parentMapUniqueId
+        const parentMapUniqueKey = this.props.viewport.components.get(currentEditComponentMapUniqueKey).parentMapUniqueKey
 
         // 存储组件信息
         const componentInfo = _.cloneDeep(JSON.parse(JSON.stringify(this.props.viewport.components.get(currentEditComponentMapUniqueKey))))

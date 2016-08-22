@@ -4,7 +4,7 @@ declare namespace FitGaea {
      */
     export interface Diff {
         // 操作类型
-        type: 'add' | 'move' | 'remove' | 'exchange' | 'update' | 'paste'
+        type: 'add' | 'move' | 'remove' | 'exchange' | 'update' | 'paste' | 'reset' | 'addCombo'
         // 操作组件的 mapUniqueKey
         mapUniqueKey: string
         // 新增操作
@@ -40,9 +40,24 @@ declare namespace FitGaea {
             optionKey: string
             oldValue: ComponentPropsOptionValue,
             newValue: ComponentPropsOptionValue
-        },
+        }
         // 粘贴操作
         paste?: DiffRemove
+        // 重置组件
+        reset?: {
+            // 重置前的信息
+            beforeProps: ComponentProps
+            beforeName: string
+        }
+        // 新增组合
+        addCombo?: {
+            // 父级 mapKey
+            parentMapUniqueKey: string
+            // 父级的 index
+            index: number
+            // 组合的完整信息（不是 copy 的, 是真正对应的 mapUniqueKey）
+            componentInfo: ViewportComponentFullInfo
+        }
     }
 
     export interface DiffRemove extends ViewportComponentFullInfo {

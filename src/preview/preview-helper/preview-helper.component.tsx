@@ -21,7 +21,7 @@ export default class PreviewHelper extends React.Component <typings.PropsDefine,
 
     componentWillMount() {
         // 从 store 找到自己信息
-        this.componentInfo = this.props.preview.components.get(this.props.mapUniqueId)
+        this.componentInfo = this.props.preview.components.get(this.props.mapUniqueKey)
 
         // 获取当前要渲染的组件 class
         this.SelfComponent = this.props.preview.getComponentByUniqueKey(this.componentInfo.props.uniqueKey)
@@ -36,7 +36,7 @@ export default class PreviewHelper extends React.Component <typings.PropsDefine,
             childs = this.componentInfo.layoutChilds.map(layoutChildUniqueMapKey=> {
                 return (
                     <PreviewHelper.ObservePreviewHelper key={layoutChildUniqueMapKey}
-                                                        mapUniqueId={layoutChildUniqueMapKey}/>
+                                                        mapUniqueKey={layoutChildUniqueMapKey}/>
                 )
             })
         }

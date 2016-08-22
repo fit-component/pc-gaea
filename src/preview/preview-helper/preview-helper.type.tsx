@@ -7,7 +7,7 @@ export interface PropsDefine {
     /**
      * 当前元素的查找的 id
      */
-    mapUniqueId?: string
+    mapUniqueKey?: string
 }
 
 export class Props implements PropsDefine {

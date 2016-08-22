@@ -6,7 +6,7 @@ export interface PropsDefine {
     /**
      * store map 中的唯一 id
      */
-    mapUniqueId ?: string
+    mapUniqueKey ?: string
 
     application?: Application
     viewport?: Viewport

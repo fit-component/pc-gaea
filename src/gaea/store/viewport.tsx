@@ -21,21 +21,21 @@ export default class Viewport {
     /**
      * 根节点的唯一 id
      */
-    @observable rootMapUniqueId: string
+    @observable rootMapUniqueKey: string
 
     /**
      * 生成根节点唯一 id
      */
     createRootUniqueId() {
-        this.rootMapUniqueId = this.createUniqueId()
-        return this.rootMapUniqueId
+        this.rootMapUniqueKey = this.createUniqueId()
+        return this.rootMapUniqueKey
     }
 
     /**
      * 设置根节点唯一 id
      */
     setRootUniqueId(uniqueId: string) {
-        this.rootMapUniqueId = uniqueId
+        this.rootMapUniqueKey = uniqueId
     }
 
     /**
@@ -46,29 +46,68 @@ export default class Viewport {
     }
 
     /**
+     * 将某个元素重置为默认配置
+     */
+    resetComponent(mapUniqueKey: string) {
+        const component = this.components.get(mapUniqueKey)
+        // 找到对应 class
+        const ComponentClass = this.application.getComponentByUniqueKey(component.props.uniqueKey)
+
+        // 保存操作
+        this.saveOperate({
+            type: 'reset',
+            mapUniqueKey: mapUniqueKey,
+            reset: {
+                beforeProps: JSON.parse(JSON.stringify(component.props)),
+                beforeName: component.props.name
+            }
+        })
+
+        // 开始重置
+        transaction(()=> {
+            component.props.options = _.cloneDeep(ComponentClass.defaultProps.options)
+            component.props.name = ComponentClass.defaultProps.name
+        })
+    }
+
+    /**
      * 添加 component, 根据情况分为新添加、移动已存在组件
      */
-    addComponent(parentMapUniqueId: string, index: number) {
-        let mapUniqueKey: string
-
-        if (this.currentMovingComponent.isNew) {
-            // 添加一个全新的 component
-            mapUniqueKey = this.createUniqueId()
-            this.addNewComponent(mapUniqueKey, parentMapUniqueId, this.currentMovingComponent.uniqueKey, index)
+    addComponent(parentMapUniqueKey: string, index: number) {
+        // 对组合特殊处理
+        if (this.currentMovingComponent.uniqueKey === 'combo') {
+            // 返回组合的 copy
+            const copyCombo = this.createCopyComponentWithNewUniqueKey(this.application.comboComponents[this.dragStartIndex], parentMapUniqueKey)
+            this.addComplexComponent(parentMapUniqueKey, copyCombo.mapUniqueKey, index, copyCombo)
+            return {
+                mapUniqueKey: copyCombo.mapUniqueKey,
+                component: copyCombo
+            }
         } else {
-            // 添加一个已存在的 component
-            mapUniqueKey = this.currentMovingComponent.mapUniqueKey
-            this.addToParent(mapUniqueKey, parentMapUniqueId, index)
-        }
+            let mapUniqueKey: string
 
-        return mapUniqueKey
+            if (this.currentMovingComponent.isNew) {
+                // 添加一个全新的 component
+                mapUniqueKey = this.createUniqueId()
+                this.addNewComponent(mapUniqueKey, parentMapUniqueKey, this.currentMovingComponent.uniqueKey, index)
+            } else {
+                // 添加一个已存在的 component
+                mapUniqueKey = this.currentMovingComponent.mapUniqueKey
+                this.addToParent(mapUniqueKey, parentMapUniqueKey, index)
+            }
+
+            return {
+                mapUniqueKey: mapUniqueKey,
+                component: null
+            }
+        }
     }
 
     /**
      * 同一个父级下子元素移动位置
      */
-    sortComponents(parentMapUniqueId: string, beforeIndex: number, afterIndex: number) {
-        const layoutChilds = this.components.get(parentMapUniqueId).layoutChilds
+    sortComponents(parentMapUniqueKey: string, beforeIndex: number, afterIndex: number) {
+        const layoutChilds = this.components.get(parentMapUniqueKey).layoutChilds
         if (beforeIndex < afterIndex) {
             // 从左到右
             transaction(()=> {
@@ -262,13 +301,13 @@ export default class Viewport {
     cancelEditComponent() {
         this.currentEditComponentMapUniqueKey = null
 
-        if (this.lastSelectMapUniqueId !== null) {
+        if (this.lastSelectMapUniqueKey !== null) {
             this.application.event.emit(this.application.event.changeComponentSelectStatusEvent, {
-                mapUniqueId: this.lastSelectMapUniqueId,
+                mapUniqueKey: this.lastSelectMapUniqueKey,
                 selected: false
             } as FitGaea.ComponentSelectStatusEvent)
 
-            this.setLastSelectMapUniqueId(null)
+            this.setLastSelectMapUniqueKey(null)
         }
     }
 
@@ -302,14 +341,14 @@ export default class Viewport {
         let nowComponent = this.components.get(mapUniqueKey)
 
         // 如果已经是根元素, 直接返回空数组
-        if (nowComponent.parentMapUniqueId === null) {
+        if (nowComponent.parentMapUniqueKey === null) {
             return [] as Array<string>
         }
 
         // 直到父级是根元素为止
-        while (this.components.get(nowComponent.parentMapUniqueId).parentMapUniqueId !== null) {
-            finderPath.unshift(nowComponent.parentMapUniqueId)
-            nowComponent = this.components.get(nowComponent.parentMapUniqueId)
+        while (this.components.get(nowComponent.parentMapUniqueKey).parentMapUniqueKey !== null) {
+            finderPath.unshift(nowComponent.parentMapUniqueKey)
+            nowComponent = this.components.get(nowComponent.parentMapUniqueKey)
         }
 
         return finderPath
@@ -339,13 +378,13 @@ export default class Viewport {
     /**
      * 最后一次选择中组件 id, 会随着取消选择变成 null
      */
-    lastSelectMapUniqueId: string = null
+    lastSelectMapUniqueKey: string = null
 
     /**
      * 设置最后一次高亮选择组件 id
      */
-    setLastSelectMapUniqueId(mapUniqueId: string) {
-        this.lastSelectMapUniqueId = mapUniqueId
+    setLastSelectMapUniqueKey(mapUniqueKey: string) {
+        this.lastSelectMapUniqueKey = mapUniqueKey
     }
 
     /**
@@ -411,7 +450,7 @@ export default class Viewport {
                 options: _.cloneDeep(ComponentClass.defaultProps.options),
                 uniqueKey: uniqueId
             },
-            parentMapUniqueId: parentMapUniqueKey,
+            parentMapUniqueKey: parentMapUniqueKey,
             layoutChilds: []
         }
 
@@ -434,11 +473,11 @@ export default class Viewport {
      * 1. 存在于 this.components 中
      * 2. 如果是布局组件, 所有子元素也都存在于 this.components 中
      */
-    addToParent(mapUniqueKey: string, parentMapUniqueId: string, index: number) {
+    addToParent(mapUniqueKey: string, parentMapUniqueKey: string, index: number) {
         // 修改那个元素的父级
-        this.components.get(mapUniqueKey).parentMapUniqueId = parentMapUniqueId
+        this.components.get(mapUniqueKey).parentMapUniqueKey = parentMapUniqueKey
         // 在父级中插入子元素
-        this.components.get(parentMapUniqueId).layoutChilds.splice(index, 0, mapUniqueKey)
+        this.components.get(parentMapUniqueKey).layoutChilds.splice(index, 0, mapUniqueKey)
     }
 
     /**
@@ -503,8 +542,8 @@ export default class Viewport {
         [mapUniqueKey: string]: FitGaea.ViewportComponentInfo
     } = {}) {
         // 从父级删除这个 child
-        // 能删除的都不是根元素, 一定有 parentMapUniqueId 这个属性
-        const parentComponent = this.components.get(this.components.get(mapUniqueKey).parentMapUniqueId)
+        // 能删除的都不是根元素, 一定有 parentMapUniqueKey 这个属性
+        const parentComponent = this.components.get(this.components.get(mapUniqueKey).parentMapUniqueKey)
         const childIndex = parentComponent.layoutChilds.findIndex(item=>item === mapUniqueKey)
         parentComponent.layoutChilds.splice(childIndex, 1)
 
@@ -559,6 +598,12 @@ export default class Viewport {
             case 'paste':
                 this.deleteComponent(operate.mapUniqueKey)
                 break
+            case 'reset':
+                this.components.get(operate.mapUniqueKey).props = operate.reset.beforeProps
+                break
+            case 'addCombo':
+                this.deleteComponent(operate.mapUniqueKey)
+                break
         }
 
         this.nowOperateIndex -= 1
@@ -599,6 +644,13 @@ export default class Viewport {
                 break
             case 'paste':
                 this.addComplexComponent(operate.paste.parentMapUniqueKey, operate.mapUniqueKey, operate.paste.index, operate.paste)
+                break
+            case 'reset':
+                const ComponentClass = this.application.getComponentByUniqueKey(operate.reset.beforeProps.uniqueKey)
+                this.components.get(operate.mapUniqueKey).props = _.cloneDeep(ComponentClass.defaultProps)
+                break
+            case 'addCombo':
+                this.addComplexComponent(operate.addCombo.parentMapUniqueKey, operate.mapUniqueKey, operate.addCombo.index, operate.addCombo.componentInfo)
                 break
         }
     }
@@ -656,32 +708,7 @@ export default class Viewport {
             return true
         }
 
-        const componentInfo = this.components.get(mapUniqueKey)
-
-        // 子元素信息
-        let childs: {
-            [mapUniqueKey: string]: FitGaea.ViewportComponentInfo
-        } = {}
-
-        const mapChilds = (component: FitGaea.ViewportComponentInfo, childs: {
-            [mapUniqueKey: string]: FitGaea.ViewportComponentInfo
-        })=> {
-            if (component.props.uniqueKey === 'gaea-layout') {
-                JSON.parse(JSON.stringify(component.layoutChilds)).forEach((componentMapUniqueKey: string)=> {
-                    const childInfo = this.components.get(componentMapUniqueKey)
-                    childs[componentMapUniqueKey] = JSON.parse(JSON.stringify(childInfo))
-                    mapChilds(childInfo, childs)
-                })
-            }
-        }
-
-        mapChilds(componentInfo, childs)
-
-        this.copyComponent = {
-            mapUniqueKey,
-            componentInfo: JSON.parse(JSON.stringify(componentInfo)),
-            childs: childs
-        }
+        this.copyComponent = this.getComponentFullInfoByMapUniqueKey(mapUniqueKey)
     }
 
     /**
@@ -706,8 +733,8 @@ export default class Viewport {
         Object.keys(originComponent.childs).forEach(mapUniqueKey=> {
             const originChild = originComponent.childs[mapUniqueKey]
             childs[uniqueKeyMap.get(mapUniqueKey)] = {
-                parentMapUniqueId: uniqueKeyMap.get(originChild.parentMapUniqueId),
-                props: originChild.props,
+                parentMapUniqueKey: uniqueKeyMap.get(originChild.parentMapUniqueKey),
+                props: JSON.parse(JSON.stringify(originChild.props)),
                 layoutChilds: originChild.layoutChilds.map(childMapUniqueKey=>uniqueKeyMap.get(childMapUniqueKey))
             }
         })
@@ -716,8 +743,8 @@ export default class Viewport {
         let newCopyComponent: FitGaea.ViewportComponentFullInfo = {
             mapUniqueKey: uniqueKeyMap.get(originComponent.mapUniqueKey),
             componentInfo: {
-                parentMapUniqueId: parentMapUniqueKey,
-                props: originComponent.componentInfo.props,
+                parentMapUniqueKey: parentMapUniqueKey,
+                props: JSON.parse(JSON.stringify(originComponent.componentInfo.props)),
                 layoutChilds: originComponent.componentInfo.layoutChilds.map(childMapUniqueKey=>uniqueKeyMap.get(childMapUniqueKey))
             },
             childs: childs
@@ -767,5 +794,37 @@ export default class Viewport {
         })
 
         return true
+    }
+
+    /**
+     * 获取一个已存在组件的完整信息
+     */
+    getComponentFullInfoByMapUniqueKey(mapUniqueKey: string): FitGaea.ViewportComponentFullInfo {
+        const componentInfo = this.components.get(mapUniqueKey)
+
+        // 子元素信息
+        let childs: {
+            [mapUniqueKey: string]: FitGaea.ViewportComponentInfo
+        } = {}
+
+        const mapChilds = (component: FitGaea.ViewportComponentInfo, childs: {
+            [mapUniqueKey: string]: FitGaea.ViewportComponentInfo
+        })=> {
+            if (component.props.uniqueKey === 'gaea-layout') {
+                JSON.parse(JSON.stringify(component.layoutChilds)).forEach((componentMapUniqueKey: string)=> {
+                    const childInfo = this.components.get(componentMapUniqueKey)
+                    childs[componentMapUniqueKey] = JSON.parse(JSON.stringify(childInfo))
+                    mapChilds(childInfo, childs)
+                })
+            }
+        }
+
+        mapChilds(componentInfo, childs)
+
+        return {
+            mapUniqueKey,
+            componentInfo: JSON.parse(JSON.stringify(componentInfo)),
+            childs: childs
+        }
     }
 }

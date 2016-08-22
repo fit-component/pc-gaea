@@ -3,7 +3,7 @@ declare namespace FitGaea {
      * 鼠标移动到组件上/树对应的组件上
      */
     export interface MouseHoverComponentEvent {
-        mapUniqueId: string
+        mapUniqueKey: string
         type: string
     }
 
@@ -11,7 +11,7 @@ declare namespace FitGaea {
      * 修改某个组件选中状态
      */
     export interface ComponentSelectStatusEvent {
-        mapUniqueId: string
+        mapUniqueKey: string
         selected: boolean
     }
 }

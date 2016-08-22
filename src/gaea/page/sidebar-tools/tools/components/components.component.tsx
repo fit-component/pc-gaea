@@ -48,7 +48,7 @@ export default class Components extends React.Component <typings.PropsDefine, ty
             delay: 0,
             onStart: (event: any) => {
                 this.lastDragStartIndex = event.oldIndex as number
-                this.props.viewport.startDragging('', this.getUniqueKeyByIndex(event.oldIndex as number), true)
+                this.props.viewport.startDragging('', this.getUniqueKeyByIndex(event.oldIndex as number), true, null, event.oldIndex as number)
             },
             onEnd: (event: any) => {
                 this.props.viewport.endDragging()
@@ -69,7 +69,6 @@ export default class Components extends React.Component <typings.PropsDefine, ty
                 } else {
                     // 没拖走, 只是晃了一下, 不用管了
                 }
-
             }
         })
     }
@@ -83,6 +82,8 @@ export default class Components extends React.Component <typings.PropsDefine, ty
                 return this.props.application.customComponents[index].defaultProps.uniqueKey
             case 'base':
                 return this.props.application.baseComponents[index].defaultProps.uniqueKey
+            case 'group':
+                return 'combo'
         }
     }
 
@@ -132,8 +133,7 @@ export default class Components extends React.Component <typings.PropsDefine, ty
             case 'custom':
                 return this.props.application.customComponents.map((item, index)=> {
                     return (
-                        <DragSource key={index}
-                                    uniqueKey={item.defaultProps.uniqueKey}>
+                        <DragSource key={index}>
                             <i className={`fa fa-${item.defaultProps.icon || 'cube'} icons`}/>
                             {item.defaultProps.name}
                         </DragSource>
@@ -142,25 +142,21 @@ export default class Components extends React.Component <typings.PropsDefine, ty
             case 'base':
                 return this.props.application.baseComponents.map((item, index)=> {
                     return (
-                        <DragSource key={index}
-                                    uniqueKey={item.defaultProps.uniqueKey}>
+                        <DragSource key={index}>
                             <i className={`fa fa-${item.defaultProps.icon || 'cube'} icons gaea`}/>
                             {item.defaultProps.name}
                         </DragSource>
                     )
                 })
             case 'group':
-                // return this.state.groups.map((item, index)=> {
-                //     return (
-                //         <DragSource key={index}
-                //                     uniqueKey="gaea-layout"
-                //                     info={item.info}>
-                //             <i className={`fa fa-cubes icons gaea`}/>
-                //             {item.name}
-                //         </DragSource>
-                //     )
-                // })
-                return null
+                return this.props.application.comboComponents.map((component, index)=> {
+                    return (
+                        <DragSource key={index}>
+                            <i className={`fa fa-cubes icons gaea`}/>
+                            {component.name}
+                        </DragSource>
+                    )
+                })
         }
     }
 

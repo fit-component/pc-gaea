@@ -44,9 +44,9 @@ export default class Tree extends React.Component <typings.PropsDefine, typings.
      * 当视图或者树区域有组件 hover
      */
     @autoBindMethod handleViewportOrTreeComponentMouseOver(listnerContext: any, opts: FitGaea.MouseHoverComponentEvent) {
-        const targetInstance = this.findEditHelperByMapUniqueId(opts.mapUniqueId)
+        const targetInstance = this.findEditHelperByMapUniqueKey(opts.mapUniqueKey)
         targetInstance.outerMoveBoxToSelf()
-        if (opts.type !== 'tree' && this.props.viewport.lastSelectMapUniqueId === null) {
+        if (opts.type !== 'tree' && this.props.viewport.lastSelectMapUniqueKey === null) {
             // 只有非 tree 上组件触发的 hover, 并且没有选中组件 才会滑动 tree 视图
             // 让 domTree 滚动条滑动到 tree 这个元素实例的位置
             this.scrollToChildren(targetInstance)
@@ -67,9 +67,9 @@ export default class Tree extends React.Component <typings.PropsDefine, typings.
     /**
      * 根据 mapUniqueKey 找到对应子元素
      */
-    @autoBindMethod findEditHelperByMapUniqueId(mapUniqueId: string) {
-        const finderPath = this.props.viewport.findComponentPathFromRoot(mapUniqueId)
-        let targetInstance = (this.refs[`tree-${this.props.viewport.rootMapUniqueId}`] as any)['wrappedInstance'] as TreeElement
+    @autoBindMethod findEditHelperByMapUniqueKey(mapUniqueKey: string) {
+        const finderPath = this.props.viewport.findComponentPathFromRoot(mapUniqueKey)
+        let targetInstance = (this.refs[`tree-${this.props.viewport.rootMapUniqueKey}`] as any)['wrappedInstance'] as TreeElement
         finderPath.forEach(path=> {
             targetInstance = (targetInstance.refs[`tree-${path}`]as any)['wrappedInstance'] as TreeElement
         })
@@ -88,7 +88,7 @@ export default class Tree extends React.Component <typings.PropsDefine, typings.
      * 更改某个子组件的选中状态
      */
     @autoBindMethod handleChangeComponentSelectStatus(listnerContext: any, opts: FitGaea.ComponentSelectStatusEvent) {
-        const targetInstance = this.findEditHelperByMapUniqueId(opts.mapUniqueId)
+        const targetInstance = this.findEditHelperByMapUniqueKey(opts.mapUniqueKey)
         targetInstance.setSelect(opts.selected)
         this.scrollToChildren(targetInstance)
     }
@@ -110,8 +110,8 @@ export default class Tree extends React.Component <typings.PropsDefine, typings.
 
                 <div ref={this.setChildRef}>
                     <TreeComponent defaultExpendAll={true}>
-                        <TreeElement mapUniqueId={this.props.viewport.rootMapUniqueId}
-                                     ref={`tree-${this.props.viewport.rootMapUniqueId}`}/>
+                        <TreeElement mapUniqueKey={this.props.viewport.rootMapUniqueKey}
+                                     ref={`tree-${this.props.viewport.rootMapUniqueKey}`}/>
                     </TreeComponent>
                 </div>
 

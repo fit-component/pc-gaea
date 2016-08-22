@@ -21,13 +21,13 @@ export default class Preview extends React.Component <typings.PropsDefine, typin
         // 设置自定义组件
         this.preview.setCustomComponents(this.props.components)
 
-        this.props.value && Object.keys(this.props.value).forEach(mapUniqueId=> {
-            const defaultInfo = this.props.value[mapUniqueId]
+        this.props.value && Object.keys(this.props.value).forEach(mapUniqueKey=> {
+            const defaultInfo = this.props.value[mapUniqueKey]
             const ComponentClass = this.preview.getComponentByUniqueKey(defaultInfo.props.uniqueKey)
 
-            // 设置根 mapUniqueId
-            if (defaultInfo.parentMapUniqueId === null) {
-                this.preview.setRootUniqueId(mapUniqueId)
+            // 设置根 mapUniqueKey
+            if (defaultInfo.parentMapUniqueKey === null) {
+                this.preview.setRootUniqueId(mapUniqueKey)
             }
 
             // 组合成完整的 options
@@ -37,7 +37,7 @@ export default class Preview extends React.Component <typings.PropsDefine, typin
                 options[optionKey].value = defaultInfo.props.options[optionKey].value
             })
 
-            this.preview.components.set(mapUniqueId, {
+            this.preview.components.set(mapUniqueKey, {
                 props: {
                     uniqueKey: defaultInfo.props.uniqueKey,
                     icon: ComponentClass.defaultProps.icon,
@@ -45,7 +45,7 @@ export default class Preview extends React.Component <typings.PropsDefine, typin
                     options
                 },
                 layoutChilds: defaultInfo.layoutChilds || [],
-                parentMapUniqueId: defaultInfo.parentMapUniqueId
+                parentMapUniqueKey: defaultInfo.parentMapUniqueKey
             })
         })
     }
@@ -53,7 +53,7 @@ export default class Preview extends React.Component <typings.PropsDefine, typin
     render() {
         return (
             <Provider preview={this.preview}>
-                <PreviewHelper mapUniqueId={this.preview.rootMapUniqueId}/>
+                <PreviewHelper mapUniqueKey={this.preview.rootMapUniqueKey}/>
             </Provider>
         )
     }

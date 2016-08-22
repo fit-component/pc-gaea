@@ -57,12 +57,12 @@ export default class Preview {
     /**
      * 根节点的唯一 id
      */
-    rootMapUniqueId: string
+    rootMapUniqueKey: string
 
     /**
      * 设置根节点唯一 id
      */
     setRootUniqueId(uniqueId: string) {
-        this.rootMapUniqueId = uniqueId
+        this.rootMapUniqueKey = uniqueId
     }
 }

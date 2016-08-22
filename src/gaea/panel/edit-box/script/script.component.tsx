@@ -2,8 +2,8 @@ import * as React from 'react'
 import * as typings from './script.type'
 import {observer, inject} from 'mobx-react'
 
-import {ButtonGroup, Button} from '../../../../../../../button/src'
-import {autoBindMethod} from '../../../../../../../../common/auto-bind/src'
+import {ButtonGroup, Button} from '../../../../../../button/src'
+import {autoBindMethod} from '../../../../../../../common/auto-bind/src'
 
 // 只有在前端才会引用 codeMirror
 let Codemirror: any = {}

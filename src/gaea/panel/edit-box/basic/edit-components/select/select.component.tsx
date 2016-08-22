@@ -2,7 +2,7 @@ import * as React from 'react'
 import * as typings from './select.type'
 import {observer, inject} from 'mobx-react'
 
-import {Select} from '../../../../../../../../../select/src'
+import {Select} from '../../../../../../../../select/src'
 
 @inject('viewport') @observer
 export default class EditComponentSelect extends React.Component <typings.PropsDefine, typings.StateDefine> {

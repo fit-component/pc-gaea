@@ -122,17 +122,11 @@ declare namespace FitGaea {
      * 资源文件
      */
     export interface SourceFile {
-        /**
-         * 文件类型
-         */
-            type: string
-        /**
-         * 文件名
-         */
+        // 文件类型
+        type: string
+        // 文件名
         name: string
-        /**
-         * 序号,排在第几
-         */
+        // 序号,排在第几
         order: number
     }
 
@@ -142,5 +136,13 @@ declare namespace FitGaea {
     export interface OnlineVersion {
         key: string,
         value: string
+    }
+
+    /**
+     * 组合信息
+     */
+    export interface ComboComponentInfo extends ViewportComponentFullInfo {
+        // 组合名
+        name: string
     }
 }

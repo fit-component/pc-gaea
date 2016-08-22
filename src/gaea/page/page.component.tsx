@@ -11,6 +11,8 @@ import SidebarToolsPreview from './sidebar-tools-preview/sidebar-tools-preview.c
 import Viewport from './viewport/viewport.component'
 import ViewportSidebarResize from './viewport-sidebar-resize/viewport-sidebar-resize.component'
 import HeaderNav from './header/header.component'
+import EditBox from '../panel/edit-box/edit-box.component'
+import OuterMoveBox from './outer-move-box/outer-move-box.component'
 
 import Preview from '../../preview/preview.component'
 
@@ -29,7 +31,7 @@ export default class Page extends React.Component <typings.PropsDefine, typings.
             // 布置最外层的画布
             let layoutOptions = _.cloneDeep(LayoutClass.defaultProps.options)
             layoutOptions['minHeight'].value = '100%'
-            this.props.viewport.components.set(this.props.viewport.rootMapUniqueId, {
+            this.props.viewport.components.set(this.props.viewport.rootMapUniqueKey, {
                 props: {
                     uniqueKey: 'gaea-layout',
                     icon: LayoutClass.defaultProps.icon,
@@ -37,17 +39,17 @@ export default class Page extends React.Component <typings.PropsDefine, typings.
                     options: layoutOptions
                 },
                 layoutChilds: [],
-                parentMapUniqueId: null
+                parentMapUniqueKey: null
             })
         } else {
             // 有的话, 直接用 defaultValue
-            Object.keys(this.props.application.defaultValue).forEach(mapUniqueId=> {
-                const defaultInfo = this.props.application.defaultValue[mapUniqueId]
+            Object.keys(this.props.application.defaultValue).forEach(mapUniqueKey=> {
+                const defaultInfo = this.props.application.defaultValue[mapUniqueKey]
                 const ComponentClass = this.props.application.getComponentByUniqueKey(defaultInfo.props.uniqueKey)
 
                 // 如果是根节点, 设置根据点 id
-                if (defaultInfo.parentMapUniqueId === null) {
-                    this.props.viewport.setRootUniqueId(mapUniqueId)
+                if (defaultInfo.parentMapUniqueKey === null) {
+                    this.props.viewport.setRootUniqueId(mapUniqueKey)
                 }
 
                 // 组合成完整的 options
@@ -57,7 +59,7 @@ export default class Page extends React.Component <typings.PropsDefine, typings.
                     options[optionKey].value = defaultInfo.props.options[optionKey].value
                 })
 
-                this.props.viewport.components.set(mapUniqueId, {
+                this.props.viewport.components.set(mapUniqueKey, {
                     props: {
                         uniqueKey: defaultInfo.props.uniqueKey,
                         icon: ComponentClass.defaultProps.icon,
@@ -65,7 +67,7 @@ export default class Page extends React.Component <typings.PropsDefine, typings.
                         options
                     },
                     layoutChilds: defaultInfo.layoutChilds || [],
-                    parentMapUniqueId: defaultInfo.parentMapUniqueId
+                    parentMapUniqueKey: defaultInfo.parentMapUniqueKey
                 })
             })
         }
@@ -95,9 +97,13 @@ export default class Page extends React.Component <typings.PropsDefine, typings.
                 </Sidebar>
 
                 <Section className={sectionClasses}>
-                    <Viewport/>
-                    {this.props.application.isPreview &&
-                    <Preview value={this.props.viewport.getIncrementComponentsInfo()}/>}
+                    <div className="section-container">
+                        <Viewport/>
+                        <EditBox/>
+                        <OuterMoveBox />
+                        {this.props.application.isPreview &&
+                        <Preview value={this.props.viewport.getIncrementComponentsInfo()}/>}
+                    </div>
                 </Section>
 
             </Layout>

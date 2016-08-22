@@ -116,7 +116,7 @@ export default class Header extends React.Component <typings.PropsDefine, typing
                   height={this.props.application.headerHeight}>
                 <MenuItem brand
                           to="/designer">{this.props.application.title}</MenuItem>
-                <Setting />
+                <Setting/>
 
                 <RightMenu>
                     <MenuItem key="save"
@@ -129,9 +129,10 @@ export default class Header extends React.Component <typings.PropsDefine, typing
                     <MenuItem key="undo"
                               className={undoClasses}
                               onClick={this.undo}><i className="fa fa-undo"/></MenuItem>
-                    <Online key="online"/>
                 </RightMenu>
             </Menu>
         )
     }
 }
+
+// <Online key="online"/>

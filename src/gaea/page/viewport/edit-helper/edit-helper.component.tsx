@@ -1,7 +1,7 @@
 /**
  * 编辑辅助组件
  * 每个子组件的在 map 中的 key 都由父级生成
- * 父级先在 store 中创建爱你数据, 再直接把 mapUniqueId 扔给子元素,数据获取绑定全部交给子元素自己
+ * 父级先在 store 中创建数据, 再直接把 mapUniqueKey 扔给子元素,数据获取绑定全部交给子元素自己
  */
 
 import * as React from 'react'
@@ -34,6 +34,7 @@ export default class EditHelper extends React.Component <typings.PropsDefine, ty
 
     // 元素对象
     private childInstance: React.ReactInstance
+
     // 元素dom对象
     private childDomInstance: Element
 
@@ -42,7 +43,7 @@ export default class EditHelper extends React.Component <typings.PropsDefine, ty
 
     componentWillMount() {
         // 从 store 找到自己信息
-        this.componentInfo = this.props.viewport.components.get(this.props.mapUniqueId)
+        this.componentInfo = this.props.viewport.components.get(this.props.mapUniqueKey)
 
         // 获取当前要渲染的组件 class
         this.SelfComponent = this.props.application.getComponentByUniqueKey(this.componentInfo.props.uniqueKey)
@@ -77,7 +78,7 @@ export default class EditHelper extends React.Component <typings.PropsDefine, ty
                 },
                 onAdd: (event: any)=> {
                     // 增加一个元素
-                    const mapUniqueKey = this.props.viewport.addComponent(this.props.mapUniqueId, event.newIndex as number)
+                    const {mapUniqueKey, component} = this.props.viewport.addComponent(this.props.mapUniqueKey, event.newIndex as number)
 
                     // 取消 srotable 对 dom 的修改
                     // 删掉 dom 元素, 让 react 去生成 dom
@@ -85,15 +86,30 @@ export default class EditHelper extends React.Component <typings.PropsDefine, ty
                         // 是新拖进来的, 不用管, 因为工具栏会把它收回去
                         // 为什么不删掉? 因为这个元素不论是不是 clone, 都被移过来了, 不还回去 react 在更新 dom 时会无法找到
                         // 记录新增历史
-                        this.props.viewport.saveOperate({
-                            type: 'add',
-                            mapUniqueKey,
-                            add: {
-                                uniqueId: this.props.viewport.currentMovingComponent.uniqueKey,
-                                parentMapUniqueKey: this.props.mapUniqueId,
-                                index: event.newIndex as number
-                            }
-                        })
+                        if (this.props.viewport.currentMovingComponent.uniqueKey === 'combo') {
+                            // 新增组合
+                            this.props.viewport.saveOperate({
+                                type: 'addCombo',
+                                mapUniqueKey,
+                                addCombo: {
+                                    parentMapUniqueKey: this.props.mapUniqueKey,
+                                    index: event.newIndex as number,
+                                    componentInfo: component
+                                }
+                            })
+                        } else {
+                            // 新增普通组件
+                            this.props.viewport.saveOperate({
+                                type: 'add',
+                                mapUniqueKey,
+                                add: {
+                                    uniqueId: this.props.viewport.currentMovingComponent.uniqueKey,
+                                    parentMapUniqueKey: this.props.mapUniqueKey,
+                                    index: event.newIndex as number
+                                }
+                            })
+                        }
+
                     } else {
                         // 如果是从某个元素移过来的（新增的,而不是同一个父级改变排序）
                         // 把这个元素还给之前拖拽的父级
@@ -110,7 +126,7 @@ export default class EditHelper extends React.Component <typings.PropsDefine, ty
                         }
 
                         // 设置新增时拖拽源信息
-                        this.props.viewport.setDragTarget(this.props.mapUniqueId, event.newIndex as number)
+                        this.props.viewport.setDragTarget(this.props.mapUniqueKey, event.newIndex as number)
                     }
                 },
                 onUpdate: (event: any)=> {
@@ -130,11 +146,11 @@ export default class EditHelper extends React.Component <typings.PropsDefine, ty
                             this.props.viewport.dragStartParentElement.insertBefore(event.item, this.props.viewport.dragStartParentElement.childNodes[oldIndex + 1])
                         }
                     }
-                    this.props.viewport.sortComponents(this.props.mapUniqueId, event.oldIndex as number, event.newIndex as number)
+                    this.props.viewport.sortComponents(this.props.mapUniqueKey, event.oldIndex as number, event.newIndex as number)
 
                     this.props.viewport.saveOperate({
                         type: 'exchange',
-                        mapUniqueKey: this.props.mapUniqueId,
+                        mapUniqueKey: this.props.mapUniqueKey,
                         exchange: {
                             oldIndex,
                             newIndex
@@ -149,11 +165,11 @@ export default class EditHelper extends React.Component <typings.PropsDefine, ty
                     this.props.viewport.saveOperate({
                         type: 'move',
                         // 新增元素父级 key
-                        mapUniqueKey: this.props.mapUniqueId,
+                        mapUniqueKey: this.props.mapUniqueKey,
                         move: {
                             targetParentMapUniqueKey: this.props.viewport.dragTargetMapUniqueKey,
                             targetIndex: this.props.viewport.dragTargetIndex,
-                            sourceParentMapUniqueKey: this.props.mapUniqueId,
+                            sourceParentMapUniqueKey: this.props.mapUniqueKey,
                             sourceIndex: event.oldIndex as number
                         }
                     })
@@ -178,10 +194,10 @@ export default class EditHelper extends React.Component <typings.PropsDefine, ty
     @autoBindMethod handleMouseOver(event: React.MouseEvent) {
         event.stopPropagation()
         this.props.application.event.emit(this.props.application.event.viewportOrTreeComponentMouseOver, {
-            mapUniqueId: this.props.mapUniqueId,
+            mapUniqueKey: this.props.mapUniqueKey,
             type: 'component'
         } as FitGaea.MouseHoverComponentEvent)
-        this.props.viewport.setHoveringComponentMapUniqueKey(this.props.mapUniqueId)
+        this.props.viewport.setHoveringComponentMapUniqueKey(this.props.mapUniqueKey)
     }
 
     /**
@@ -190,13 +206,13 @@ export default class EditHelper extends React.Component <typings.PropsDefine, ty
     @autoBindMethod handleMouseLeave(event: React.MouseEvent) {
         event.stopPropagation()
 
-        if (this.componentInfo.parentMapUniqueId !== null) {
+        if (this.componentInfo.parentMapUniqueKey !== null) {
             // 根元素才响应此事件
             return
         }
 
         this.props.application.event.emit(this.props.application.event.viewportOrTreeRootComponentMouseLeave, {
-            mapUniqueId: this.props.mapUniqueId,
+            mapUniqueKey: this.props.mapUniqueKey,
             type: 'component'
         } as FitGaea.MouseHoverComponentEvent)
         this.props.viewport.setHoveringComponentMapUniqueKey(null)
@@ -213,23 +229,23 @@ export default class EditHelper extends React.Component <typings.PropsDefine, ty
         event.stopPropagation()
 
         // 设置选中组件的 uniqueKey
-        this.props.viewport.setCurrentEditComponentMapUniqueKey(this.props.mapUniqueId)
+        this.props.viewport.setCurrentEditComponentMapUniqueKey(this.props.mapUniqueKey)
 
         // 把上一个组件触发非选中
-        if (this.props.viewport.lastSelectMapUniqueId !== null) {
+        if (this.props.viewport.lastSelectMapUniqueKey !== null) {
             // 如果上个选中组件没被关
             this.props.application.event.emit(this.props.application.event.changeComponentSelectStatusEvent, {
-                mapUniqueId: this.props.viewport.lastSelectMapUniqueId,
+                mapUniqueKey: this.props.viewport.lastSelectMapUniqueKey,
                 selected: false
             } as FitGaea.ComponentSelectStatusEvent)
         }
 
         // 设置自己为上一个组件
-        this.props.viewport.setLastSelectMapUniqueId(this.props.mapUniqueId)
+        this.props.viewport.setLastSelectMapUniqueKey(this.props.mapUniqueKey)
 
         // 触发选中组件 event, 各 layout 会接收, 设置子组件的 setSelect
         this.props.application.event.emit(this.props.application.event.changeComponentSelectStatusEvent, {
-            mapUniqueId: this.props.mapUniqueId,
+            mapUniqueKey: this.props.mapUniqueKey,
             selected: true
         } as FitGaea.ComponentSelectStatusEvent)
     }
@@ -252,7 +268,7 @@ export default class EditHelper extends React.Component <typings.PropsDefine, ty
             childs = this.componentInfo.layoutChilds.map(layoutChildUniqueMapKey=> {
                 return (
                     <EditHelper.ObserveEditHelper key={layoutChildUniqueMapKey}
-                                                  mapUniqueId={layoutChildUniqueMapKey}
+                                                  mapUniqueKey={layoutChildUniqueMapKey}
                                                   ref={`edit-${layoutChildUniqueMapKey}`}/>
                 )
             })

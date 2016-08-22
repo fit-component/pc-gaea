@@ -9,4 +9,8 @@ export default class Setting {
      * 点击编辑框移除按钮时, 是否二次确认
      */
     @observable confirmWhenRemoveComponent: boolean = true
+
+    setConfirmWhenRemoveComponent(isConfirm: boolean) {
+        this.confirmWhenRemoveComponent = isConfirm
+    }
 }

@@ -1,12 +1,13 @@
-/// <reference path="../../../../../../../../typings-module/react-draggable.d.ts" />
+/// <reference path="../../../../../../../typings-module/react-draggable.d.ts" />
 
 import * as React from 'react'
 import * as ReactDOM from 'react-dom'
 import * as typings from './edit-box.type'
+import * as classNames from 'classnames'
 import {observer, inject} from 'mobx-react'
 
-import {autoBindMethod} from '../../../../../../../common/auto-bind/src'
-import {Tabs, TabPanel} from '../../../../../../tabs/src'
+import {autoBindMethod} from '../../../../../../common/auto-bind/src'
+import {Tabs, TabPanel} from '../../../../../tabs/src'
 import * as Draggable from 'react-draggable'
 
 import Basic from './basic/basic.component'
@@ -32,6 +33,22 @@ export default class EditBox extends React.Component <typings.PropsDefine, typin
 
     componentDidMount() {
         this.domInstance = ReactDOM.findDOMNode(this)
+    }
+
+    componentWillReact() {
+        // if (this.props.viewport.currentEditComponentMapUniqueKey !== null) {
+        //     // 进入动画
+        //     setTimeout(()=> {
+        //         this.setState({
+        //             animateStatus: 'enter'
+        //         })
+        //     }, 100)
+        // } else {
+        //     // 离开动画
+        //     this.setState({
+        //         animateStatus: 'init'
+        //     })
+        // }
     }
 
     @autoBindMethod handleDrag(event: Event, data: DraggableData) {
@@ -70,12 +87,20 @@ export default class EditBox extends React.Component <typings.PropsDefine, typin
             height: this.props.viewport.editBoxPosition.height
         }
 
+        const animateClasses = classNames({
+            '_namespace': true,
+            'handle-drag': true,
+            'animated': this.state.animateStatus === 'init',
+            'animated zoomIn': this.state.animateStatus === 'enter',
+            'animated-init': this.state.animateStatus === 'leave'
+        })
+
         return (
             <Draggable handle=".title-container"
                        bounds={bounds}
                        onDrag={this.handleDrag}
                        defaultPosition={position}>
-                <div className="_namespace handle-drag"
+                <div className={animateClasses}
                      style={containerStyle}>
                     <div className="container-box">
                         <span className="handle-drag-close"

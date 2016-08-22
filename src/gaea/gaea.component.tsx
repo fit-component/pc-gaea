@@ -16,6 +16,8 @@ import baseComponents from '../base-components'
 
 import DevTools from 'mobx-react-devtools'
 
+import 'animate.css'
+
 @observer
 export default class Gaea extends React.Component <typings.PropsDefine, typings.StateDefine> {
     static defaultProps: typings.PropsDefine = new typings.Props()

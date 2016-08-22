@@ -3,17 +3,61 @@ import * as typings from './setting.type'
 import {observer, inject} from 'mobx-react'
 
 import {MenuItem} from '../../../../../../menu/src'
-
+import Modal from '../../../../../../modal/src'
+import Switch from '../../../../../../switch/src'
 import {autoBindMethod} from '../../../../../../../common/auto-bind/src'
 
-@observer
+import './setting.scss'
+
+@inject('setting') @observer
 export default class Setting extends React.Component <typings.PropsDefine, typings.StateDefine> {
     static defaultProps: typings.PropsDefine = new typings.Props()
     public state: typings.StateDefine = new typings.State()
 
+    @autoBindMethod handleShowModal() {
+        this.setState({
+            show: true
+        })
+    }
+
+    @autoBindMethod handleOk() {
+        this.setState({
+            show: false
+        })
+    }
+
+    @autoBindMethod handleCancel() {
+        this.setState({
+            show: false
+        })
+    }
+
+    @autoBindMethod handleConfirmWhenRemoveComponentChange(checked: boolean) {
+        this.props.setting.setConfirmWhenRemoveComponent(checked)
+    }
+
     render() {
         return (
-            <MenuItem>设置</MenuItem>
+            <MenuItem onClick={this.handleShowModal}>
+                设置
+                <div className="_namespace">
+                    <Modal className="_namespace"
+                           show={this.state.show}
+                           onOk={this.handleOk.bind(this)}
+                           onCancel={this.handleCancel.bind(this)}>
+                        <div className="title">设置</div>
+
+                        <div className="left-right">
+                            <div className="left">点击移除时会弹出确认框</div>
+                            <div className="right">
+                                <Switch checked={this.props.setting.confirmWhenRemoveComponent}
+                                        onChange={this.handleConfirmWhenRemoveComponentChange}/>
+                            </div>
+                        </div>
+
+                    </Modal>
+                </div>
+            </MenuItem>
         )
     }
 }

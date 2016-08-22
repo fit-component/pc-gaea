@@ -65,7 +65,7 @@ export default class Application {
      * 页面默认编辑信息
      */
     defaultValue: {
-        [mapUniqueId: string]: FitGaea.ViewportComponentInfo
+        [mapUniqueKey: string]: FitGaea.ViewportComponentInfo
     }
 
     /**
@@ -77,7 +77,7 @@ export default class Application {
         customComponents: Array<React.ComponentClass<FitGaea.ComponentProps>>,
         isHideCustomComponents: boolean,
         defaultValue: {
-            [mapUniqueId: string]: FitGaea.ViewportComponentInfo
+            [mapUniqueKey: string]: FitGaea.ViewportComponentInfo
         }
     }) {
         this.title = props.title
@@ -107,8 +107,14 @@ export default class Application {
     /**
      * 组合组件
      */
-        // TODO: 类型定义有问题
-    comboComponents: any
+    @observable comboComponents: Array<FitGaea.ComboComponentInfo> = []
+
+    /**
+     * 添加一个组合
+     */
+    addComboComponent(comboComponent: FitGaea.ComboComponentInfo) {
+        this.comboComponents.push(comboComponent)
+    }
 
     /**
      * 根据 uniqueKey 获取组件

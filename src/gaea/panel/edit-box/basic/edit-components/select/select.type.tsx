@@ -1,7 +1,8 @@
 import * as React from 'react'
-import Viewport from '../../../store/viewport'
+import Viewport from '../../../../../store/viewport'
 
 export interface PropsDefine {
+    optionKey?: string
     viewport?: Viewport
 }
 
