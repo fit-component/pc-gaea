@@ -201,24 +201,6 @@ export default class EditHelper extends React.Component <typings.PropsDefine, ty
     }
 
     /**
-     * 最外层 鼠标移开
-     */
-    @autoBindMethod handleMouseLeave(event: React.MouseEvent) {
-        event.stopPropagation()
-
-        if (this.componentInfo.parentMapUniqueKey !== null) {
-            // 根元素才响应此事件
-            return
-        }
-
-        this.props.application.event.emit(this.props.application.event.viewportOrTreeRootComponentMouseLeave, {
-            mapUniqueKey: this.props.mapUniqueKey,
-            type: 'component'
-        } as FitGaea.MouseHoverComponentEvent)
-        this.props.viewport.setHoveringComponentMapUniqueKey(null)
-    }
-
-    /**
      * 让树视图高亮框移动到自己身上
      */
     @autoBindMethod outerMoveBoxToSelf() {
@@ -293,8 +275,7 @@ export default class EditHelper extends React.Component <typings.PropsDefine, ty
                  }}
                  style={outerStyle}
                  onClick={this.handleClick}
-                 onMouseOver={this.handleMouseOver}
-                 onMouseLeave={this.handleMouseLeave}>
+                 onMouseOver={this.handleMouseOver}>
                 {React.createElement(this.SelfComponent, componentProps, childs)}
             </div>
         )

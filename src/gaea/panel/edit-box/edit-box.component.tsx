@@ -111,12 +111,12 @@ export default class EditBox extends React.Component <typings.PropsDefine, typin
                               className="_namespace edit-box-handle"
                               style={containerStyle}>
                             <TabPanel tab="基础"
-                                      key="basic"
+                                      activeKey="basic"
                                       className="edit-container">
                                 <Basic/>
                             </TabPanel>
                             <TabPanel tab="脚本"
-                                      key="script"
+                                      activeKey="script"
                                       className="edit-container">
                                 <Script/>
                             </TabPanel>

@@ -21,17 +21,17 @@ export default class Tools extends React.Component <typings.PropsDefine, typings
                   type="retro"
                   className="_namespace">
                 <TabPanel tab="组件"
-                          key="components"
+                          activeKey="components"
                           className="tab-panel">
                     <Components/>
                 </TabPanel>
                 <TabPanel tab="历史"
-                          key="history"
+                          activeKey="history"
                           className="tab-panel">
                     <History/>
                 </TabPanel>
                 <TabPanel tab="资源"
-                          key="source"
+                          activeKey="resource"
                           className="tab-panel">
                     <Source/>
                 </TabPanel>

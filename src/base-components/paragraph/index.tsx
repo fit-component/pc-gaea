@@ -1,6 +1,7 @@
 import * as React from 'react'
 import * as module from './module'
 import {others} from '../../../../../common/transmit-transparently/src'
+const {Text} = require('react-native')
 
 export default class ParagraphComponent extends React.Component <module.PropsInterface, module.StateInterface> {
     static defaultProps: module.PropsInterface = new module.Props()
@@ -12,7 +13,7 @@ export default class ParagraphComponent extends React.Component <module.PropsInt
         }
 
         return (
-            <p style={style}>{this.props.options['text'].value}</p>
+            <Text style={style}>{this.props.options['text'].value}</Text>
         )
     }
 }

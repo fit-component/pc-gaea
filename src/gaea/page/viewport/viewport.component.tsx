@@ -72,6 +72,15 @@ export default class Viewport extends React.Component <typings.PropsDefine, typi
         this.props.viewport.setViewportDomInstance(ReactDOM.findDOMNode(ref))
     }
 
+    @autoBindMethod handleMouseLeave(event: React.MouseEvent){
+        event.stopPropagation()
+        this.props.application.event.emit(this.props.application.event.viewportOrTreeRootComponentMouseLeave, {
+            mapUniqueKey: this.props.viewport.rootMapUniqueKey,
+            type: 'component'
+        } as FitGaea.MouseHoverComponentEvent)
+        this.props.viewport.setHoveringComponentMapUniqueKey(null)
+    }
+
     render() {
         const style = {
             display: this.props.application.isPreview && 'none'
@@ -80,6 +89,7 @@ export default class Viewport extends React.Component <typings.PropsDefine, typi
         return (
             <div className="_namespace"
                  style={style}
+                 onMouseLeave={this.handleMouseLeave}
                  ref={this.getRootRef}>
                 <EditHelper mapUniqueKey={this.props.viewport.rootMapUniqueKey}
                             ref={`edit-${this.props.viewport.rootMapUniqueKey}`}/>

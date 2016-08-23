@@ -1,7 +1,7 @@
 import * as React from 'react'
-import * as ReactDOM from 'react-dom'
 import {observer, inject} from 'mobx-react'
 import * as typings from './preview-helper.type'
+const {View} = require('react-native')
 
 import fitLayoutStyle from '../../utils/fit-layout-style'
 
@@ -42,16 +42,19 @@ export default class PreviewHelper extends React.Component <typings.PropsDefine,
         }
 
         let componentProps = _.cloneDeep(this.componentInfo.props)
-        let outerStyle = {}
+        let outerStyle: React.CSSProperties = {}
 
         if (this.componentInfo.props.uniqueKey === 'gaea-layout') {
             outerStyle = fitLayoutStyle(componentProps.options)
         }
 
+        // 因为要适配 react-native, 删除不兼容的属性
+        delete outerStyle.display
+
         return (
-            <div style={outerStyle}>
+            <View style={outerStyle}>
                 {React.createElement(this.SelfComponent, componentProps, childs)}
-            </div>
+            </View>
         )
     }
 }
