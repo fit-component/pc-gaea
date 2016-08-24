@@ -14,9 +14,9 @@ import Setting from './store/setting'
 import Page from './page/page.component'
 import baseComponents from '../base-components'
 
-import DevTools from 'mobx-react-devtools'
+//import DevTools from 'mobx-react-devtools'
 
-import 'animate.css'
+//import 'animate.css'
 
 @observer
 export default class Gaea extends React.Component <typings.PropsDefine, typings.StateDefine> {
@@ -68,10 +68,11 @@ export default class Gaea extends React.Component <typings.PropsDefine, typings.
                       setting={this.setting}>
                 <div ref={this.getRootRef.bind(this)}>
                     <Page/>
-                    <DevTools position={{bottom:0,left:0}}/>
                 </div>
             </Provider>
         )
     }
 }
+
+// <DevTools position={{bottom:0,left:0}}/>
 
