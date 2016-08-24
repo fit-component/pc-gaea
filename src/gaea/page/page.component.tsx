@@ -102,7 +102,10 @@ export default class Page extends React.Component <typings.PropsDefine, typings.
                         <EditBox/>
                         <OuterMoveBox />
                         {this.props.application.isPreview &&
-                        <Preview value={this.props.viewport.getIncrementComponentsInfo()}/>}
+                        <div className="preview-container">
+                            <Preview value={this.props.viewport.getIncrementComponentsInfo()}/>
+                        </div>
+                        }
                     </div>
                 </Section>
 

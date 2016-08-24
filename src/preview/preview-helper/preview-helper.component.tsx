@@ -1,17 +1,12 @@
 import * as React from 'react'
-import {observer, inject} from 'mobx-react'
 import * as typings from './preview-helper.type'
 const {View} = require('react-native')
 
 import fitLayoutStyle from '../../utils/fit-layout-style'
 
-@inject('preview') @observer
 export default class PreviewHelper extends React.Component <typings.PropsDefine, typings.StateDefine> {
     static defaultProps: typings.PropsDefine = new typings.Props()
     public state: typings.StateDefine = new typings.State()
-
-    // 装饰器给外部用挺方便,这个专门给自己用 ^_^
-    static ObservePreviewHelper = inject('preview')(observer(PreviewHelper))
 
     // 对应 store 中的数据
     private componentInfo: FitGaea.ViewportComponentInfo
@@ -35,8 +30,9 @@ export default class PreviewHelper extends React.Component <typings.PropsDefine,
         if (this.componentInfo.props.uniqueKey === 'gaea-layout' && this.componentInfo.layoutChilds) {
             childs = this.componentInfo.layoutChilds.map(layoutChildUniqueMapKey=> {
                 return (
-                    <PreviewHelper.ObservePreviewHelper key={layoutChildUniqueMapKey}
-                                                        mapUniqueKey={layoutChildUniqueMapKey}/>
+                    <PreviewHelper key={layoutChildUniqueMapKey}
+                                   preview={this.props.preview}
+                                   mapUniqueKey={layoutChildUniqueMapKey}/>
                 )
             })
         }

@@ -1,13 +1,9 @@
 import * as React from 'react'
 import * as typings from './preview.type'
 import PreviewStore from './store/preview'
-import {observer, Provider} from 'mobx-react'
-
-import baseComponents from '../base-components'
 
 import PreviewHelper from './preview-helper/preview-helper.component'
 
-@observer
 export default class Preview extends React.Component <typings.PropsDefine, typings.StateDefine> {
     static defaultProps: typings.PropsDefine = new typings.Props()
     public state: typings.StateDefine = new typings.State()
@@ -16,7 +12,7 @@ export default class Preview extends React.Component <typings.PropsDefine, typin
 
     componentWillMount() {
         // 设置基础组件
-        this.preview.setBaseComponents(baseComponents)
+        this.preview.setBaseComponents(this.preview.baseComponents)
 
         // 设置自定义组件
         this.preview.setCustomComponents(this.props.components)
@@ -52,9 +48,8 @@ export default class Preview extends React.Component <typings.PropsDefine, typin
 
     render() {
         return (
-            <Provider preview={this.preview}>
-                <PreviewHelper mapUniqueKey={this.preview.rootMapUniqueKey}/>
-            </Provider>
+            <PreviewHelper preview={this.preview}
+                           mapUniqueKey={this.preview.rootMapUniqueKey}/>
         )
     }
 }

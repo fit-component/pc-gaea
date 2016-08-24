@@ -120,9 +120,11 @@ export default class Application {
      * 根据 uniqueKey 获取组件
      */
     getComponentByUniqueKey(uniqueKey: string) {
-        for (let component of this.baseComponents) {
-            if (component.defaultProps.uniqueKey === uniqueKey) {
-                return component
+        if (this.baseComponents) {
+            for (let component of this.baseComponents) {
+                if (component.defaultProps.uniqueKey === uniqueKey) {
+                    return component
+                }
             }
         }
 

@@ -12,7 +12,6 @@ import ViewportStore from './store/viewport'
 import Setting from './store/setting'
 
 import Page from './page/page.component'
-import baseComponents from '../base-components'
 
 //import DevTools from 'mobx-react-devtools'
 
@@ -46,7 +45,7 @@ export default class Gaea extends React.Component <typings.PropsDefine, typings.
     setPropsToApplication(props: typings.PropsDefine) {
         this.applicationStore.setInitPropsToApplication({
             title: props.title,
-            baseComponents: baseComponents,
+            baseComponents: this.props.baseComponents,
             customComponents: props.components,
             isHideCustomComponents: props.isHideCustomComponents,
             // 页面编辑信息
