@@ -11,7 +11,11 @@ export default (options: {
 
     outerStyle.width = options['width'].value
     outerStyle.minHeight = options['minHeight'].value
-    outerStyle.display = options['display'].value
+
+    if (options['display']) {
+        outerStyle.display = options['display'].value
+    }
+
     outerStyle.flexDirection = options['flexDirection'].value
 
     // 如果宽高是百分比,那继承的是100%,否则长度会更小

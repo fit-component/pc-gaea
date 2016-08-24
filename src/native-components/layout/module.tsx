@@ -24,14 +24,6 @@ export class Props implements PropsInterface {
             order: 1
         },
 
-        display: {
-            label: '布局类型',
-            value: 'flex',
-            editor: 'none',
-            editable: false,
-            order: 2
-        },
-
         justifyContent: {
             label: '主轴对齐方式',
             value: 'flex-start',

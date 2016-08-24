@@ -12,7 +12,6 @@ export default class LayoutComponent extends React.Component <module.PropsInterf
             width: this.props.options['width'].value,
             minHeight: this.props.options['minHeight'].value,
             backgroundColor: this.props.options['backgroundColor'].value,
-            display: this.props.options['display'].value,
             flexDirection: this.props.options['flexDirection'].value,
             flexGrow: this.props.options['flexGrow'].value,
             flexWrap: this.props.options['flexWrap'].value,

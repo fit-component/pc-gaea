@@ -30,7 +30,7 @@ export default class Page extends React.Component <typings.PropsDefine, typings.
             const LayoutClass = this.props.application.getComponentByUniqueKey('gaea-layout')
             // 布置最外层的画布
             let layoutOptions = _.cloneDeep(LayoutClass.defaultProps.options)
-            layoutOptions['minHeight'].value = '100%'
+            layoutOptions['minHeight'].value = 500
             this.props.viewport.components.set(this.props.viewport.rootMapUniqueKey, {
                 props: {
                     uniqueKey: 'gaea-layout',
