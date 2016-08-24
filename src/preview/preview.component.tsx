@@ -1,5 +1,6 @@
 import * as React from 'react'
 import * as typings from './preview.type'
+import * as _ from 'lodash'
 import PreviewStore from './store/preview'
 
 import PreviewHelper from './preview-helper/preview-helper.component'

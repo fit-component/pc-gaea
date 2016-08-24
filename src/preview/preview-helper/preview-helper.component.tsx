@@ -1,5 +1,6 @@
 import * as React from 'react'
 import * as typings from './preview-helper.type'
+import * as _ from 'lodash'
 const {View} = require('react-native')
 
 import fitLayoutStyle from '../../utils/fit-layout-style'
