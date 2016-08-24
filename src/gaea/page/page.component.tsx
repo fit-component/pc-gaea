@@ -103,7 +103,7 @@ export default class Page extends React.Component <typings.PropsDefine, typings.
                         <OuterMoveBox />
                         {this.props.application.isPreview &&
                         <div className="preview-container">
-                            <Preview value={this.props.viewport.getIncrementComponentsInfo()}/>
+                            <Preview value={this.props.viewport.getIncrementComponentsInfo()} baseComponents={this.props.application.baseComponents} customComponents={this.props.application.customComponents}/>
                         </div>
                         }
                     </div>

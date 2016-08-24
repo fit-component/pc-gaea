@@ -4,7 +4,7 @@ export interface PropsDefine {
     /**
      * 自定义组件
      */
-    components?: Array<React.ComponentClass<FitGaea.ComponentProps>>
+    customComponents?: Array<React.ComponentClass<FitGaea.ComponentProps>>
 
     /**
      * 基础组件

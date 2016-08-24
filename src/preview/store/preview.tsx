@@ -39,9 +39,11 @@ export default class Preview {
             }
         }
 
-        for (let component of this.customComponents) {
-            if (component.defaultProps.uniqueKey === uniqueKey) {
-                return component
+        if (this.customComponents) {
+            for (let component of this.customComponents) {
+                if (component.defaultProps.uniqueKey === uniqueKey) {
+                    return component
+                }
             }
         }
 

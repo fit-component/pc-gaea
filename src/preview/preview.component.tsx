@@ -12,10 +12,10 @@ export default class Preview extends React.Component <typings.PropsDefine, typin
 
     componentWillMount() {
         // 设置基础组件
-        this.preview.setBaseComponents(this.preview.baseComponents)
+        this.preview.setBaseComponents(this.props.baseComponents)
 
         // 设置自定义组件
-        this.preview.setCustomComponents(this.props.components)
+        this.preview.setCustomComponents(this.props.customComponents)
 
         this.props.value && Object.keys(this.props.value).forEach(mapUniqueKey=> {
             const defaultInfo = this.props.value[mapUniqueKey]
