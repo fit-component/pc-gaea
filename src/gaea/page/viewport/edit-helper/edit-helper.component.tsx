@@ -51,6 +51,12 @@ export default class EditHelper extends React.Component <typings.PropsDefine, ty
     componentDidMount() {
         this.childDomInstance = ReactDOM.findDOMNode(this.childInstance)
 
+        // 绑定 click
+        this.childDomInstance.addEventListener('mouseover', this.handleMouseOver)
+
+        // 绑定 onMouseOver
+        this.childDomInstance.addEventListener('click', this.handleClick)
+
         // 如果自己是布局元素, 给子元素绑定 sortable
         if (this.componentInfo.props.uniqueKey === 'gaea-layout') {
             // 添加可排序拖拽
@@ -182,12 +188,16 @@ export default class EditHelper extends React.Component <typings.PropsDefine, ty
             // TODO 这里会报错
             // this.sortable.destory()
         }
+
+        // 移除事件绑定
+        this.childDomInstance.removeEventListener('mouseover', this.handleMouseOver)
+        this.childDomInstance.removeEventListener('click', this.handleClick)
     }
 
     /**
      * 鼠标移上去
      */
-    @autoBindMethod handleMouseOver(event: React.MouseEvent) {
+    @autoBindMethod handleMouseOver(event: MouseEvent) {
         event.stopPropagation()
         this.props.application.event.emit(this.props.application.event.viewportOrTreeComponentMouseOver, {
             mapUniqueKey: this.props.mapUniqueKey,
@@ -212,7 +222,7 @@ export default class EditHelper extends React.Component <typings.PropsDefine, ty
         })
     }
 
-    @autoBindMethod handleClick(event: React.MouseEvent) {
+    @autoBindMethod handleClick(event: MouseEvent) {
         event.stopPropagation()
 
         // 设置选中组件的 uniqueKey
@@ -262,9 +272,6 @@ export default class EditHelper extends React.Component <typings.PropsDefine, ty
         componentProps.ref = (ref: React.ReactInstance)=> {
             this.childInstance = ref
         }
-
-        componentProps.onClick = this.handleClick
-        componentProps.onMouseOver = this.handleMouseOver
 
         return React.createElement(this.SelfComponent, componentProps, childs)
     }
