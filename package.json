@@ -1,6 +1,6 @@
 {
   "name": "fit-gaea",
-  "version": "1.0.32",
+  "version": "1.0.33",
   "description": "",
   "main": "lib/index.js",
   "scripts": {
@@ -18,7 +18,7 @@
     "lodash": "^3.10.1",
     "font-awesome": "^4.6.1",
     "fit-tree": "^3.0.43",
-    "fit-modal": "^3.0.57",
+    "fit-modal": "^3.0.58",
     "sortablejs": "git://github.com/RubaXa/Sortable.git#dev",
     "codemirror": "^5.15.2",
     "react-codemirror": "^0.2.6",
