@@ -10,7 +10,6 @@ import * as typings from './edit-helper.type'
 import {observer, inject} from 'mobx-react'
 
 import {autoBindMethod} from '../../../../../../../common/auto-bind/src'
-import fitLayoutStyle from '../../../../utils/fit-layout-style'
 
 import * as _ from 'lodash'
 import * as Sortable from 'sortablejs'
@@ -52,13 +51,10 @@ export default class EditHelper extends React.Component <typings.PropsDefine, ty
     componentDidMount() {
         this.childDomInstance = ReactDOM.findDOMNode(this.childInstance)
 
-        // 由于外面包了一层 div,找到其子元素
-        const childComponentDomInstance = this.childDomInstance.childNodes[0] as Element
-
         // 如果自己是布局元素, 给子元素绑定 sortable
         if (this.componentInfo.props.uniqueKey === 'gaea-layout') {
             // 添加可排序拖拽
-            this.sortable = Sortable.create(childComponentDomInstance, {
+            this.sortable = Sortable.create(this.childDomInstance, {
                 animation: 150,
                 // 放在一个组里,可以跨组拖拽
                 group: {
@@ -67,7 +63,7 @@ export default class EditHelper extends React.Component <typings.PropsDefine, ty
                     put: true
                 },
                 onStart: (event: any) => {
-                    this.props.viewport.startDragging(this.componentInfo.layoutChilds[event.oldIndex as number], '', false, childComponentDomInstance, event.oldIndex as number)
+                    this.props.viewport.startDragging(this.componentInfo.layoutChilds[event.oldIndex as number], '', false, this.childDomInstance, event.oldIndex as number)
                 },
                 onEnd: (event: any) => {
                     this.props.viewport.endDragging()
@@ -207,31 +203,6 @@ export default class EditHelper extends React.Component <typings.PropsDefine, ty
         this.props.viewport.setHoverComponent(this.childDomInstance)
     }
 
-    @autoBindMethod handleClick(event: React.MouseEvent) {
-        event.stopPropagation()
-
-        // 设置选中组件的 uniqueKey
-        this.props.viewport.setCurrentEditComponentMapUniqueKey(this.props.mapUniqueKey)
-
-        // 把上一个组件触发非选中
-        if (this.props.viewport.lastSelectMapUniqueKey !== null) {
-            // 如果上个选中组件没被关
-            this.props.application.event.emit(this.props.application.event.changeComponentSelectStatusEvent, {
-                mapUniqueKey: this.props.viewport.lastSelectMapUniqueKey,
-                selected: false
-            } as FitGaea.ComponentSelectStatusEvent)
-        }
-
-        // 设置自己为上一个组件
-        this.props.viewport.setLastSelectMapUniqueKey(this.props.mapUniqueKey)
-
-        // 触发选中组件 event, 各 layout 会接收, 设置子组件的 setSelect
-        this.props.application.event.emit(this.props.application.event.changeComponentSelectStatusEvent, {
-            mapUniqueKey: this.props.mapUniqueKey,
-            selected: true
-        } as FitGaea.ComponentSelectStatusEvent)
-    }
-
     /**
      * 修改自己选中状态
      */
@@ -257,27 +228,18 @@ export default class EditHelper extends React.Component <typings.PropsDefine, ty
         }
 
         let componentProps = _.cloneDeep(this.componentInfo.props)
-        let outerStyle = {}
-
-        if (this.componentInfo.props.uniqueKey === 'gaea-layout') {
-            outerStyle = fitLayoutStyle(componentProps.options)
-        }
 
         const classes = classNames({
             '_namespace': true,
             'selected': this.state.selected
         })
 
-        return (
-            <div className={classes}
-                 ref={(ref: React.ReactInstance)=> {
-                    this.childInstance = ref
-                 }}
-                 style={outerStyle}
-                 onClick={this.handleClick}
-                 onMouseOver={this.handleMouseOver}>
-                {React.createElement(this.SelfComponent, componentProps, childs)}
-            </div>
-        )
+        componentProps.ref = (ref: React.ReactInstance)=> {
+            this.childInstance = ref
+        }
+
+        componentProps.onMouseOver = this.handleMouseOver
+
+        return React.createElement(this.SelfComponent, componentProps, childs)
     }
 }

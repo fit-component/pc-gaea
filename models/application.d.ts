@@ -81,7 +81,7 @@ declare namespace FitGaea {
          * 当 editor 为 array 时的数组配置
          * 数组中的 key,和填入的值,会作为 Array<key:value> 填入到 value 中
          */
-        array?: Array<ComponentPropsOptionsArray>
+        array?: Array<ComponentPropsOptionsArrayValue>
         /**
          * 当 editor 为 selector 时的数组配置
          */

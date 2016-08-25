@@ -8,9 +8,9 @@ export class Props implements PropsInterface {
     uniqueKey = 'gaea-layout'
 
     options = {
-        width: {
-            label: '宽',
-            value: '100%',
+        flex: {
+            label: 'flex',
+            value: 1,
             editor: 'text',
             editable: true,
             order: 0,
@@ -109,14 +109,6 @@ export class Props implements PropsInterface {
                 value: 'wrap-reverse'
             }],
             order: 6
-        },
-
-        flexGrow: {
-            label: 'flex-grow',
-            value: null as any,
-            editor: 'none',
-            editable: false,
-            order: 7
         },
 
         backgroundColor: {

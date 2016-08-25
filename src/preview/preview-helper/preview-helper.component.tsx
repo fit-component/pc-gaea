@@ -3,8 +3,6 @@ import * as typings from './preview-helper.type'
 import * as _ from 'lodash'
 const {View} = require('react-native')
 
-import fitLayoutStyle from '../../utils/fit-layout-style'
-
 export default class PreviewHelper extends React.Component <typings.PropsDefine, typings.StateDefine> {
     static defaultProps: typings.PropsDefine = new typings.Props()
     public state: typings.StateDefine = new typings.State()
@@ -39,19 +37,7 @@ export default class PreviewHelper extends React.Component <typings.PropsDefine,
         }
 
         let componentProps = _.cloneDeep(this.componentInfo.props)
-        let outerStyle: React.CSSProperties = {}
 
-        if (this.componentInfo.props.uniqueKey === 'gaea-layout') {
-            outerStyle = fitLayoutStyle(componentProps.options)
-        }
-
-        // 因为要适配 react-native, 删除不兼容的属性
-        delete outerStyle.display
-
-        return (
-            <View style={outerStyle}>
-                {React.createElement(this.SelfComponent, componentProps, childs)}
-            </View>
-        )
+        return React.createElement(this.SelfComponent, componentProps, childs)
     }
 }

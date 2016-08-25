@@ -20,8 +20,10 @@ export default class LayoutComponent extends React.Component <module.PropsInterf
             overflow: this.props.options['overflow'].value
         }
 
+        const otherProps = others(new module.Props(), this.props)
+
         return (
-            <div style={style}>{this.props.children}</div>
+            <div {...otherProps} style={style}>{this.props.children}</div>
         )
     }
 }
