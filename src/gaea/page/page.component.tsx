@@ -14,7 +14,7 @@ import HeaderNav from './header/header.component'
 import EditBox from '../panel/edit-box/edit-box.component'
 import OuterMoveBox from './outer-move-box/outer-move-box.component'
 
-import Preview from '../../preview/preview.component'
+import Preview from '../../../../gaea-preview/src'
 
 import './page.scss'
 

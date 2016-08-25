@@ -4,7 +4,6 @@
 
 import 'font-awesome/css/font-awesome.css'
 import Gaea from './gaea/gaea.component'
-import Preview from './preview/preview.component'
 
 import {Tree} from '../../tree/src'
 import {autoBindMethod} from '../../../common/auto-bind/src'
@@ -19,6 +18,6 @@ import {Tabs} from '../../tabs/src'
 import * as draggable from 'react-draggable'
 import * as keymaster from 'keymaster'
 import * as layoutGlobal from '../../layout-global/src'
+import Preview from '../../gaea-preview/src'
 
 export default Gaea
-export {Gaea, Preview}

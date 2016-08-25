@@ -46,7 +46,7 @@ export default class Gaea extends React.Component <typings.PropsDefine, typings.
         this.applicationStore.setInitPropsToApplication({
             title: props.title,
             baseComponents: this.props.baseComponents,
-            customComponents: props.components,
+            customComponents: props.customComponents,
             isHideCustomComponents: props.isHideCustomComponents,
             // 页面编辑信息
             defaultValue: props.defaultValue
