@@ -45,7 +45,7 @@ export default class EditHelper extends React.Component <typings.PropsDefine, ty
         this.componentInfo = this.props.viewport.components.get(this.props.mapUniqueKey)
 
         // 获取当前要渲染的组件 class
-        this.SelfComponent = this.props.application.getComponentByUniqueKey(this.componentInfo.props.uniqueKey)
+        this.SelfComponent = this.props.application.getComponentByUniqueKey(this.componentInfo.props.gaeaUniqueKey)
     }
 
     componentDidMount() {
@@ -58,7 +58,7 @@ export default class EditHelper extends React.Component <typings.PropsDefine, ty
         this.childDomInstance.addEventListener('click', this.handleClick)
 
         // 如果自己是布局元素, 给子元素绑定 sortable
-        if (this.componentInfo.props.uniqueKey === 'gaea-layout') {
+        if (this.componentInfo.props.gaeaUniqueKey === 'gaea-layout') {
             // 添加可排序拖拽
             this.sortable = Sortable.create(this.childDomInstance, {
                 animation: 150,
@@ -184,7 +184,7 @@ export default class EditHelper extends React.Component <typings.PropsDefine, ty
 
     componentWillUnmount() {
         // 如果是布局组件, 就销毁 sortable
-        if (this.componentInfo.props.uniqueKey === 'gaea-layout') {
+        if (this.componentInfo.props.gaeaUniqueKey === 'gaea-layout') {
             // TODO 这里会报错
             // this.sortable.destory()
         }
@@ -252,7 +252,7 @@ export default class EditHelper extends React.Component <typings.PropsDefine, ty
         let childs: Array<React.ReactElement<any>> = null
 
         // gaea-layout 可以有子元素
-        if (this.componentInfo.props.uniqueKey === 'gaea-layout' && this.componentInfo.layoutChilds) {
+        if (this.componentInfo.props.gaeaUniqueKey === 'gaea-layout' && this.componentInfo.layoutChilds) {
             childs = this.componentInfo.layoutChilds.map(layoutChildUniqueMapKey=> {
                 return (
                     <EditHelper.ObserveEditHelper key={layoutChildUniqueMapKey}

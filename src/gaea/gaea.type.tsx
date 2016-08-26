@@ -96,7 +96,7 @@ export interface PropsDefine {
 export class Props implements PropsDefine {
     title = 'Gaea'
     version = '0.0.0'
-    components = [] as Array<React.ComponentClass<FitGaea.ComponentProps>>
+    customComponents = [] as Array<React.ComponentClass<FitGaea.ComponentProps>>
     isHideCustomComponents = false
     viewportSize = 100
     onSave = ()=> {

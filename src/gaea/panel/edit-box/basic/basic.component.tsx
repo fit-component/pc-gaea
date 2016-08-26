@@ -33,7 +33,7 @@ export default class EditBoxBasic extends React.Component <typings.PropsDefine, 
      * 修改组件标题
      */
     @autoBindMethod handleChangeName(event: any) {
-        this.componentInfo.props.name = event.target.value
+        this.componentInfo.props.gaeaName = event.target.value
     }
 
     /**
@@ -58,19 +58,19 @@ export default class EditBoxBasic extends React.Component <typings.PropsDefine, 
         // 绑定组件信息
         this.componentInfo = this.props.viewport.components.get(this.props.viewport.currentEditComponentMapUniqueKey)
 
-        const Editors = this.componentInfo.props.options && Object.keys(this.componentInfo.props.options).map((optionKey, index)=> {
-                const key = `${this.props.viewport.currentEditComponentMapUniqueKey}-${optionKey}`
+        const Editors = this.componentInfo.props.gaeaEdit && this.componentInfo.props.gaeaEdit.map((editOption, index)=> {
+                const key = `${this.props.viewport.currentEditComponentMapUniqueKey}-${editOption.field}`
 
-                switch (this.componentInfo.props.options[optionKey].editor) {
+                switch (editOption.editor) {
                     case 'text':
                         return (
                             <TextEditor key={key}
-                                        optionKey={optionKey}/>
+                                        editOption={editOption}/>
                         )
                     case 'selector':
                         return (
                             <SelectEditor key={key}
-                                          optionKey={optionKey}/>
+                                          editOption={editOption}/>
                         )
                 }
             })
@@ -85,7 +85,7 @@ export default class EditBoxBasic extends React.Component <typings.PropsDefine, 
 
         // 成组按钮,有 childs 的 layout 元素且非根节点才有
         let GroupButton: React.ReactElement<any> = null
-        if (this.componentInfo.props.uniqueKey === 'gaea-layout' && this.componentInfo.parentMapUniqueKey !== null) {
+        if (this.componentInfo.props.gaeaUniqueKey === 'gaea-layout' && this.componentInfo.parentMapUniqueKey !== null) {
             GroupButton = (
                 <SetGroupButton/>
             )
@@ -94,7 +94,7 @@ export default class EditBoxBasic extends React.Component <typings.PropsDefine, 
         return (
             <div className="_namespace">
                 <div className="component-icon-container">
-                    <i className={`fa fa-${this.componentInfo.props.icon}`}/>
+                    <i className={`fa fa-${this.componentInfo.props.gaeaIcon}`}/>
                 </div>
                 <Input className="title-name"
                        label=""
@@ -102,7 +102,7 @@ export default class EditBoxBasic extends React.Component <typings.PropsDefine, 
                        onChange={this.handleChangeName}
                        rightRender={this.titleInputRightRender}
                        style={{paddingLeft:35}}
-                       value={this.componentInfo.props.name}/>
+                       value={this.componentInfo.props.gaeaName}/>
                 <div className="edit-item-container">
                     {Editors}
                 </div>

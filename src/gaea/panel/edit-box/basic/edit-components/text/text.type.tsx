@@ -2,7 +2,7 @@ import * as React from 'react'
 import Viewport from '../../../../../store/viewport'
 
 export interface PropsDefine {
-    optionKey?: string
+    editOption?: FitGaea.ComponentPropsGaeaEdit
     viewport?: Viewport
 }
 

@@ -29,15 +29,10 @@ export default class Page extends React.Component <typings.PropsDefine, typings.
             this.props.viewport.createRootUniqueId()
             const LayoutClass = this.props.application.getComponentByUniqueKey('gaea-layout')
             // 布置最外层的画布
-            let layoutOptions = _.cloneDeep(LayoutClass.defaultProps.options)
-            layoutOptions['minHeight'].value = 500
+            let layoutProps = _.cloneDeep(LayoutClass.defaultProps)
+            layoutProps['minHeight'] = 500
             this.props.viewport.components.set(this.props.viewport.rootMapUniqueKey, {
-                props: {
-                    uniqueKey: 'gaea-layout',
-                    icon: LayoutClass.defaultProps.icon,
-                    name: '画布',
-                    options: layoutOptions
-                },
+                props: layoutProps,
                 layoutChilds: [],
                 parentMapUniqueKey: null
             })
@@ -45,27 +40,20 @@ export default class Page extends React.Component <typings.PropsDefine, typings.
             // 有的话, 直接用 defaultValue
             Object.keys(this.props.application.defaultValue).forEach(mapUniqueKey=> {
                 const defaultInfo = this.props.application.defaultValue[mapUniqueKey]
-                const ComponentClass = this.props.application.getComponentByUniqueKey(defaultInfo.props.uniqueKey)
+                const ComponentClass = this.props.application.getComponentByUniqueKey(defaultInfo.props.gaeaUniqueKey)
 
                 // 如果是根节点, 设置根据点 id
                 if (defaultInfo.parentMapUniqueKey === null) {
                     this.props.viewport.setRootUniqueId(mapUniqueKey)
                 }
 
-                // 组合成完整的 options
-                let options = _.cloneDeep(ComponentClass.defaultProps.options)
-                defaultInfo.props.options && Object.keys(defaultInfo.props.options).forEach(optionKey=> {
-                    // 只要设置的有 optionKey, 那肯定有编辑后的 value
-                    options[optionKey].value = defaultInfo.props.options[optionKey].value
+                let props = _.cloneDeep(ComponentClass.defaultProps)
+                defaultInfo.props && Object.keys(defaultInfo.props).forEach(propsKey=> {
+                    props[propsKey] = defaultInfo.props[propsKey]
                 })
 
                 this.props.viewport.components.set(mapUniqueKey, {
-                    props: {
-                        uniqueKey: defaultInfo.props.uniqueKey,
-                        icon: ComponentClass.defaultProps.icon,
-                        name: defaultInfo.props.name || ComponentClass.defaultProps.name,
-                        options
-                    },
+                    props,
                     layoutChilds: defaultInfo.layoutChilds || [],
                     parentMapUniqueKey: defaultInfo.parentMapUniqueKey
                 })

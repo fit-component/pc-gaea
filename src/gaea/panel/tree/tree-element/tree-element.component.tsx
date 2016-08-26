@@ -46,18 +46,18 @@ export default class TreeElement extends React.Component <typings.PropsDefine, t
      */
     @autoBindMethod treeNameRender() {
         // 如果 uniqueKey 中有 gaea, 说明是内置组件, 用背景加深方式展现
-        if (this.componentInfo.props.uniqueKey.indexOf('gaea') > -1) {
+        if (this.componentInfo.props.gaeaUniqueKey.indexOf('gaea') > -1) {
             return (
                 <div className="flex">
-                    <i className={`fa fa-${this.componentInfo.props.icon} icons gaea`}/>
-                    <span className="text">{this.componentInfo.props.name}</span>
+                    <i className={`fa fa-${this.componentInfo.props.gaeaIcon} icons gaea`}/>
+                    <span className="text">{this.componentInfo.props.gaeaName}</span>
                 </div>
             )
         } else {
             return (
                 <div className="flex">
-                    <i className={`fa fa-${this.componentInfo.props.icon} icons`}/>
-                    <span className="text">{this.componentInfo.props.name}</span>
+                    <i className={`fa fa-${this.componentInfo.props.gaeaIcon} icons`}/>
+                    <span className="text">{this.componentInfo.props.gaeaName}</span>
                 </div>
             )
         }
@@ -138,7 +138,7 @@ export default class TreeElement extends React.Component <typings.PropsDefine, t
         let childs: Array<React.ReactElement<any>> = null
 
         // gaea-layout 可以有子元素
-        if (this.componentInfo.props.uniqueKey === 'gaea-layout' && this.componentInfo.layoutChilds) {
+        if (this.componentInfo.props.gaeaUniqueKey === 'gaea-layout' && this.componentInfo.layoutChilds) {
             childs = this.componentInfo.layoutChilds.map(layoutChildUniqueMapKey=> {
                 return (
                     <TreeElement.ObserveTreeElement key={layoutChildUniqueMapKey}
@@ -161,7 +161,7 @@ export default class TreeElement extends React.Component <typings.PropsDefine, t
                 'selected': this.state.selected
             }),
             // 父级是布局组件才有
-            onMouseLeave: this.componentInfo.props.uniqueKey === 'gaea-layout' ? this.handleMouseLeave : null,
+            onMouseLeave: this.componentInfo.props.gaeaUniqueKey === 'gaea-layout' ? this.handleMouseLeave : null,
             // 主动绑定用到的数据
             name: this.componentInfo.props.name,
             icon: this.componentInfo.props.icon

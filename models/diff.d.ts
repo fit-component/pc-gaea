@@ -36,8 +36,8 @@ declare namespace FitGaea {
         }
         // 更新操作
         update?: {
-            // 配置项 key
-            optionKey: string
+            // 更新的字段
+            field: string
             oldValue: ComponentPropsOptionValue,
             newValue: ComponentPropsOptionValue
         }

@@ -6,19 +6,17 @@ declare namespace FitGaea {
         /**
          * 唯一的 key,用来唯一标识这个组件,所有盖亚内部组件都以 gaea- 为前缀
          */
-        uniqueKey: string
+        gaeaUniqueKey: string
         /**
          * 组件的中文名
          */
-        name: string
+        gaeaName: string
         /**
          * 组件图标,为 fontAwesome
          */
-        icon?: string
+        gaeaIcon?: string
 
-        options?: {
-            [key: string]: ComponentPropsOptions
-        }
+        gaeaEdit?: Array<ComponentPropsGaeaEdit>
 
         [x: string]: any
     }
@@ -26,7 +24,7 @@ declare namespace FitGaea {
     /**
      * 组件配置中数组配置
      */
-    export interface ComponentPropsOptionsArray extends ComponentPropsOptions {
+    export interface ComponentPropsOptionsArray extends ComponentPropsGaeaEdit {
         key: string
     }
 
@@ -60,15 +58,15 @@ declare namespace FitGaea {
     /**
      * 组件配置
      */
-    export interface ComponentPropsOptions {
+    export interface ComponentPropsGaeaEdit {
+        /**
+         * 对应字段名
+         */
+        field: string
         /**
          * 选项名称
          */
         label: string
-        /**
-         * 选项值
-         */
-        value?: ComponentPropsOptionValue
         /**
          * 编辑器类型 text array(暂时不支持2层以上) selector
          */

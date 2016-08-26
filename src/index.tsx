@@ -19,5 +19,7 @@ import * as draggable from 'react-draggable'
 import * as keymaster from 'keymaster'
 import * as layoutGlobal from '../../layout-global/src'
 import Preview from '../../gaea-preview/src'
+import Input from '../../input/src'
+import {Select} from '../../select/src'
 
 export default Gaea

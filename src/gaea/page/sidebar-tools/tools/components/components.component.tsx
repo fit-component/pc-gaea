@@ -79,9 +79,9 @@ export default class Components extends React.Component <typings.PropsDefine, ty
     @autoBindMethod getUniqueKeyByIndex(index: number) {
         switch (this.state.selectedType) {
             case 'custom':
-                return this.props.application.customComponents[index].defaultProps.uniqueKey
+                return this.props.application.customComponents[index].defaultProps.gaeaUniqueKey
             case 'base':
-                return this.props.application.baseComponents[index].defaultProps.uniqueKey
+                return this.props.application.baseComponents[index].defaultProps.gaeaUniqueKey
             case 'group':
                 return 'combo'
         }
@@ -134,8 +134,8 @@ export default class Components extends React.Component <typings.PropsDefine, ty
                 return this.props.application.customComponents.map((item, index)=> {
                     return (
                         <DragSource key={index}>
-                            <i className={`fa fa-${item.defaultProps.icon || 'cube'} icons`}/>
-                            {item.defaultProps.name}
+                            <i className={`fa fa-${item.defaultProps.gaeaIcon || 'cube'} icons`}/>
+                            {item.defaultProps.gaeaName}
                         </DragSource>
                     )
                 })
@@ -143,8 +143,8 @@ export default class Components extends React.Component <typings.PropsDefine, ty
                 return this.props.application.baseComponents.map((item, index)=> {
                     return (
                         <DragSource key={index}>
-                            <i className={`fa fa-${item.defaultProps.icon || 'cube'} icons gaea`}/>
-                            {item.defaultProps.name}
+                            <i className={`fa fa-${item.defaultProps.gaeaIcon || 'cube'} icons gaea`}/>
+                            {item.defaultProps.gaeaName}
                         </DragSource>
                     )
                 })

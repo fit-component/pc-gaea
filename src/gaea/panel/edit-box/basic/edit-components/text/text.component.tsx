@@ -15,14 +15,14 @@ export default class EditComponentText extends React.Component <typings.PropsDef
     render() {
         this.componentInfo = this.props.viewport.components.get(this.props.viewport.currentEditComponentMapUniqueKey)
         const textOpts = {
-            label: this.componentInfo.props.options[this.props.optionKey].label,
-            disabled: !this.componentInfo.props.options[this.props.optionKey].editable,
-            value: this.componentInfo.props.options[this.props.optionKey].value as string,
+            label: this.props.editOption.label,
+            disabled: !this.props.editOption.editable,
+            value: this.componentInfo.props[this.props.editOption.field] as string,
             onChange: (event: any)=> {
-                if (typeof this.componentInfo.props.options[this.props.optionKey].value === 'number') {
-                    this.props.viewport.updateComponentOptionsValue(this.props.optionKey, Number(event.target.value))
+                if (typeof this.componentInfo.props[this.props.editOption.field] === 'number') {
+                    this.props.viewport.updateComponentOptionsValue(this.props.editOption, Number(event.target.value))
                 } else {
-                    this.props.viewport.updateComponentOptionsValue(this.props.optionKey, event.target.value)
+                    this.props.viewport.updateComponentOptionsValue(this.props.editOption, event.target.value)
                 }
             }
         }

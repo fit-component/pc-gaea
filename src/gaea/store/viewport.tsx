@@ -51,7 +51,7 @@ export default class Viewport {
     resetComponent(mapUniqueKey: string) {
         const component = this.components.get(mapUniqueKey)
         // 找到对应 class
-        const ComponentClass = this.application.getComponentByUniqueKey(component.props.uniqueKey)
+        const ComponentClass = this.application.getComponentByUniqueKey(component.props.gaeaUniqueKey)
 
         // 保存操作
         this.saveOperate({
@@ -65,8 +65,7 @@ export default class Viewport {
 
         // 开始重置
         transaction(()=> {
-            component.props.options = _.cloneDeep(ComponentClass.defaultProps.options)
-            component.props.name = ComponentClass.defaultProps.name
+            component.props = _.cloneDeep(ComponentClass.defaultProps)
         })
     }
 
@@ -357,7 +356,7 @@ export default class Viewport {
     /**
      * 编辑当前组件, 某个选项的值
      */
-    updateComponentOptionsValue(optionKey: string, value: FitGaea.ComponentPropsOptionValue) {
+    updateComponentOptionsValue(editOptions: FitGaea.ComponentPropsGaeaEdit, value: FitGaea.ComponentPropsOptionValue) {
         let componentInfo = this.components.get(this.currentEditComponentMapUniqueKey)
 
         // 保存操作
@@ -365,14 +364,14 @@ export default class Viewport {
             type: 'update',
             mapUniqueKey: this.currentEditComponentMapUniqueKey,
             update: {
-                optionKey: optionKey,
-                oldValue: _.cloneDeep(componentInfo.props.options[optionKey].value),
+                field: editOptions.field,
+                oldValue: _.cloneDeep(componentInfo.props[editOptions.field]),
                 newValue: _.cloneDeep(value)
             }
         })
 
         // 修改组件值
-        componentInfo.props.options[optionKey].value = value
+        componentInfo.props[editOptions.field] = value
     }
 
     /**
@@ -392,32 +391,38 @@ export default class Viewport {
      */
     getIncrementComponentsInfo() {
         // 获取 components 的 map, 但是要把 options 中除了 value 以外字段都干掉
-        const cloneComponents = _.cloneDeep(JSON.parse(JSON.stringify(this.components.toJSON())))
+        const cloneComponents = JSON.parse(JSON.stringify(this.components.toJSON()))
 
         Object.keys(cloneComponents).map(key=> {
             // icon 不会变
             delete cloneComponents[key].props.icon
 
             // 获取这个组件的 defaultProps
-            const defaultProps = this.application.getComponentByUniqueKey(cloneComponents[key].props.uniqueKey).defaultProps
+            const defaultProps = this.application.getComponentByUniqueKey(cloneComponents[key].props.gaeaUniqueKey).defaultProps
 
             // 如果 name 相同, 删了
             if (cloneComponents[key].props.name == defaultProps.name) {
                 delete cloneComponents[key].props.name
             }
 
-            // 对 options 进行瘦身
-            const options = cloneComponents[key].props.options
-            options && Object.keys(options).forEach(optionKey=> {
+            // 对 props 进行瘦身
+            const props = cloneComponents[key].props
+            props && Object.keys(props).forEach(propsKey=> {
+                // gaeaUniqueKey 必须留着
+                if (propsKey === 'gaeaUniqueKey') {
+                    return
+                }
+
+                // gaeaEdit 直接删
+                if (propsKey === 'gaeaEdit') {
+                    delete props[propsKey]
+                    return
+                }
+
                 // 判断值相等就行了
-                if (options[optionKey].value == defaultProps.options[optionKey].value) {
+                if (props[propsKey] == defaultProps[propsKey]) {
                     // 如果和初始值相同, 就销毁
-                    delete options[optionKey]
-                } else {
-                    // 不同, 也仅保留 value 字段
-                    options[optionKey] = {
-                        value: options[optionKey].value
-                    } as any
+                    delete props[propsKey]
                 }
             })
 
@@ -426,8 +431,8 @@ export default class Viewport {
                 delete cloneComponents[key].layoutChilds
             }
 
-            // 如果 options 已经被删完了, 直接删掉 options
-            if (!options || Object.keys(options).length === 0) {
+            // 如果 props 已经被删完了, 直接删掉 props
+            if (!props || Object.keys(props).length === 0) {
                 delete cloneComponents[key].props.options
             }
         })
@@ -443,13 +448,10 @@ export default class Viewport {
         const ComponentClass = this.application.getComponentByUniqueKey(uniqueId)
 
         // 从 startDragging 设置的 uniqueKey 生成新组件并且绑定上
+        const newProps = _.cloneDeep(ComponentClass.defaultProps)
+
         let component: FitGaea.ViewportComponentInfo = {
-            props: {
-                name: ComponentClass.defaultProps.name,
-                icon: ComponentClass.defaultProps.icon,
-                options: _.cloneDeep(ComponentClass.defaultProps.options),
-                uniqueKey: uniqueId
-            },
+            props: newProps,
             parentMapUniqueKey: parentMapUniqueKey,
             layoutChilds: []
         }
@@ -549,7 +551,7 @@ export default class Viewport {
 
         // 删除子元素
         const component = this.components.get(mapUniqueKey)
-        if (component.props.uniqueKey === 'gaea-layout') {
+        if (component.props.gaeaUniqueKey === 'gaea-layout') {
             JSON.parse(JSON.stringify(component.layoutChilds)).forEach((componentMapUniqueKey: string)=> {
                 // 记录这个组件的信息
                 deleteChildComponents[componentMapUniqueKey] = _.cloneDeep(JSON.parse(JSON.stringify(this.components.get(componentMapUniqueKey))))
@@ -581,7 +583,7 @@ export default class Viewport {
                 this.deleteComponent(operate.mapUniqueKey)
                 break
             case 'update':
-                this.components.get(operate.mapUniqueKey).props.options[operate.update.optionKey].value = operate.update.oldValue
+                this.components.get(operate.mapUniqueKey).props[operate.update.field] = operate.update.oldValue
                 break
             case 'exchange':
                 this.sortComponents(operate.mapUniqueKey, operate.exchange.newIndex, operate.exchange.oldIndex)
@@ -628,7 +630,7 @@ export default class Viewport {
                 this.addNewComponent(operate.mapUniqueKey, operate.add.parentMapUniqueKey, operate.add.uniqueId, operate.add.index)
                 break
             case 'update':
-                this.components.get(operate.mapUniqueKey).props.options[operate.update.optionKey].value = operate.update.newValue
+                this.components.get(operate.mapUniqueKey).props[operate.update.field] = operate.update.newValue
                 break
             case 'exchange':
                 this.sortComponents(operate.mapUniqueKey, operate.exchange.oldIndex, operate.exchange.newIndex)
@@ -646,7 +648,7 @@ export default class Viewport {
                 this.addComplexComponent(operate.paste.parentMapUniqueKey, operate.mapUniqueKey, operate.paste.index, operate.paste)
                 break
             case 'reset':
-                const ComponentClass = this.application.getComponentByUniqueKey(operate.reset.beforeProps.uniqueKey)
+                const ComponentClass = this.application.getComponentByUniqueKey(operate.reset.beforeProps.gaeaUniqueKey)
                 this.components.get(operate.mapUniqueKey).props = _.cloneDeep(ComponentClass.defaultProps)
                 break
             case 'addCombo':
@@ -719,7 +721,7 @@ export default class Viewport {
         // [oldMapUniqueKey => newMapUniqueKey]
         const uniqueKeyMap = new Map()
         uniqueKeyMap.set(originComponent.mapUniqueKey, this.createUniqueId())
-        if (originComponent.componentInfo.props.uniqueKey === 'gaea-layout') {
+        if (originComponent.componentInfo.props.gaeaUniqueKey === 'gaea-layout') {
             Object.keys(originComponent.childs).forEach(childMapUniqueKey=> {
                 uniqueKeyMap.set(childMapUniqueKey, this.createUniqueId())
             })
@@ -768,7 +770,7 @@ export default class Viewport {
         const parentComponent = this.components.get(parentMapUniqueKey)
 
         // 必须是布局组件
-        if (parentComponent.props.uniqueKey !== 'gaea-layout') {
+        if (parentComponent.props.gaeaUniqueKey !== 'gaea-layout') {
             return false
         }
 
@@ -810,7 +812,7 @@ export default class Viewport {
         const mapChilds = (component: FitGaea.ViewportComponentInfo, childs: {
             [mapUniqueKey: string]: FitGaea.ViewportComponentInfo
         })=> {
-            if (component.props.uniqueKey === 'gaea-layout') {
+            if (component.props.gaeaUniqueKey === 'gaea-layout') {
                 JSON.parse(JSON.stringify(component.layoutChilds)).forEach((componentMapUniqueKey: string)=> {
                     const childInfo = this.components.get(componentMapUniqueKey)
                     childs[componentMapUniqueKey] = JSON.parse(JSON.stringify(childInfo))

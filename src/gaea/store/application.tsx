@@ -122,14 +122,14 @@ export default class Application {
     getComponentByUniqueKey(uniqueKey: string) {
         if (this.baseComponents) {
             for (let component of this.baseComponents) {
-                if (component.defaultProps.uniqueKey === uniqueKey) {
+                if (component.defaultProps.gaeaUniqueKey === uniqueKey) {
                     return component
                 }
             }
         }
 
         for (let component of this.customComponents) {
-            if (component.defaultProps.uniqueKey === uniqueKey) {
+            if (component.defaultProps.gaeaUniqueKey === uniqueKey) {
                 return component
             }
         }
