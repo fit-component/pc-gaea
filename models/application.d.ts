@@ -53,7 +53,7 @@ declare namespace FitGaea {
     /**
      * 组件的值
      */
-    export type ComponentPropsOptionValue = number|string|Array<ComponentPropsOptionsArrayValue>
+    export type ComponentPropsOptionValue = number|string|boolean|Array<ComponentPropsOptionsArrayValue>
 
     /**
      * 组件配置

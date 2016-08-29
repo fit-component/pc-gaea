@@ -11,6 +11,7 @@ import SetGroupButton from './set-group-button/set-group-button.component'
 
 import TextEditor from './edit-components/text/text.component'
 import SelectEditor from './edit-components/select/select.component'
+import SwitchEditor from './edit-components/switch/switch.component'
 
 import './basic.scss'
 
@@ -70,6 +71,11 @@ export default class EditBoxBasic extends React.Component <typings.PropsDefine, 
                     case 'selector':
                         return (
                             <SelectEditor key={key}
+                                          editOption={editOption}/>
+                        )
+                    case 'switch':
+                        return (
+                            <SwitchEditor key={key}
                                           editOption={editOption}/>
                         )
                 }

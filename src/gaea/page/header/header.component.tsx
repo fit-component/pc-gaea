@@ -70,6 +70,9 @@ export default class Header extends React.Component <typings.PropsDefine, typing
      */
     @autoBindMethod handlePreview() {
         this.props.application.setPreview(!this.props.application.isPreview)
+        if (this.props.application.isPreview){
+            this.props.viewport.setCurrentEditComponentMapUniqueKey(null)
+        }
     }
 
     /**
