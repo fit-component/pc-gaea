@@ -113,9 +113,8 @@ export default class Header extends React.Component <typings.PropsDefine, typing
 
         return (
             <Menu className="_namespace"
-                  height={this.props.application.headerHeight}>
-                <MenuItem brand
-                          to="/designer">{this.props.application.title}</MenuItem>
+                  height={this.props.application.headerHeight - 1}>
+                <MenuItem brand>{this.props.application.title}</MenuItem>
                 <Setting/>
 
                 <RightMenu>

@@ -2,12 +2,12 @@ import * as React from 'react'
 import * as typings from './page.type'
 import {observer, inject} from 'mobx-react'
 
-import {Layout, Header, Sidebar, Section} from '../../../../layout-global/src'
 import * as classNames from 'classnames'
 import * as _ from 'lodash'
 
 import SidebarTools from './sidebar-tools/sidebar-tools.component'
 import SidebarToolsPreview from './sidebar-tools-preview/sidebar-tools-preview.component'
+import Footer from './footer/footer.component'
 import Viewport from './viewport/viewport.component'
 import ViewportSidebarResize from './viewport-sidebar-resize/viewport-sidebar-resize.component'
 import HeaderNav from './header/header.component'
@@ -70,35 +70,41 @@ export default class Page extends React.Component <typings.PropsDefine, typings.
         })
 
         return (
-            <Layout className="_namespace">
+            <div className="_namespace"
+                 style={{height:this.props.application.height}}>
 
-                <Header height={this.props.application.headerHeight}>
-                    <HeaderNav />
-                </Header>
-
-                <Sidebar width={this.props.application.sidebarWidth}
-                         className="sidebar"
-                         direction="right">
+                <div style={{width:this.props.application.sidebarWidth}}
+                     className="sidebar">
                     <SidebarTools />
                     <SidebarToolsPreview />
                     <ViewportSidebarResize />
-                </Sidebar>
+                </div>
 
-                <Section className={sectionClasses}>
-                    <div className="section-container">
+                <div className={sectionClasses}>
+                    <HeaderNav />
+
+                    <div className="section-container"
+                         style={{height:`calc(100% - ${this.props.application.headerHeight + this.props.application.footerHeight}px)`}}>
                         <Viewport/>
                         <EditBox/>
                         <OuterMoveBox />
                         {this.props.application.isPreview &&
                         <div className="preview-container">
-                            <Preview value={this.props.viewport.getIncrementComponentsInfo()} baseComponents={this.props.application.baseComponents} customComponents={this.props.application.customComponents}/>
+                            <Preview value={this.props.viewport.getIncrementComponentsInfo()}
+                                     baseComponents={this.props.application.baseComponents}
+                                     customComponents={this.props.application.customComponents}/>
                         </div>
                         }
                     </div>
-                </Section>
 
-            </Layout>
+                    <Footer />
+                </div>
+
+            </div>
         )
     }
 }
-
+//
+// <Header height={this.props.application.headerHeight}>
+//     <HeaderNav />
+// </Header>

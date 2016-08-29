@@ -12,12 +12,17 @@ export default class Application {
     /**
      * 头部栏高度
      */
-    @observable headerHeight = 40
+    @observable headerHeight = 37
 
     /**
      * 侧边栏宽度
      */
     @observable sidebarWidth = 240
+
+    /**
+     * 底部栏高度
+     */
+    @observable footerHeight = 25
 
     /**
      * 设置侧边栏宽度
@@ -69,6 +74,11 @@ export default class Application {
     }
 
     /**
+     * 页面高度
+     */
+    height: number
+
+    /**
      * 将接收到的 props 赋值到 application 中
      */
     setInitPropsToApplication(props: {
@@ -76,6 +86,7 @@ export default class Application {
         baseComponents: Array<React.ComponentClass<FitGaea.ComponentProps>>,
         customComponents: Array<React.ComponentClass<FitGaea.ComponentProps>>,
         isHideCustomComponents: boolean,
+        height: number,
         defaultValue: {
             [mapUniqueKey: string]: FitGaea.ViewportComponentInfo
         }
@@ -85,6 +96,7 @@ export default class Application {
         this.setCustomComponents(props.customComponents)
         this.isHideCustomComponents = props.isHideCustomComponents
         this.defaultValue = props.defaultValue
+        this.height = props.height
     }
 
     /**

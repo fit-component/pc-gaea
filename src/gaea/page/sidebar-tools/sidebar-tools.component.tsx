@@ -20,7 +20,8 @@ export default class SidebarTools extends React.Component <typings.PropsDefine, 
         })
 
         const style = {
-            transform: this.props.application.isPreview ? `translate3d(${this.props.application.sidebarWidth}px, 0, 0)` : 'translate3d(0, 0, 0)'
+            transform: this.props.application.isPreview ? `translate3d(${this.props.application.sidebarWidth}px, 0, 0)` : 'translate3d(0, 0, 0)',
+            width: this.props.application.sidebarWidth
         }
 
         return (

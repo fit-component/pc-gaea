@@ -8,6 +8,11 @@ export interface PropsDefine {
     title?: string
 
     /**
+     * 编辑器的高度
+     */
+    height?: number
+
+    /**
      * 当前最新版本号,如果没有,默认是 0.0.0
      * 必须是 x.x.x 格式
      */
@@ -94,11 +99,12 @@ export interface PropsDefine {
 }
 
 export class Props implements PropsDefine {
-    title = 'Gaea'
+    title = 'Fit-Gaea'
     version = '0.0.0'
     customComponents = [] as Array<React.ComponentClass<FitGaea.ComponentProps>>
     isHideCustomComponents = false
     viewportSize = 100
+    height = 600
     onSave = ()=> {
     }
     versionInit = (saveVersion: Function)=> {
