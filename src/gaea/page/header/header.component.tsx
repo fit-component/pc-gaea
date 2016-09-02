@@ -61,7 +61,7 @@ export default class Header extends React.Component <typings.PropsDefine, typing
     @autoBindMethod handleSave() {
         // 获取增量编辑信息
         const componentsInfo = this.props.viewport.getIncrementComponentsInfo()
-        console.log(JSON.stringify(componentsInfo))
+        this.props.application.event.emit(this.props.application.event.onSave, componentsInfo)
         return false
     }
 

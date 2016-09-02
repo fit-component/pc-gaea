@@ -13,12 +13,6 @@ export interface PropsDefine {
     height?: number
 
     /**
-     * 当前最新版本号,如果没有,默认是 0.0.0
-     * 必须是 x.x.x 格式
-     */
-    version?: string
-
-    /**
      * 定制外部提供编辑组件
      */
     customComponents?: Array<React.ComponentClass<FitGaea.ComponentProps>>

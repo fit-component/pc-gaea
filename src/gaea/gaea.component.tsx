@@ -5,17 +5,11 @@ import * as ReactDOM from 'react-dom'
 import * as typings from './gaea.type'
 import {observer, Provider} from 'mobx-react'
 
-import {autoBindMethod} from '../../../../common/auto-bind/src'
-
 import ApplicationStore from './store/application'
 import ViewportStore from './store/viewport'
 import Setting from './store/setting'
 
 import Page from './page/page.component'
-
-//import DevTools from 'mobx-react-devtools'
-
-//import 'animate.css'
 
 @observer
 export default class Gaea extends React.Component <typings.PropsDefine, typings.StateDefine> {
@@ -26,9 +20,19 @@ export default class Gaea extends React.Component <typings.PropsDefine, typings.
     private viewport = new ViewportStore(this.applicationStore)
     private setting = new Setting()
 
+    private handleOnSaveBind = this.handleOnSave.bind(this)
+
     componentWillMount() {
         // 将初始化的 props 赋值到 store 上
         this.setPropsToApplication.call(this, this.props)
+
+        // 监听
+        this.addListener.call(this)
+    }
+
+    componentWillUnmount() {
+        // 移除监听
+        this.removeListener.call(this)
     }
 
     componentWillReceiveProps(nextProps: typings.PropsDefine) {
@@ -48,7 +52,7 @@ export default class Gaea extends React.Component <typings.PropsDefine, typings.
             baseComponents: this.props.baseComponents,
             customComponents: props.customComponents,
             isHideCustomComponents: props.isHideCustomComponents,
-            height:props.height,
+            height: props.height,
             // 页面编辑信息
             defaultValue: props.defaultValue
         })
@@ -59,6 +63,29 @@ export default class Gaea extends React.Component <typings.PropsDefine, typings.
      */
     getRootRef(ref: React.ReactInstance) {
         this.viewport.setRootDomInstance(ReactDOM.findDOMNode(ref))
+    }
+
+    /**
+     * 添加监听
+     */
+    addListener() {
+        this.applicationStore.event.on(this.applicationStore.event.onSave, this.handleOnSaveBind)
+    }
+
+    /**
+     * 移除监听
+     */
+    removeListener() {
+        this.applicationStore.event.off(this.applicationStore.event.onSave, this.handleOnSaveBind)
+    }
+
+    /**
+     * 触发保存
+     */
+    handleOnSave(context: any, componentsInfo: {
+        [mapUniqueKey: string]: FitGaea.ViewportComponentInfo
+    }) {
+        this.props.onSave(componentsInfo)
     }
 
     render() {
@@ -73,6 +100,4 @@ export default class Gaea extends React.Component <typings.PropsDefine, typings.
         )
     }
 }
-
-// <DevTools position={{bottom:0,left:0}}/>
 

@@ -19,4 +19,9 @@ export default class EventSystem extends Event {
      * 改变某个组件的选中状态
      */
     changeComponentSelectStatusEvent = 'changeComponentSelectStatus'
+
+    /**
+     * 触发了保存
+     */
+    onSave = 'onSave'
 }
