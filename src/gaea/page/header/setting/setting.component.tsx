@@ -38,7 +38,8 @@ export default class Setting extends React.Component <typings.PropsDefine, typin
 
     render() {
         return (
-            <MenuItem onClick={this.handleShowModal}>
+            <div className="menu-item"
+                 onClick={this.handleShowModal}>
                 设置
                 <div className="_namespace">
                     <Modal className="_namespace"
@@ -57,7 +58,7 @@ export default class Setting extends React.Component <typings.PropsDefine, typin
 
                     </Modal>
                 </div>
-            </MenuItem>
+            </div>
         )
     }
 }

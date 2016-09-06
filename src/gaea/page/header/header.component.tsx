@@ -2,7 +2,6 @@ import * as React from 'react'
 import * as typings from './header.type'
 import {observer, inject} from 'mobx-react'
 
-import {Menu, RightMenu, MenuItem} from '../../../../../menu/src'
 import {autoBindMethod} from '../../../../../../common/auto-bind/src'
 import notice from '../../../../../message/src'
 import Setting from './setting/setting.component'
@@ -70,7 +69,7 @@ export default class Header extends React.Component <typings.PropsDefine, typing
      */
     @autoBindMethod handlePreview() {
         this.props.application.setPreview(!this.props.application.isPreview)
-        if (this.props.application.isPreview){
+        if (this.props.application.isPreview) {
             this.props.viewport.setCurrentEditComponentMapUniqueKey(null)
         }
     }
@@ -105,34 +104,76 @@ export default class Header extends React.Component <typings.PropsDefine, typing
         }
     }
 
+    /**
+     * 修改视图大小
+     */
+    @autoBindMethod handleChangeViewportWidth(width: number) {
+        this.props.application.setViewportWidth(width)
+    }
+
+    @autoBindMethod handleChangeViewportWidthByRange(event: any) {
+        this.props.application.setViewportWidth(Number(event.target.value))
+    }
+
     render() {
         const undoClasses = classNames({
+            'menu-item': true,
             'operate-disable': !this.props.viewport.canUndo
         })
 
         const redoClasses = classNames({
+            'menu-item': true,
             'operate-disable': !this.props.viewport.canRedo
         })
 
-        return (
-            <Menu className="_namespace"
-                  height={this.props.application.headerHeight - 1}>
-                <MenuItem brand>{this.props.application.title}</MenuItem>
-                <Setting/>
+        const mobileClasses = classNames({
+            'menu-item': true,
+            'viewport-size-active': this.props.application.viewportWidth === 40
+        })
 
-                <RightMenu>
-                    <MenuItem key="save"
-                              onClick={this.handleSave}>保存</MenuItem>
-                    <MenuItem key="preview"
-                              onClick={this.handlePreview}>{this.props.application.isPreview ? '取消' : '预览'}</MenuItem>
-                    <MenuItem key="redo"
-                              className={redoClasses}
-                              onClick={this.redo}><i className="fa fa-rotate-right"/></MenuItem>
-                    <MenuItem key="undo"
-                              className={undoClasses}
-                              onClick={this.undo}><i className="fa fa-undo"/></MenuItem>
-                </RightMenu>
-            </Menu>
+        const desktopClasses = classNames({
+            'menu-item': true,
+            'viewport-size-active': this.props.application.viewportWidth === 100
+        })
+
+        return (
+            <div className="_namespace"
+                 height={this.props.application.headerHeight - 1}>
+                <div className="left">
+                    <div className="brand menu-item">{this.props.application.title}</div>
+                    <Setting/>
+                </div>
+
+                <div className="right">
+                    <div className="size-group">
+                        <div className={mobileClasses}
+                             onClick={this.handleChangeViewportWidth.bind(this,40)}><i className="fa fa-mobile"/></div>
+                        <div className={desktopClasses}
+                             onClick={this.handleChangeViewportWidth.bind(this,100)}><i className="fa fa-desktop"/>
+                        </div>
+
+                        <div className="slider-container">
+                            <input onChange={this.handleChangeViewportWidthByRange}
+                                   min="10"
+                                   max="100"
+                                   step="1"
+                                   value={this.props.application.viewportWidth}
+                                   className="slider"
+                                   type="range"/>
+                        </div>
+                    </div>
+
+                    <div className={undoClasses}
+                         onClick={this.undo}><i className="fa fa-undo"/></div>
+                    <div className={redoClasses}
+                         onClick={this.redo}><i className="fa fa-rotate-right"/></div>
+                    <div className="menu-item"
+                         onClick={this.handlePreview}>{this.props.application.isPreview ? '取消' : '预览'}</div>
+                    <div className="menu-item"
+                         onClick={this.handleSave}>保存
+                    </div>
+                </div>
+            </div>
         )
     }
 }

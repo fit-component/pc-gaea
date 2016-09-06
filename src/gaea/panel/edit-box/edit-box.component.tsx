@@ -73,8 +73,8 @@ export default class EditBox extends React.Component <typings.PropsDefine, typin
         const bounds = {
             left: 0,
             top: 0,
-            right: this.props.viewport.viewportDomInstance.clientWidth - this.props.viewport.editBoxPosition.width,
-            bottom: this.props.viewport.viewportDomInstance.clientHeight - this.props.viewport.editBoxPosition.height
+            right: this.props.viewport.sectionContainerDomInstance.clientWidth - this.props.viewport.editBoxPosition.width,
+            bottom: this.props.viewport.sectionContainerDomInstance.clientHeight - this.props.viewport.editBoxPosition.height
         }
 
         const position = {

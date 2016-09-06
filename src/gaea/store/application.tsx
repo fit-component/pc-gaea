@@ -25,6 +25,15 @@ export default class Application {
     @observable footerHeight = 25
 
     /**
+     * 编辑区域宽度百分比 1~100
+     */
+    @observable viewportWidth = 100
+
+    setViewportWidth(width: number) {
+        this.viewportWidth = width
+    }
+
+    /**
      * 设置侧边栏宽度
      */
     setSidebarWidth(value: number) {
@@ -79,6 +88,11 @@ export default class Application {
     height: number
 
     /**
+     * 是不是 reactNative
+     */
+    isReactNative: boolean
+
+    /**
      * 将接收到的 props 赋值到 application 中
      */
     setInitPropsToApplication(props: {
@@ -89,7 +103,8 @@ export default class Application {
         height: number,
         defaultValue: {
             [mapUniqueKey: string]: FitGaea.ViewportComponentInfo
-        }
+        },
+        isReactNative: boolean
     }) {
         this.title = props.title
         this.baseComponents = props.baseComponents
@@ -97,6 +112,7 @@ export default class Application {
         this.isHideCustomComponents = props.isHideCustomComponents
         this.defaultValue = props.defaultValue
         this.height = props.height
+        this.isReactNative = props.isReactNative
     }
 
     /**

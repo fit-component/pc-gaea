@@ -19,8 +19,8 @@ export default class OuterMoveBox extends React.Component <typings.PropsDefine, 
         const style = {
             left: this.props.viewport.viewportHoverComponentSpec.left,
             top: this.props.viewport.viewportHoverComponentSpec.top,
-            width: this.props.viewport.viewportHoverComponentSpec.width,
-            height: this.props.viewport.viewportHoverComponentSpec.height
+            width: this.props.viewport.viewportHoverComponentSpec.width - 5,
+            height: this.props.viewport.viewportHoverComponentSpec.height - 4
         }
 
         return (

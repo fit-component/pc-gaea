@@ -54,7 +54,8 @@ export default class Gaea extends React.Component <typings.PropsDefine, typings.
             isHideCustomComponents: props.isHideCustomComponents,
             height: props.height,
             // 页面编辑信息
-            defaultValue: props.defaultValue
+            defaultValue: props.defaultValue,
+            isReactNative:props.isReactNative
         })
     }
 

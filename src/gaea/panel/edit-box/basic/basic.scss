@@ -81,3 +81,21 @@
         }
     }
 }
+
+.edit-line-container {
+    display: flex;
+    padding: 5px 0;
+    .edit-line-label {
+        display: flex;
+        align-items: center;
+        flex-grow: 1;
+        width: 0;
+        &.disabled {
+            color: #ccc;
+        }
+    }
+    .edit-line-editor {
+        flex-grow: 1;
+        width: 0;
+    }
+}

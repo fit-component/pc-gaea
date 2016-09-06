@@ -16,17 +16,14 @@ export default class EditComponentSwitch extends React.Component <typings.PropsD
     render() {
         this.componentInfo = this.props.viewport.components.get(this.props.viewport.currentEditComponentMapUniqueKey)
         const switchOpts = {
-            disabled: !this.props.editOption.editable,
-            checked: this.componentInfo.props[this.props.editOption.field] as boolean,
+            disabled: !this.props.editOption.editable || this.props.editOption.isNull,
+            checked: this.props.editOption.isNull ? this.props.editOption.notNullValue as boolean : this.componentInfo.props[this.props.editOption.field] as boolean,
             onChange: (checked: boolean)=> {
                 this.props.viewport.updateComponentOptionsValue(this.props.editOption, checked)
             }
         }
         return (
-            <div className="_namespace">
-                <span>{this.props.editOption.label}</span>
-                <Switch {...switchOpts}/>
-            </div>
+            <Switch {...switchOpts}/>
         )
     }
 }

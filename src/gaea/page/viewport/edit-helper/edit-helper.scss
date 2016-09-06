@@ -3,4 +3,12 @@
         outline: 2px solid #CCC;
         z-index: 9;
     }
+    &.gaea-layout-active {
+        .gaea-layout {
+            background-color: whitesmoke !important;
+            border: 2px dotted #ddd !important;
+            min-width: 100px !important;
+            min-height: 40px !important;
+        }
+    }
 }

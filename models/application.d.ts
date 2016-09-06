@@ -84,6 +84,22 @@ declare namespace FitGaea {
          * 当 editor 为 selector 时的数组配置
          */
         selector?: Array<ComponentPropsOptionsSelector>
+        /**
+         * 值类型, 默认为字符串
+         */
+            type?: string
+        /**
+         * 是否为 null
+         */
+        isNull?: boolean
+        /**
+         * 能否被设置为 null
+         */
+        canNull?: boolean
+        /**
+         * 暂存这个字段非 null 时候的值, 为了在设置 null 后可以还原
+         */
+        notNullValue?: any
     }
 
     /**

@@ -17,6 +17,17 @@ import * as classNames from 'classnames'
 
 import './edit-helper.scss'
 
+const hasClass = (obj: HTMLElement, cls: string) => {
+    return obj.className.match(new RegExp('(\\s|^)' + cls + '(\\s|$)'))
+}
+
+const removeClass = (obj: HTMLElement, cls: string) => {
+    if (hasClass(obj, cls)) {
+        var reg = new RegExp('(\\s|^)' + cls + '(\\s|$)')
+        obj.className = obj.className.replace(reg, ' ')
+    }
+}
+
 @inject('application', 'viewport') @observer
 export default class EditHelper extends React.Component <typings.PropsDefine, typings.StateDefine> {
     static defaultProps: typings.PropsDefine = new typings.Props()
@@ -31,14 +42,29 @@ export default class EditHelper extends React.Component <typings.PropsDefine, ty
     // 对应 store 中的数据
     private componentInfo: FitGaea.ViewportComponentInfo
 
-    // 元素对象
-    private childInstance: React.ReactInstance
+    // 当前元素对象
+    private selfInstance: React.ReactInstance
 
-    // 元素dom对象
-    private childDomInstance: Element
+    // 当前元素dom对象
+    private selfDomInstance: HTMLElement
 
     // sortable 对象, 只有布局组件才有
     private sortable: any
+
+    // 是否正在移动组件
+    private isMovingComponent = false
+
+    componentWillReact() {
+        if (this.componentInfo.props.gaeaUniqueKey === 'gaea-layout' && this.componentInfo.parentMapUniqueKey === null) {
+            if (this.props.viewport.isMovingComponent) {
+                if (!hasClass(this.selfDomInstance, 'gaea-layout-active')) {
+                    this.selfDomInstance.className += ' gaea-layout-active'
+                }
+            } else {
+                removeClass(this.selfDomInstance, 'gaea-layout-active')
+            }
+        }
+    }
 
     componentWillMount() {
         // 从 store 找到自己信息
@@ -49,18 +75,20 @@ export default class EditHelper extends React.Component <typings.PropsDefine, ty
     }
 
     componentDidMount() {
-        this.childDomInstance = ReactDOM.findDOMNode(this.childInstance)
+        this.selfDomInstance = ReactDOM.findDOMNode(this.selfInstance) as HTMLElement
 
-        // 绑定 click
-        this.childDomInstance.addEventListener('mouseover', this.handleMouseOver)
+        this.selfDomInstance.addEventListener('mouseover', this.handleMouseOver)
+        this.selfDomInstance.addEventListener('click', this.handleClick)
 
-        // 绑定 onMouseOver
-        this.childDomInstance.addEventListener('click', this.handleClick)
+        // 增加统一 class
+        this.selfDomInstance.className += ' _namespace'
 
         // 如果自己是布局元素, 给子元素绑定 sortable
         if (this.componentInfo.props.gaeaUniqueKey === 'gaea-layout') {
+            this.selfDomInstance.className += ' gaea-layout'
+
             // 添加可排序拖拽
-            this.sortable = Sortable.create(this.childDomInstance, {
+            this.sortable = Sortable.create(this.selfDomInstance, {
                 animation: 150,
                 // 放在一个组里,可以跨组拖拽
                 group: {
@@ -69,7 +97,7 @@ export default class EditHelper extends React.Component <typings.PropsDefine, ty
                     put: true
                 },
                 onStart: (event: any) => {
-                    this.props.viewport.startDragging(this.componentInfo.layoutChilds[event.oldIndex as number], '', false, this.childDomInstance, event.oldIndex as number)
+                    this.props.viewport.startDragging(this.componentInfo.layoutChilds[event.oldIndex as number], '', false, this.selfDomInstance, event.oldIndex as number)
                 },
                 onEnd: (event: any) => {
                     this.props.viewport.endDragging()
@@ -190,8 +218,8 @@ export default class EditHelper extends React.Component <typings.PropsDefine, ty
         }
 
         // 移除事件绑定
-        this.childDomInstance.removeEventListener('mouseover', this.handleMouseOver)
-        this.childDomInstance.removeEventListener('click', this.handleClick)
+        this.selfDomInstance.removeEventListener('mouseover', this.handleMouseOver)
+        this.selfDomInstance.removeEventListener('click', this.handleClick)
     }
 
     /**
@@ -210,7 +238,7 @@ export default class EditHelper extends React.Component <typings.PropsDefine, ty
      * 让树视图高亮框移动到自己身上
      */
     @autoBindMethod outerMoveBoxToSelf() {
-        this.props.viewport.setHoverComponent(this.childDomInstance)
+        this.props.viewport.setHoverComponent(this.selfDomInstance)
     }
 
     /**
@@ -251,7 +279,12 @@ export default class EditHelper extends React.Component <typings.PropsDefine, ty
         // 子元素
         let childs: Array<React.ReactElement<any>> = null
 
-        // gaea-layout 可以有子元素
+        // 如果是最外层布局元素, 绑定上 isMovingComponent
+        if (this.componentInfo.props.gaeaUniqueKey === 'gaea-layout' && this.componentInfo.parentMapUniqueKey === null) {
+            this.isMovingComponent = this.props.viewport.isMovingComponent
+        }
+
+        // 布局元素可以有子元素
         if (this.componentInfo.props.gaeaUniqueKey === 'gaea-layout' && this.componentInfo.layoutChilds) {
             childs = this.componentInfo.layoutChilds.map(layoutChildUniqueMapKey=> {
                 return (
@@ -264,13 +297,8 @@ export default class EditHelper extends React.Component <typings.PropsDefine, ty
 
         let componentProps = _.cloneDeep(this.componentInfo.props)
 
-        const classes = classNames({
-            '_namespace': true,
-            'selected': this.state.selected
-        })
-
         componentProps.ref = (ref: React.ReactInstance)=> {
-            this.childInstance = ref
+            this.selfInstance = ref
         }
 
         return React.createElement(this.SelfComponent, componentProps, childs)

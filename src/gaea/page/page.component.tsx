@@ -1,9 +1,11 @@
 import * as React from 'react'
+import * as ReactDOM from 'react-dom'
 import * as typings from './page.type'
 import {observer, inject} from 'mobx-react'
 
 import * as classNames from 'classnames'
 import * as _ from 'lodash'
+import {autoBindMethod} from '../../../../../common/auto-bind/src'
 
 import SidebarTools from './sidebar-tools/sidebar-tools.component'
 import SidebarToolsPreview from './sidebar-tools-preview/sidebar-tools-preview.component'
@@ -30,8 +32,16 @@ export default class Page extends React.Component <typings.PropsDefine, typings.
             const LayoutClass = this.props.application.getComponentByUniqueKey('gaea-layout')
             // 布置最外层的画布
             let layoutProps = _.cloneDeep(LayoutClass.defaultProps)
-            layoutProps['minHeight'] = 500
-            this.props.viewport.components.set(this.props.viewport.rootMapUniqueKey, {
+
+            if (this.props.application.isReactNative) {
+                layoutProps['flex'] = 1
+                layoutProps['overflowY'] = 'auto'
+            } else {
+                layoutProps['flexGrow'] = 1
+                layoutProps['flexDirection'] = 'column'
+            }
+
+            this.props.viewport.setComponents(this.props.viewport.rootMapUniqueKey, {
                 props: layoutProps,
                 layoutChilds: [],
                 parentMapUniqueKey: null
@@ -52,7 +62,7 @@ export default class Page extends React.Component <typings.PropsDefine, typings.
                     props[propsKey] = defaultInfo.props[propsKey]
                 })
 
-                this.props.viewport.components.set(mapUniqueKey, {
+                this.props.viewport.setComponents(mapUniqueKey, {
                     props,
                     layoutChilds: defaultInfo.layoutChilds || [],
                     parentMapUniqueKey: defaultInfo.parentMapUniqueKey
@@ -60,6 +70,10 @@ export default class Page extends React.Component <typings.PropsDefine, typings.
             })
         }
 
+    }
+
+    @autoBindMethod getSectionContainerRef(ref: React.ReactInstance) {
+        this.props.viewport.setSectionContainerDomInstance(ReactDOM.findDOMNode(ref))
     }
 
     render() {
@@ -84,17 +98,23 @@ export default class Page extends React.Component <typings.PropsDefine, typings.
                     <HeaderNav />
 
                     <div className="section-container"
+                         ref={this.getSectionContainerRef}
                          style={{height:`calc(100% - ${this.props.application.headerHeight + this.props.application.footerHeight}px)`}}>
-                        <Viewport/>
                         <EditBox/>
-                        <OuterMoveBox />
-                        {this.props.application.isPreview &&
-                        <div className="preview-container">
-                            <Preview value={this.props.viewport.getIncrementComponentsInfo()}
-                                     baseComponents={this.props.application.baseComponents}
-                                     customComponents={this.props.application.customComponents}/>
+
+                        <div className="viewport-main-container"
+                             style={{width: `${this.props.application.viewportWidth}%`}}>
+                            <Viewport/>
+                            <OuterMoveBox />
+                            {this.props.application.isPreview &&
+                            <div className="preview-container">
+                                <Preview value={this.props.viewport.getIncrementComponentsInfo()}
+                                         baseComponents={this.props.application.baseComponents}
+                                         customComponents={this.props.application.customComponents}/>
+                            </div>
+                            }
                         </div>
-                        }
+
                     </div>
 
                     <Footer />

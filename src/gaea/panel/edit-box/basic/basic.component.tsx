@@ -1,9 +1,11 @@
 import * as React from 'react'
 import * as typings from './basic.type'
 import {observer, inject} from 'mobx-react'
+import * as classNames from 'classnames'
 
 import {autoBindMethod} from '../../../../../../../common/auto-bind/src'
 import {Button, ButtonGroup} from '../../../../../../button/src'
+import {Checkbox} from '../../../../../../checkbox/src'
 import Input from '../../../../../../input/src'
 
 import RemoveButton from './remote-button/remote-button.component'
@@ -51,6 +53,20 @@ export default class EditBoxBasic extends React.Component <typings.PropsDefine, 
         )
     }
 
+    /**
+     * 修改一个字段是否生效
+     */
+    handleToggleOptionEnable(editOption: FitGaea.ComponentPropsGaeaEdit, checked: boolean) {
+        editOption.isNull = !checked
+        if (!checked) {
+            // 暂存非空的值
+            editOption.notNullValue = this.componentInfo.props[editOption.field]
+            this.props.viewport.updateComponentOptionsValue(editOption, null)
+        } else {
+            this.props.viewport.updateComponentOptionsValue(editOption, editOption.notNullValue)
+        }
+    }
+
     render() {
         if (!this.props.viewport.currentEditComponentMapUniqueKey) {
             return null
@@ -62,23 +78,46 @@ export default class EditBoxBasic extends React.Component <typings.PropsDefine, 
         const Editors = this.componentInfo.props.gaeaEdit && this.componentInfo.props.gaeaEdit.map((editOption, index)=> {
                 const key = `${this.props.viewport.currentEditComponentMapUniqueKey}-${editOption.field}`
 
+                let EditElement: React.ReactElement<any> = null
+
                 switch (editOption.editor) {
                     case 'text':
-                        return (
-                            <TextEditor key={key}
-                                        editOption={editOption}/>
+                        EditElement = (
+                            <TextEditor editOption={editOption}/>
                         )
+                        break
                     case 'selector':
-                        return (
-                            <SelectEditor key={key}
-                                          editOption={editOption}/>
+                        EditElement = (
+                            <SelectEditor editOption={editOption}/>
                         )
+                        break
                     case 'switch':
-                        return (
-                            <SwitchEditor key={key}
-                                          editOption={editOption}/>
+                        EditElement = (
+                            <SwitchEditor editOption={editOption}/>
                         )
+                        break
                 }
+
+                const editLineLabelClasses = classNames({
+                    'edit-line-label': true,
+                    'disabled': editOption.isNull
+                })
+
+                return (
+                    <div key={key}
+                         className="edit-line-container">
+                        <div className={editLineLabelClasses}>
+                            {editOption.canNull &&
+                            <Checkbox checked={!editOption.isNull}
+                                      onChange={this.handleToggleOptionEnable.bind(this, editOption)}/>
+                            }
+                            {editOption.label}
+                        </div>
+                        <div className="edit-line-editor">
+                            {EditElement}
+                        </div>
+                    </div>
+                )
             })
 
         // 重置按钮,非根节点才有

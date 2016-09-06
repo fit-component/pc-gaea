@@ -20,11 +20,19 @@
 .section-container {
     position: relative;
     overflow: hidden;
+    background-image: url('../images/transparent.png');
 }
 
 .preview-container {
+    display: flex;
     position: relative;
     height: 100%;
     overflow-y: auto;
     overflow-x: hidden;
+}
+
+.viewport-main-container {
+    position: relative;
+    margin: 0 auto;
+    height: 100%;
 }

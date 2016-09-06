@@ -85,9 +85,9 @@ export interface PropsDefine {
     addSourceFile?: (folderId?: string, fileInfo?: FitGaea.SourceFile, addSuccess?: ()=>void)=>void
 
     /**
-     * 页面大小, 0 ~ 100, 100 表示页面宽度最大
+     * is for react-native?
      */
-    viewportSize?: number
+    isReactNative?: boolean
 
     [x: string]: any
 }
@@ -97,7 +97,6 @@ export class Props implements PropsDefine {
     version = '0.0.0'
     customComponents = [] as Array<React.ComponentClass<FitGaea.ComponentProps>>
     isHideCustomComponents = false
-    viewportSize = 100
     height = 600
     onSave = ()=> {
     }
@@ -123,6 +122,7 @@ export class Props implements PropsDefine {
     addSourceFile = (folderId?: string, fileInfo?: FitGaea.SourceFile, addSuccess?: ()=>void)=> {
         addSuccess()
     }
+    isReactNative = false
 }
 
 export interface StateDefine {

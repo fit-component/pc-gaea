@@ -39,6 +39,24 @@ export default class Viewport {
     }
 
     /**
+     * 添加一个新实例元素, 不要用 componentsSet
+     */
+    setComponents(mapUniqueKey: string, componentInfo: FitGaea.ViewportComponentInfo) {
+        // 遍历 gaeaEdit, 如果值是 undefined || null , 设置为 isNull
+        if (componentInfo.props.gaeaEdit) {
+            componentInfo.props.gaeaEdit = componentInfo.props.gaeaEdit.map(gaeaEdit=> {
+                if (componentInfo.props[gaeaEdit.field] === undefined || componentInfo.props[gaeaEdit.field] === null) {
+                    gaeaEdit.isNull = true
+                } else {
+                    gaeaEdit.isNull = false
+                }
+                return gaeaEdit
+            })
+        }
+        this.components.set(mapUniqueKey, componentInfo)
+    }
+
+    /**
      * 生成一个唯一
      */
     createUniqueId() {
@@ -221,6 +239,18 @@ export default class Viewport {
     }
 
     /**
+     * section-container dom 元素
+     */
+    sectionContainerDomInstance: Element
+
+    /**
+     * 设置 section-container dom 元素
+     */
+    setSectionContainerDomInstance(sectionContainerDomInstance: Element) {
+        this.sectionContainerDomInstance = sectionContainerDomInstance
+    }
+
+    /**
      * 设置某个元素为 hover 元素
      */
     setHoverComponent(element: Element) {
@@ -359,6 +389,18 @@ export default class Viewport {
     updateComponentOptionsValue(editOptions: FitGaea.ComponentPropsGaeaEdit, value: FitGaea.ComponentPropsOptionValue) {
         let componentInfo = this.components.get(this.currentEditComponentMapUniqueKey)
 
+        switch (editOptions.type) {
+            case 'string':
+                value = value.toString()
+                break
+            case 'number':
+                value = Number(value)
+                break
+            case 'boolean':
+                value = Boolean(value)
+                break
+        }
+
         // 保存操作
         this.saveOperate({
             type: 'update',
@@ -462,7 +504,7 @@ export default class Viewport {
         }
 
         transaction(()=> {
-            this.components.set(mapUniqueKey, component)
+            this.setComponents(mapUniqueKey, component)
         })
 
         // 在父级中插入子元素
@@ -489,11 +531,11 @@ export default class Viewport {
     addComplexComponent(parentMapUniqueKey: string, mapUniqueKey: string, index: number, componentFullInfo: FitGaea.ViewportComponentFullInfo) {
         // 先把子元素添加回来
         Object.keys(componentFullInfo.childs).forEach(childMapUniqueKey=> {
-            this.components.set(childMapUniqueKey, _.cloneDeep(componentFullInfo.childs[childMapUniqueKey]))
+            this.setComponents(childMapUniqueKey, _.cloneDeep(componentFullInfo.childs[childMapUniqueKey]))
         })
 
         // 再把这个组件添加回来
-        this.components.set(mapUniqueKey, _.cloneDeep(componentFullInfo.componentInfo))
+        this.setComponents(mapUniqueKey, _.cloneDeep(componentFullInfo.componentInfo))
 
         // 加到父级上
         this.addToParent(mapUniqueKey, parentMapUniqueKey, index)

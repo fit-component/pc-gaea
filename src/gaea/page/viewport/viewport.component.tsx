@@ -72,7 +72,7 @@ export default class Viewport extends React.Component <typings.PropsDefine, typi
         this.props.viewport.setViewportDomInstance(ReactDOM.findDOMNode(ref))
     }
 
-    @autoBindMethod handleMouseLeave(event: React.MouseEvent){
+    @autoBindMethod handleMouseLeave(event: React.MouseEvent) {
         event.stopPropagation()
         this.props.application.event.emit(this.props.application.event.viewportOrTreeRootComponentMouseLeave, {
             mapUniqueKey: this.props.viewport.rootMapUniqueKey,
