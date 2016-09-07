@@ -28,7 +28,7 @@ const removeClass = (obj: HTMLElement, cls: string) => {
     }
 }
 
-@inject('application', 'viewport') @observer
+@inject('application', 'viewport', 'setting') @observer
 export default class EditHelper extends React.Component <typings.PropsDefine, typings.StateDefine> {
     static defaultProps: typings.PropsDefine = new typings.Props()
     public state: typings.StateDefine = new typings.State()
@@ -55,7 +55,7 @@ export default class EditHelper extends React.Component <typings.PropsDefine, ty
     private isMovingComponent = false
 
     componentWillReact() {
-        if (this.componentInfo.props.gaeaUniqueKey === 'gaea-layout' && this.componentInfo.parentMapUniqueKey === null) {
+        if (this.componentInfo.props.gaeaUniqueKey === 'gaea-layout' && this.componentInfo.parentMapUniqueKey === null && this.props.setting.showLayoutWhenDragging) {
             if (this.props.viewport.isMovingComponent) {
                 if (!hasClass(this.selfDomInstance, 'gaea-layout-active')) {
                     this.selfDomInstance.className += ' gaea-layout-active'
@@ -83,10 +83,10 @@ export default class EditHelper extends React.Component <typings.PropsDefine, ty
         // 增加统一 class
         this.selfDomInstance.className += ' _namespace'
 
+        this.setDraggingClass()
+
         // 如果自己是布局元素, 给子元素绑定 sortable
         if (this.componentInfo.props.gaeaUniqueKey === 'gaea-layout') {
-            this.selfDomInstance.className += ' gaea-layout'
-
             // 添加可排序拖拽
             this.sortable = Sortable.create(this.selfDomInstance, {
                 animation: 150,
@@ -210,6 +210,10 @@ export default class EditHelper extends React.Component <typings.PropsDefine, ty
         }
     }
 
+    componentWillUpdate() {
+        this.setDraggingClass()
+    }
+
     componentWillUnmount() {
         // 如果是布局组件, 就销毁 sortable
         if (this.componentInfo.props.gaeaUniqueKey === 'gaea-layout') {
@@ -220,6 +224,34 @@ export default class EditHelper extends React.Component <typings.PropsDefine, ty
         // 移除事件绑定
         this.selfDomInstance.removeEventListener('mouseover', this.handleMouseOver)
         this.selfDomInstance.removeEventListener('click', this.handleClick)
+    }
+
+    /**
+     * 根据元素容器大小, 设置拖拽时的 class
+     */
+    @autoBindMethod setDraggingClass() {
+        if (this.componentInfo.props.gaeaUniqueKey === 'gaea-layout' && this.componentInfo.parentMapUniqueKey !== null) {
+            if (!hasClass(this.selfDomInstance, 'gaea-layout')) {
+                this.selfDomInstance.className += ' gaea-layout'
+            }
+
+            const selfBoundingClientRect = this.selfDomInstance.getBoundingClientRect()
+            if (selfBoundingClientRect.width < 100) {
+                if (!hasClass(this.selfDomInstance, 'gaea-layout-no-width')) {
+                    this.selfDomInstance.className += ' gaea-layout-no-width'
+                }
+            } else {
+                removeClass(this.selfDomInstance, 'gaea-layout-no-width')
+            }
+
+            if (selfBoundingClientRect.height < 40) {
+                if (!hasClass(this.selfDomInstance, 'gaea-layout-no-height')) {
+                    this.selfDomInstance.className += ' gaea-layout-no-height'
+                }
+            } else {
+                removeClass(this.selfDomInstance, 'gaea-layout-no-height')
+            }
+        }
     }
 
     /**
@@ -295,7 +327,7 @@ export default class EditHelper extends React.Component <typings.PropsDefine, ty
             })
         }
 
-        let componentProps = _.cloneDeep(this.componentInfo.props)
+        let componentProps = JSON.parse(JSON.stringify(this.componentInfo.props))
 
         componentProps.ref = (ref: React.ReactInstance)=> {
             this.selfInstance = ref

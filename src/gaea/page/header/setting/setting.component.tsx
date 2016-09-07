@@ -32,8 +32,12 @@ export default class Setting extends React.Component <typings.PropsDefine, typin
         })
     }
 
-    @autoBindMethod handleConfirmWhenRemoveComponentChange(checked: boolean) {
+    @autoBindMethod setConfirmWhenRemoveComponent(checked: boolean) {
         this.props.setting.setConfirmWhenRemoveComponent(checked)
+    }
+
+    @autoBindMethod setShowLayoutWhenDragging(checked: boolean) {
+        this.props.setting.setShowLayoutWhenDragging(checked)
     }
 
     render() {
@@ -52,7 +56,15 @@ export default class Setting extends React.Component <typings.PropsDefine, typin
                             <div className="left">点击移除时会弹出确认框</div>
                             <div className="right">
                                 <Switch checked={this.props.setting.confirmWhenRemoveComponent}
-                                        onChange={this.handleConfirmWhenRemoveComponentChange}/>
+                                        onChange={this.setConfirmWhenRemoveComponent}/>
+                            </div>
+                        </div>
+
+                        <div className="left-right">
+                            <div className="left">拖动时显示所有布局元素</div>
+                            <div className="right">
+                                <Switch checked={this.props.setting.showLayoutWhenDragging}
+                                        onChange={this.setShowLayoutWhenDragging}/>
                             </div>
                         </div>
 

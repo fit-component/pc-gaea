@@ -90,12 +90,20 @@
         align-items: center;
         flex-grow: 1;
         width: 0;
+        font-size: 12px;
+        color: #666;
+        font-weight: bold;
         &.disabled {
             color: #ccc;
         }
     }
     .edit-line-editor {
-        flex-grow: 1;
+        flex-grow: 3;
         width: 0;
     }
+}
+
+// reset input 样式
+.lib-pc-input-src-input {
+    margin-top: 10px !important;
 }

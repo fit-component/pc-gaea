@@ -13,4 +13,13 @@ export default class Setting {
     setConfirmWhenRemoveComponent(isConfirm: boolean) {
         this.confirmWhenRemoveComponent = isConfirm
     }
+
+    /**
+     * 拖动时显示所有布局元素
+     */
+    @observable showLayoutWhenDragging: boolean = true
+
+    setShowLayoutWhenDragging(isShow: boolean) {
+        this.showLayoutWhenDragging = isShow
+    }
 }

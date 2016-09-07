@@ -16,11 +16,21 @@ export default class OuterMoveBox extends React.Component <typings.PropsDefine, 
             return null
         }
 
+        let width = this.props.viewport.viewportHoverComponentSpec.width - 5
+        if (width < 0) {
+            width = 0
+        }
+
+        let height = this.props.viewport.viewportHoverComponentSpec.height - 4
+        if (height < 0) {
+            height = 0
+        }
+
         const style = {
             left: this.props.viewport.viewportHoverComponentSpec.left,
             top: this.props.viewport.viewportHoverComponentSpec.top,
-            width: this.props.viewport.viewportHoverComponentSpec.width - 5,
-            height: this.props.viewport.viewportHoverComponentSpec.height - 4
+            width,
+            height
         }
 
         return (

@@ -389,16 +389,19 @@ export default class Viewport {
     updateComponentOptionsValue(editOptions: FitGaea.ComponentPropsGaeaEdit, value: FitGaea.ComponentPropsOptionValue) {
         let componentInfo = this.components.get(this.currentEditComponentMapUniqueKey)
 
-        switch (editOptions.type) {
-            case 'string':
-                value = value.toString()
-                break
-            case 'number':
-                value = Number(value)
-                break
-            case 'boolean':
-                value = Boolean(value)
-                break
+        if (value !== null) {
+            // 不能让 null 设置无效, 所以非 null 才做转换
+            switch (editOptions.type) {
+                case 'string':
+                    value = value.toString()
+                    break
+                case 'number':
+                    value = Number(value)
+                    break
+                case 'boolean':
+                    value = Boolean(value)
+                    break
+            }
         }
 
         // 保存操作
@@ -596,7 +599,7 @@ export default class Viewport {
         if (component.props.gaeaUniqueKey === 'gaea-layout') {
             JSON.parse(JSON.stringify(component.layoutChilds)).forEach((componentMapUniqueKey: string)=> {
                 // 记录这个组件的信息
-                deleteChildComponents[componentMapUniqueKey] = _.cloneDeep(JSON.parse(JSON.stringify(this.components.get(componentMapUniqueKey))))
+                deleteChildComponents[componentMapUniqueKey] = JSON.parse(JSON.stringify(this.components.get(componentMapUniqueKey)))
 
                 // 删除之
                 this.deleteComponent(componentMapUniqueKey, deleteChildComponents)
