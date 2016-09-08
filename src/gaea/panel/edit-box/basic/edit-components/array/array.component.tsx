@@ -29,14 +29,12 @@ export default class EditComponentText extends React.Component <typings.PropsDef
         this.componentInfo = this.props.viewport.components.get(this.props.viewport.currentEditComponentMapUniqueKey)
 
         let field = this.componentInfo.props[this.props.editOption.field] as Array<any>
-        if (field === null) {
-            field = []
-        }
-        const Element = field.map(item=> {
-            return (
-                <div>111</div>
-            )
-        })
+
+        const Element = field.constructor.name === 'Array' && field.map(item=> {
+                return (
+                    <div>111</div>
+                )
+            })
 
         return (
             <div>
