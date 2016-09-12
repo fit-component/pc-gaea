@@ -68,7 +68,7 @@ declare namespace FitGaea {
          */
         label: string
         /**
-         * 编辑器类型 text array(暂时不支持2层以上) selector
+         * 编辑器类型 text array(暂时不支持) selector switch
          */
         editor: string
         /**

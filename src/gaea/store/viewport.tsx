@@ -501,8 +501,8 @@ export default class Viewport {
             layoutChilds: []
         }
 
-        // 如果是个布局元素, 将其 layoutChilds 设置为数组
         if (uniqueId === 'gaea-layout') {
+            // 如果是个布局元素, 将其 layoutChilds 设置为数组
             component.layoutChilds = []
         }
 
