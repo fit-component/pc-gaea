@@ -39,6 +39,10 @@ export default class Page extends React.Component <typings.PropsDefine, typings.
             } else {
                 layoutProps['flexGrow'] = 1
                 layoutProps['flexDirection'] = 'column'
+                layoutProps['display'] = 'block'
+                layoutProps['overflow'] = null
+                layoutProps['overflowX'] = 'hidden'
+                layoutProps['overflowY'] = 'auto'
             }
 
             this.props.viewport.setComponents(this.props.viewport.rootMapUniqueKey, {
