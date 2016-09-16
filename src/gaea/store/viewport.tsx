@@ -45,11 +45,17 @@ export default class Viewport {
         // 遍历 gaeaEdit, 如果值是 undefined || null , 设置为 isNull
         if (componentInfo.props.gaeaEdit) {
             componentInfo.props.gaeaEdit = componentInfo.props.gaeaEdit.map(gaeaEdit=> {
-                if (componentInfo.props[gaeaEdit.field] === undefined || componentInfo.props[gaeaEdit.field] === null) {
-                    gaeaEdit.isNull = true
-                } else {
+                // 豁免一些类型
+                if (['marginPadding'].findIndex(name=>name === gaeaEdit.editor) > -1) {
                     gaeaEdit.isNull = false
+                } else {
+                    if (componentInfo.props[gaeaEdit.field] === undefined || componentInfo.props[gaeaEdit.field] === null) {
+                        gaeaEdit.isNull = true
+                    } else {
+                        gaeaEdit.isNull = false
+                    }
                 }
+
                 return gaeaEdit
             })
         }
@@ -322,6 +328,8 @@ export default class Viewport {
      */
     setCurrentEditComponentMapUniqueKey(mapUniqueKey: string) {
         this.currentEditComponentMapUniqueKey = mapUniqueKey
+        // 出现附加工具条，因为编辑框在这里
+        this.showSidebarAddon()
     }
 
     /**
@@ -329,6 +337,7 @@ export default class Viewport {
      */
     cancelEditComponent() {
         this.currentEditComponentMapUniqueKey = null
+        this.hideSidebarAddon()
 
         if (this.lastSelectMapUniqueKey !== null) {
             this.application.event.emit(this.application.event.changeComponentSelectStatusEvent, {
@@ -338,26 +347,6 @@ export default class Viewport {
 
             this.setLastSelectMapUniqueKey(null)
         }
-    }
-
-    /**
-     * 编辑框的位置信息
-     */
-    @observable editBoxPosition = {
-        left: 0,
-        top: 0,
-        width: 400,
-        height: 500
-    }
-
-    /**
-     * 设置编辑框的位置信息
-     */
-    setEditBoxPosition(left: number, top: number) {
-        transaction(()=> {
-            this.editBoxPosition.left = left
-            this.editBoxPosition.top = top
-        })
     }
 
     /**
@@ -384,10 +373,34 @@ export default class Viewport {
     }
 
     /**
-     * 编辑当前组件, 某个选项的值
+     * 编辑当前组件, 某个选项的值，附带保存历史
      */
     updateComponentOptionsValue(editOptions: FitGaea.ComponentPropsGaeaEdit, value: FitGaea.ComponentPropsOptionValue) {
         let componentInfo = this.components.get(this.currentEditComponentMapUniqueKey)
+
+        const oldValue = JSON.parse(JSON.stringify(componentInfo.props))
+
+        this.updateComponentOptionsValueByOptions(this.currentEditComponentMapUniqueKey, editOptions, value)
+
+        const newValue = JSON.parse(JSON.stringify(componentInfo.props))
+
+        // 保存操作
+        this.saveOperate({
+            type: 'update',
+            mapUniqueKey: this.currentEditComponentMapUniqueKey,
+            update: {
+                editOptions: JSON.parse(JSON.stringify(editOptions)),
+                oldValue,
+                newValue
+            }
+        })
+    }
+
+    /**
+     * 根据 editOption 修改值
+     */
+    updateComponentOptionsValueByOptions(mapUniqueKey: string, editOptions: FitGaea.ComponentPropsGaeaEdit, value: FitGaea.ComponentPropsOptionValue) {
+        let componentInfo = this.components.get(mapUniqueKey)
 
         if (value !== null) {
             // 不能让 null 设置无效, 所以非 null 才做转换
@@ -404,19 +417,21 @@ export default class Viewport {
             }
         }
 
-        // 保存操作
-        this.saveOperate({
-            type: 'update',
-            mapUniqueKey: this.currentEditComponentMapUniqueKey,
-            update: {
-                field: editOptions.field,
-                oldValue: _.cloneDeep(componentInfo.props[editOptions.field]),
-                newValue: _.cloneDeep(value)
-            }
-        })
-
         // 修改组件值
-        componentInfo.props[editOptions.field] = value
+        switch (editOptions.editor) {
+            case 'marginPadding':
+                componentInfo.props['marginLeft'] = value['marginLeft']
+                componentInfo.props['marginTop'] = value['marginTop']
+                componentInfo.props['marginRight'] = value['marginRight']
+                componentInfo.props['marginBottom'] = value['marginBottom']
+                componentInfo.props['paddingLeft'] = value['paddingLeft']
+                componentInfo.props['paddingTop'] = value['paddingTop']
+                componentInfo.props['paddingRight'] = value['paddingRight']
+                componentInfo.props['paddingBottom'] = value['paddingBottom']
+                break
+            default:
+                componentInfo.props[editOptions.field] = value
+        }
     }
 
     /**
@@ -628,7 +643,7 @@ export default class Viewport {
                 this.deleteComponent(operate.mapUniqueKey)
                 break
             case 'update':
-                this.components.get(operate.mapUniqueKey).props[operate.update.field] = operate.update.oldValue
+                this.components.get(operate.mapUniqueKey).props = _.cloneDeep(operate.update.oldValue)
                 break
             case 'exchange':
                 this.sortComponents(operate.mapUniqueKey, operate.exchange.newIndex, operate.exchange.oldIndex)
@@ -675,7 +690,7 @@ export default class Viewport {
                 this.addNewComponent(operate.mapUniqueKey, operate.add.parentMapUniqueKey, operate.add.uniqueId, operate.add.index)
                 break
             case 'update':
-                this.components.get(operate.mapUniqueKey).props[operate.update.field] = operate.update.newValue
+                this.components.get(operate.mapUniqueKey).props = _.cloneDeep(operate.update.newValue)
                 break
             case 'exchange':
                 this.sortComponents(operate.mapUniqueKey, operate.exchange.oldIndex, operate.exchange.newIndex)
@@ -873,5 +888,18 @@ export default class Viewport {
             componentInfo: JSON.parse(JSON.stringify(componentInfo)),
             childs: childs
         }
+    }
+
+    /**
+     * 是否显示附加工具条
+     */
+    @observable isShowSidebarAddon = false
+
+    showSidebarAddon() {
+        this.isShowSidebarAddon = true
+    }
+
+    hideSidebarAddon() {
+        this.isShowSidebarAddon = false
     }
 }

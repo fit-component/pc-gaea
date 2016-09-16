@@ -3,26 +3,16 @@
 import * as React from 'react'
 import * as ReactDOM from 'react-dom'
 import * as typings from './edit-box.type'
-import * as classNames from 'classnames'
 import {observer, inject} from 'mobx-react'
 
 import {autoBindMethod} from '../../../../../../common/auto-bind/src'
 import {Tabs, TabPanel} from '../../../../../tabs/src'
-import * as Draggable from 'react-draggable'
 
 import Basic from './basic/basic.component'
 import Event from './event/event.component'
 import Script from './script/script.component'
 
 import './edit-box.scss'
-
-export type DraggableData = {
-    node: HTMLElement,
-    // lastX + deltaX === x
-    x: number, y: number,
-    deltaX: number, deltaY: number,
-    lastX: number, lastY: number
-}
 
 @inject('application', 'viewport') @observer
 export default class EditBox extends React.Component <typings.PropsDefine, typings.StateDefine> {
@@ -33,29 +23,6 @@ export default class EditBox extends React.Component <typings.PropsDefine, typin
 
     componentDidMount() {
         this.domInstance = ReactDOM.findDOMNode(this)
-    }
-
-    componentWillReact() {
-        // if (this.props.viewport.currentEditComponentMapUniqueKey !== null) {
-        //     // 进入动画
-        //     setTimeout(()=> {
-        //         this.setState({
-        //             animateStatus: 'enter'
-        //         })
-        //     }, 100)
-        // } else {
-        //     // 离开动画
-        //     this.setState({
-        //         animateStatus: 'init'
-        //     })
-        // }
-    }
-
-    @autoBindMethod handleDrag(event: Event, data: DraggableData) {
-        let left = data.lastX
-        let top = data.lastY
-
-        this.props.viewport.setEditBoxPosition(left, top)
     }
 
     /**
@@ -70,60 +37,26 @@ export default class EditBox extends React.Component <typings.PropsDefine, typin
             return null
         }
 
-        const bounds = {
-            left: 0,
-            top: 0,
-            right: this.props.viewport.sectionContainerDomInstance.clientWidth - this.props.viewport.editBoxPosition.width,
-            bottom: this.props.viewport.sectionContainerDomInstance.clientHeight - this.props.viewport.editBoxPosition.height
-        }
-
-        const position = {
-            x: this.props.viewport.editBoxPosition.left,
-            y: this.props.viewport.editBoxPosition.top
-        }
-
-        const containerStyle = {
-            width: this.props.viewport.editBoxPosition.width,
-            height: this.props.viewport.editBoxPosition.height
-        }
-
-        const animateClasses = classNames({
-            '_namespace': true,
-            'handle-drag': true,
-            'animated': this.state.animateStatus === 'init',
-            'animated zoomIn': this.state.animateStatus === 'enter',
-            'animated-init': this.state.animateStatus === 'leave'
-        })
-
         return (
-            <Draggable handle=".title-container"
-                       bounds={bounds}
-                       onDrag={this.handleDrag}
-                       defaultPosition={position}>
-                <div className={animateClasses}
-                     style={containerStyle}>
-                    <div className="container-box">
+            <div className="_namespace container-box">
                         <span className="handle-drag-close"
                               onClick={this.handleCloseClick}>x</span>
 
-                        <Tabs defaultActiveKey="basic"
-                              type="retro"
-                              className="_namespace edit-box-handle"
-                              style={containerStyle}>
-                            <TabPanel tab="基础"
-                                      activeKey="basic"
-                                      className="edit-container">
-                                <Basic/>
-                            </TabPanel>
-                            <TabPanel tab="脚本"
-                                      activeKey="script"
-                                      className="edit-container">
-                                <Script/>
-                            </TabPanel>
-                        </Tabs>
-                    </div>
-                </div>
-            </Draggable>
+                <Tabs defaultActiveKey="basic"
+                      type="retro"
+                      className="edit-box-handle">
+                    <TabPanel tab="基础"
+                              activeKey="basic"
+                              className="edit-container">
+                        <Basic/>
+                    </TabPanel>
+                    <TabPanel tab="脚本"
+                              activeKey="script"
+                              className="edit-container">
+                        <Script/>
+                    </TabPanel>
+                </Tabs>
+            </div>
         )
     }
 }

@@ -1,6 +1,6 @@
 {
   "name": "fit-gaea",
-  "version": "1.0.45",
+  "version": "1.0.46",
   "description": "",
   "main": "lib/index.js",
   "scripts": {
@@ -24,7 +24,7 @@
     "react-codemirror": "^0.2.6",
     "fit-switch": "^3.0.35",
     "fit-message": "^3.0.29",
-    "fit-tabs": "^3.0.35",
+    "fit-tabs": "^3.0.36",
     "react-draggable": "^2.1.1",
     "keymaster": "^1.6.2",
     "fit-input": "^5.0.37",

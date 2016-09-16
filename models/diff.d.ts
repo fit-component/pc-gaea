@@ -36,10 +36,9 @@ declare namespace FitGaea {
         }
         // 更新操作
         update?: {
-            // 更新的字段
-            field: string
-            oldValue: ComponentPropsOptionValue,
-            newValue: ComponentPropsOptionValue
+            editOptions: ComponentPropsGaeaEdit
+            oldValue: ComponentProps
+            newValue: ComponentProps
         }
         // 粘贴操作
         paste?: DiffRemove

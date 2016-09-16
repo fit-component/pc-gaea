@@ -13,7 +13,7 @@ import Footer from './footer/footer.component'
 import Viewport from './viewport/viewport.component'
 import ViewportSidebarResize from './viewport-sidebar-resize/viewport-sidebar-resize.component'
 import HeaderNav from './header/header.component'
-import EditBox from '../panel/edit-box/edit-box.component'
+import SidebarAddon from './sidebar-addon/sidebar-addon.component'
 import OuterMoveBox from './outer-move-box/outer-move-box.component'
 
 import Preview from '../../../../gaea-preview/src'
@@ -104,12 +104,13 @@ export default class Page extends React.Component <typings.PropsDefine, typings.
                     <div className="section-container"
                          ref={this.getSectionContainerRef}
                          style={{height:`calc(100% - ${this.props.application.headerHeight + this.props.application.footerHeight}px)`}}>
-                        <EditBox/>
 
                         <div className="viewport-main-container"
                              style={{width: `${this.props.application.viewportWidth}%`}}>
+
                             <Viewport/>
-                            <OuterMoveBox />
+                            <OuterMoveBox/>
+
                             {this.props.application.isPreview &&
                             <div className="preview-container">
                                 <Preview value={this.props.viewport.getIncrementComponentsInfo()}
@@ -117,6 +118,8 @@ export default class Page extends React.Component <typings.PropsDefine, typings.
                                          customComponents={this.props.application.customComponents}/>
                             </div>
                             }
+
+                            <SidebarAddon/>
                         </div>
 
                     </div>

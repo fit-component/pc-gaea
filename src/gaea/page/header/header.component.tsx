@@ -70,7 +70,8 @@ export default class Header extends React.Component <typings.PropsDefine, typing
     @autoBindMethod handlePreview() {
         this.props.application.setPreview(!this.props.application.isPreview)
         if (this.props.application.isPreview) {
-            this.props.viewport.setCurrentEditComponentMapUniqueKey(null)
+            // 隐藏附加侧边栏
+            this.props.viewport.hideSidebarAddon()
         }
     }
 
@@ -79,6 +80,7 @@ export default class Header extends React.Component <typings.PropsDefine, typing
      */
     @autoBindMethod undo() {
         this.props.viewport.undo()
+        return false
     }
 
     /**
@@ -86,6 +88,7 @@ export default class Header extends React.Component <typings.PropsDefine, typing
      */
     @autoBindMethod redo() {
         this.props.viewport.redo()
+        return false
     }
 
     /**
@@ -93,6 +96,7 @@ export default class Header extends React.Component <typings.PropsDefine, typing
      */
     @autoBindMethod copy() {
         this.props.viewport.copy(this.props.viewport.hoveringComponentMapUniqueKey)
+        return false
     }
 
     /**
@@ -102,6 +106,7 @@ export default class Header extends React.Component <typings.PropsDefine, typing
         if (!this.props.viewport.paste(this.props.viewport.hoveringComponentMapUniqueKey)) {
             notice.warning('此处无法粘贴')
         }
+        return false
     }
 
     /**

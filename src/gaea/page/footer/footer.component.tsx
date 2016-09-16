@@ -29,6 +29,7 @@ export default class Footer extends React.Component <typings.PropsDefine, typing
                          className="footer-item"
                          key={index}>
                         {componentInfo.props.gaeaName}
+
                         <div className="right-icon-container">
                             <div className="right-icon"></div>
                         </div>

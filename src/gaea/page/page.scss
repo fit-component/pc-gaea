@@ -24,6 +24,8 @@
 }
 
 .preview-container {
+    flex-grow: 1;
+    width: 0;
     display: flex;
     position: relative;
     height: 100%;
@@ -32,6 +34,7 @@
 }
 
 .viewport-main-container {
+    display: flex;
     position: relative;
     margin: 0 auto;
     height: 100%;

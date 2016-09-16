@@ -1,28 +1,33 @@
 & {
     position: relative;
     padding: 10px;
-    .component-icon-container {
-        position: absolute;
-        width: 30px;
-        height: 30px;
-        z-index: 5;
-        top: 15px;
+    .basic-title-container {
         display: flex;
-        justify-content: center;
         align-items: center;
-        i {
-            font-size: 20px;
-            color: #666;
+        .component-icon-container {
+            width: 30px;
+            height: 30px;
+            z-index: 5;
+            top: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            i {
+                font-size: 20px;
+                color: #666;
+            }
         }
     }
 }
 
 .title-name {
-    margin: 0;
+    margin: 0 0 0 10px;
+    width: 100%;
     .input {
         color: #666;
         font-weight: bold;
         border-bottom: 2px solid #ccc;
+        width: 100%;
     }
 }
 

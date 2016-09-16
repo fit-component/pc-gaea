@@ -15,6 +15,7 @@ import TextEditor from './edit-components/text/text.component'
 import SelectEditor from './edit-components/select/select.component'
 import SwitchEditor from './edit-components/switch/switch.component'
 import ArrayEditor from './edit-components/array/array.component'
+import MarginPaddingEditor from './edit-components/margin-padding/margin-padding.component'
 
 import './basic.scss'
 
@@ -102,6 +103,11 @@ export default class EditBoxBasic extends React.Component <typings.PropsDefine, 
                             <ArrayEditor editOption={editOption}/>
                         )
                         break
+                    case 'marginPadding':
+                        EditElement = (
+                            <MarginPaddingEditor editOption={editOption}/>
+                        )
+                        break
                 }
 
                 const editLineLabelClasses = classNames({
@@ -130,7 +136,7 @@ export default class EditBoxBasic extends React.Component <typings.PropsDefine, 
         let ResetButton: React.ReactElement<any> = null
         if (this.componentInfo.parentMapUniqueKey !== null) {
             ResetButton = (
-                <Button onClick={this.resetOptions}>重置为默认属性</Button>
+                <Button onClick={this.resetOptions}>重置</Button>
             )
         }
 
@@ -144,16 +150,18 @@ export default class EditBoxBasic extends React.Component <typings.PropsDefine, 
 
         return (
             <div className="_namespace">
-                <div className="component-icon-container">
-                    <i className={`fa fa-${this.componentInfo.props.gaeaIcon}`}/>
+                <div className="basic-title-container">
+                    <div className="component-icon-container">
+                        <i className={`fa fa-${this.componentInfo.props.gaeaIcon}`}/>
+                    </div>
+                    <Input className="title-name"
+                           label="组件名"
+                           key={this.props.viewport.currentEditComponentMapUniqueKey}
+                           onChange={this.handleChangeName}
+                           rightRender={this.titleInputRightRender}
+                           value={this.componentInfo.props.gaeaName}/>
                 </div>
-                <Input className="title-name"
-                       label=""
-                       key={this.props.viewport.currentEditComponentMapUniqueKey}
-                       onChange={this.handleChangeName}
-                       rightRender={this.titleInputRightRender}
-                       style={{paddingLeft:35}}
-                       value={this.componentInfo.props.gaeaName}/>
+
                 <div className="edit-item-container">
                     {Editors}
                 </div>
