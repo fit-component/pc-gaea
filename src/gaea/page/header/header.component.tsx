@@ -58,6 +58,9 @@ export default class Header extends React.Component <typings.PropsDefine, typing
      * 点击保存按钮
      */
     @autoBindMethod handleSave() {
+        if (this.props.application.isPreview) {
+            return
+        }
         // 获取增量编辑信息
         const componentsInfo = this.props.viewport.getIncrementComponentsInfo()
         this.props.application.event.emit(this.props.application.event.onSave, componentsInfo)
@@ -72,6 +75,13 @@ export default class Header extends React.Component <typings.PropsDefine, typing
         if (this.props.application.isPreview) {
             // 隐藏附加侧边栏
             this.props.viewport.hideSidebarAddon()
+            // 取消选择状态
+            if (this.props.viewport.lastSelectMapUniqueKey) {
+                this.props.application.event.emit(this.props.application.event.changeComponentSelectStatusEvent, {
+                    mapUniqueKey: this.props.viewport.lastSelectMapUniqueKey,
+                    selected: false
+                })
+            }
         }
     }
 
@@ -79,6 +89,9 @@ export default class Header extends React.Component <typings.PropsDefine, typing
      * 回撤
      */
     @autoBindMethod undo() {
+        if (this.props.application.isPreview) {
+            return
+        }
         this.props.viewport.undo()
         return false
     }
@@ -87,6 +100,9 @@ export default class Header extends React.Component <typings.PropsDefine, typing
      * 重做
      */
     @autoBindMethod redo() {
+        if (this.props.application.isPreview) {
+            return
+        }
         this.props.viewport.redo()
         return false
     }
@@ -95,6 +111,9 @@ export default class Header extends React.Component <typings.PropsDefine, typing
      * 复制
      */
     @autoBindMethod copy() {
+        if (this.props.application.isPreview) {
+            return
+        }
         this.props.viewport.copy(this.props.viewport.hoveringComponentMapUniqueKey)
         return false
     }
@@ -103,6 +122,9 @@ export default class Header extends React.Component <typings.PropsDefine, typing
      * 粘贴
      */
     @autoBindMethod paste() {
+        if (this.props.application.isPreview) {
+            return
+        }
         if (!this.props.viewport.paste(this.props.viewport.hoveringComponentMapUniqueKey)) {
             notice.warning('此处无法粘贴')
         }

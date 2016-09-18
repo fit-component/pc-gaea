@@ -16,8 +16,24 @@ export default class Viewport extends React.Component <typings.PropsDefine, typi
     static defaultProps: typings.PropsDefine = new typings.Props()
     public state: typings.StateDefine = new typings.State()
 
+    private handleAnyDomChange = ()=> {
+        // 当 dom 有任何改变，立刻更新外边框位置
+        this.props.viewport.resetComponentOutline()
+    }
+
     componentDidMount() {
         this.addListener()
+
+        window.addEventListener('resize', this.handleAnyDomChange.bind(this))
+
+        // Listen to changes on the elements in the page that affect layout
+        const observer = new MutationObserver(this.handleAnyDomChange.bind(this))
+        observer.observe(ReactDOM.findDOMNode(this), {
+            attributes: true,
+            childList: true,
+            characterData: true,
+            subtree: true
+        })
     }
 
     componentWillUnmount() {

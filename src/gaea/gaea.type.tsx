@@ -97,7 +97,7 @@ export class Props implements PropsDefine {
     version = '0.0.0'
     customComponents = [] as Array<React.ComponentClass<FitGaea.ComponentProps>>
     isHideCustomComponents = false
-    height = 600
+    height = 450
     onSave = ()=> {
     }
     versionInit = (saveVersion: Function)=> {

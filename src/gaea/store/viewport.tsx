@@ -182,6 +182,15 @@ export default class Viewport {
     }
 
     /**
+     * 是否显示布局元素轮廓
+     */
+    @observable showLayoutBorder = false
+
+    setShowLayoutBorder(isShow: boolean) {
+        this.showLayoutBorder = isShow
+    }
+
+    /**
      * 当前正在移动元素的信息
      */
     currentMovingComponent: FitGaea.MovingComponent
@@ -257,18 +266,35 @@ export default class Viewport {
     }
 
     /**
+     * 临时存储当前 hover 元素的 element
+     */
+    currentHoverElement: Element = null
+
+    /**
      * 设置某个元素为 hover 元素
      */
     setHoverComponent(element: Element) {
+        this.currentHoverElement = element
+        this.resetComponentOutline()
+    }
+
+    /**
+     * 校准当前 hover 元素边框虚线的位置
+     */
+    resetComponentOutline() {
+        if (this.currentHoverElement === null) {
+            return
+        }
+
         // 找到这个元素的 left, top
-        const targetBoundingClientRect = element.getBoundingClientRect()
+        const targetBoundingClientRect = this.currentHoverElement.getBoundingClientRect()
         const viewportBoundingClientRect = this.viewportDomInstance.getBoundingClientRect()
         transaction(()=> {
             this.viewportHoverComponentSpec = {
                 left: targetBoundingClientRect.left - viewportBoundingClientRect.left,
                 top: targetBoundingClientRect.top - viewportBoundingClientRect.top,
-                width: element.clientWidth,
-                height: element.clientHeight,
+                width: targetBoundingClientRect.width,
+                height: targetBoundingClientRect.height,
                 hovering: true
             }
         })
@@ -279,6 +305,7 @@ export default class Viewport {
      */
     setLeaveHover() {
         this.viewportHoverComponentSpec.hovering = false
+        this.currentHoverElement = null
     }
 
     /**
@@ -891,15 +918,44 @@ export default class Viewport {
     }
 
     /**
-     * 是否显示附加工具条
+     * 是否显示右侧附加工具条
      */
     @observable isShowSidebarAddon = false
 
     showSidebarAddon() {
         this.isShowSidebarAddon = true
+        // 显示工具条动画是 200 毫秒
+        setTimeout(()=> {
+            // 动画结束后，重置外边框位置
+            this.resetComponentOutline()
+        }, 210)
     }
 
     hideSidebarAddon() {
         this.isShowSidebarAddon = false
+        setTimeout(()=> {
+            // 动画结束后，重置外边框位置
+            this.resetComponentOutline()
+        }, 210)
+    }
+
+    /**
+     * 是否显示左侧附加工具条
+     */
+    @observable isShowLeftBar = false
+
+    /**
+     * 左侧附加工具条显示的是哪种板块
+     */
+    @observable leftBarType = ''
+
+    showLeftBar(leftBarType: string) {
+        this.leftBarType = leftBarType
+        this.isShowLeftBar = true
+    }
+
+    hideLeftBar() {
+        this.leftBarType = ''
+        this.isShowLeftBar = false
     }
 }

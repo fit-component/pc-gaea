@@ -7,6 +7,7 @@ import * as classNames from 'classnames'
 import * as _ from 'lodash'
 import {autoBindMethod} from '../../../../../common/auto-bind/src'
 
+import LeftBar from './left-bar/left-bar.component'
 import SidebarTools from './sidebar-tools/sidebar-tools.component'
 import SidebarToolsPreview from './sidebar-tools-preview/sidebar-tools-preview.component'
 import Footer from './footer/footer.component'
@@ -73,7 +74,6 @@ export default class Page extends React.Component <typings.PropsDefine, typings.
                 })
             })
         }
-
     }
 
     @autoBindMethod getSectionContainerRef(ref: React.ReactInstance) {
@@ -105,23 +105,25 @@ export default class Page extends React.Component <typings.PropsDefine, typings.
                          ref={this.getSectionContainerRef}
                          style={{height:`calc(100% - ${this.props.application.headerHeight + this.props.application.footerHeight}px)`}}>
 
-                        <div className="viewport-main-container"
-                             style={{width: `${this.props.application.viewportWidth}%`}}>
+                        <LeftBar/>
 
-                            <Viewport/>
-                            <OuterMoveBox/>
+                        <div className="viewport-main-container">
+                            <div className="viewport-main-content"
+                                 style={{width: `${this.props.application.viewportWidth}%`}}>
+                                <Viewport/>
+                                <OuterMoveBox/>
 
-                            {this.props.application.isPreview &&
-                            <div className="preview-container">
-                                <Preview value={this.props.viewport.getIncrementComponentsInfo()}
-                                         baseComponents={this.props.application.baseComponents}
-                                         customComponents={this.props.application.customComponents}/>
+                                {this.props.application.isPreview &&
+                                <div className="preview-container">
+                                    <Preview value={this.props.viewport.getIncrementComponentsInfo()}
+                                             baseComponents={this.props.application.baseComponents}
+                                             customComponents={this.props.application.customComponents}/>
+                                </div>
+                                }
                             </div>
-                            }
-
-                            <SidebarAddon/>
                         </div>
 
+                        <SidebarAddon/>
                     </div>
 
                     <Footer />

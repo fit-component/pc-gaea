@@ -37,6 +37,11 @@ export default class EditBox extends React.Component <typings.PropsDefine, typin
             return null
         }
 
+        const itemStyle = {
+            height: `calc(100% - ${this.props.application.footerHeight}px)`,
+            flexGrow: 0
+        }
+
         return (
             <div className="_namespace container-box">
                         <span className="handle-drag-close"
@@ -46,11 +51,13 @@ export default class EditBox extends React.Component <typings.PropsDefine, typin
                       type="retro"
                       className="edit-box-handle">
                     <TabPanel tab="基础"
+                              style={itemStyle}
                               activeKey="basic"
                               className="edit-container">
                         <Basic/>
                     </TabPanel>
                     <TabPanel tab="脚本"
+                              style={itemStyle}
                               activeKey="script"
                               className="edit-container">
                         <Script/>

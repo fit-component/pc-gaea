@@ -56,7 +56,7 @@ export default class EditHelper extends React.Component <typings.PropsDefine, ty
 
     componentWillReact() {
         if (this.componentInfo.props.gaeaUniqueKey === 'gaea-layout' && this.componentInfo.parentMapUniqueKey === null && this.props.setting.showLayoutWhenDragging) {
-            if (this.props.viewport.isMovingComponent) {
+            if (this.props.viewport.isMovingComponent || this.props.viewport.showLayoutBorder) {
                 if (!hasClass(this.selfDomInstance, 'gaea-layout-active')) {
                     this.selfDomInstance.className += ' gaea-layout-active'
                 }
@@ -210,8 +210,10 @@ export default class EditHelper extends React.Component <typings.PropsDefine, ty
         }
     }
 
-    componentWillUpdate() {
+    componentWillUpdate(nextProps: typings.PropsDefine, nextState: typings
+        .StateDefine) {
         this.setDraggingClass()
+        this.setSelectStyle(nextState)
     }
 
     componentWillUnmount() {
@@ -251,6 +253,19 @@ export default class EditHelper extends React.Component <typings.PropsDefine, ty
             } else {
                 removeClass(this.selfDomInstance, 'gaea-layout-no-height')
             }
+        }
+    }
+
+    /**
+     * 设置选中时样式
+     */
+    @autoBindMethod setSelectStyle(nextState: typings.StateDefine) {
+        if (nextState.selected) {
+            if (!hasClass(this.selfDomInstance, 'gaea-selected')) {
+                this.selfDomInstance.className += ' gaea-selected'
+            }
+        } else {
+            removeClass(this.selfDomInstance, 'gaea-selected')
         }
     }
 
@@ -313,7 +328,9 @@ export default class EditHelper extends React.Component <typings.PropsDefine, ty
 
         // 如果是最外层布局元素, 绑定上 isMovingComponent
         if (this.componentInfo.props.gaeaUniqueKey === 'gaea-layout' && this.componentInfo.parentMapUniqueKey === null) {
+            // TODO: 强绑 mobx
             this.isMovingComponent = this.props.viewport.isMovingComponent
+            const showLayoutBorder = this.props.viewport.showLayoutBorder
         }
 
         // 布局元素可以有子元素

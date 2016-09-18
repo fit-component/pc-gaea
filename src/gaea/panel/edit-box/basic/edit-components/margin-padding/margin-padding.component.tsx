@@ -4,8 +4,6 @@ import {observer, inject} from 'mobx-react'
 import MarginPaddingEditor from 'nt-web-margin-padding-editor'
 import * as _ from 'lodash'
 
-import Input from '../../../../../../../../input/src'
-
 @inject('viewport') @observer
 export default class EditComponentText extends React.Component <typings.PropsDefine, typings.StateDefine> {
     static defaultProps: typings.PropsDefine = new typings.Props()
@@ -53,7 +51,7 @@ export default class EditComponentText extends React.Component <typings.PropsDef
 
     render() {
         return (
-            <MarginPaddingEditor size={180}
+            <MarginPaddingEditor size={160}
                                  marginLeft={this.componentInfo.props['marginLeft']}
                                  marginTop={this.componentInfo.props['marginTop']}
                                  marginRight={this.componentInfo.props['marginRight']}
