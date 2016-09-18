@@ -37,6 +37,7 @@ export default class Page extends React.Component <typings.PropsDefine, typings.
             if (this.props.application.isReactNative) {
                 layoutProps['flex'] = 1
                 layoutProps['overflowY'] = 'auto'
+                layoutProps['flexDirection'] = 'column'
             } else {
                 layoutProps['flexGrow'] = 1
                 layoutProps['flexDirection'] = 'column'
