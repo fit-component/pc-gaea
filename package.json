@@ -1,6 +1,6 @@
 {
   "name": "fit-gaea",
-  "version": "1.0.57",
+  "version": "1.0.59",
   "description": "",
   "main": "lib/index.js",
   "scripts": {
@@ -17,18 +17,18 @@
     "react": "^0.14.0 || ^15.0.0",
     "lodash": "^3.10.1",
     "font-awesome": "^4.6.1",
-    "fit-tree": "^3.0.51",
-    "fit-modal": "^3.0.66",
+    "fit-tree": "^3.0.53",
+    "fit-modal": "^3.0.68",
     "sortablejs": "git://github.com/RubaXa/Sortable.git#dev",
     "codemirror": "^5.15.2",
     "react-codemirror": "^0.2.6",
-    "fit-switch": "^3.0.43",
-    "fit-message": "^3.0.37",
-    "fit-tabs": "^3.0.44",
+    "fit-switch": "^3.0.45",
+    "fit-message": "^3.0.39",
+    "fit-tabs": "^3.0.46",
     "react-draggable": "^2.1.1",
     "keymaster": "^1.6.2",
-    "fit-input": "^5.0.45",
-    "fit-select": "^4.0.58"
+    "fit-input": "^5.0.47",
+    "fit-select": "^4.0.60"
   },
   "typings": "lib/index.d.ts"
 }
